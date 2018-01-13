@@ -169,7 +169,7 @@ a:hover{border-color:transparent}
 .testimonials__item blockquote cite{display:block;margin-top:20px;font-size:20px;text-transform:uppercase}
 .testimonials__item blockquote cite span.name{color:#15b101}
 .testimonials__item blockquote cite span.role{color:#aaa;white-space:nowrap}
-.team{margin: auto;width:60%}
+.team{margin: auto;width:100%}
 .team__member{display:inline-block;width:-webkit-calc(25% - 50px);width:calc(25% - 50px);margin:0 20px 40px;background-color:#fff;-webkit-box-shadow:2px 2px 4px -2px #111;box-shadow:2px 2px 4px -2px #111;vertical-align:top}
 .team__member img{width:100%}
 .team__member-info{display:block;width:100%;padding:15px 10px}
