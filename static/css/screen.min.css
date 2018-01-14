@@ -173,7 +173,18 @@ a:hover{border-color:transparent}
 .team__member{display:inline-block;width:-webkit-calc(25% - 50px);width:calc(25% - 50px);margin:0 20px 40px;background-color:#fff;-webkit-box-shadow:2px 2px 4px -2px #111;box-shadow:2px 2px 4px -2px #111;vertical-align:top}
 .team__member img{width:100%}
 .team__member-info{display:block;width:100%;padding:15px 10px}
-.team__member-name{margin-bottom:5px;font-size:30px;font-weight:700}
+.team__member-name first{
+    font-family:"Times New Roman", serif;
+    color:#aaa;
+    margin-bottom:5px;
+    font-size:44px;
+}
+.team__member-name second{
+	font-family:"Poppins",sans-serif;
+    color:#15b101;
+    margin-bottom:5px;
+    font-size:30px
+}
 .team__member-role{display:block;margin-bottom:20px;font-size:18px;text-transform:capitalize}
 .team__member-descr{text-align:left}
 .contacts-section{position:relative;padding-top:300px}
