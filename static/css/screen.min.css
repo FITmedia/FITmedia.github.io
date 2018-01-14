@@ -177,13 +177,13 @@ a:hover{border-color:transparent}
     font-family:"Times New Roman", serif;
     color:#aaa;
     margin-bottom:5px;
-    font-size:44px;
+    font-size:32px;
 }
 .team__member-name second{
 	font-family:"Poppins",sans-serif;
     color:#15b101;
     margin-bottom:5px;
-    font-size:30px
+    font-size:22px
 }
 .team__member-role{display:block;margin-bottom:20px;font-size:18px;text-transform:capitalize}
 .team__member-descr{text-align:left}
