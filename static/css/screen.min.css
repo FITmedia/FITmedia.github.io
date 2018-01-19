@@ -194,13 +194,11 @@ a:hover{border-color:transparent}
 .company_logo first{
     font-family:"Times New Roman", serif;
     color:#aaa;
-    margin-bottom:5px;
     font-size:32px;
 }
 .company_logo second{
 	font-family:"Poppins",sans-serif;
     color:#15b101;
-    margin-bottom:5px;
     font-size:22px
 }
 .contact-info{position:relative;min-height:300px;padding:20px 60px 20px 20px;background-color:#fff;overflow:hidden;white-space:nowrap}
