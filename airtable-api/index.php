@@ -16,6 +16,7 @@ curl_setopt($ch, CURLOPT_URL, $url);
 $entries = curl_exec($ch);
 curl_close($ch);
 $airtable_response = json_decode($entries, TRUE);
+
 foreach($airtable_response['records'] as $key => $record)
 	{
 	$string.= $record['fields']['Data'] . ', ';
