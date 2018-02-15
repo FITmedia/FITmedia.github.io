@@ -208,8 +208,8 @@ a:hover{border-color:transparent}
 .contact-info__additional{margin-bottom:20px}
 .contact-info__additional p{font-style:italic;font-family:Georgia,Times,"Times New Roman",serif;line-height:1.5}
 .contact-info__vcard h4{margin-bottom:10px;font-weight:700}
-.contact-info__vcard p{margin-bottom:10px}
-.contact-info__vcard p:before{float:left;display:block;width:25px;height:25px;border:none;vertical-align:top}
+.contact-info__ p{margin-bottom:10px}
+.contact-info__ p:before{float:left;display:block;width:25px;height:25px;border:none;vertical-align:top}
 .contact-info__vcard a{display:inline-block;vertical-align:top}
 .contact-info__vcard span{display:inline-block}
 .contact-info__social{position:absolute;width:40px;height:100%;top:0;right:0;list-style-type:none;background-color:#aaa}
