@@ -2,6 +2,7 @@ function show(item){
   document.getElementById('main').innerHTML = item;
 }
 
+try{
 var Airtable = require('airtable');
 Airtable.configure({
     endpointUrl: 'https://api.airtable.com',
@@ -13,5 +14,6 @@ base('Table 1').find('recOQw31ZQNWIJbRp', function(err, record) {
     if (err) { console.error(err); return; }
     console.log('Retrieved', record.id);
 });
+} catch (err) { alert(err.message); }
 
 //https://api.airtable.com/v0/appffxjnfZPJUmCxX/Table%201?fields%5B%5D=Name&fields%5B%5D=Notes&fields%5B%5D=Date
