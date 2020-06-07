@@ -1,0 +1,141 @@
+/***** BASE STYLES *****/
+
+header, main, footer {
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    color: #000000;
+    padding: 20px;
+}
+
+/***** GRID *****/
+
+.full-width {
+    width: 1200px;
+    margin: 0 auto;
+    overflow: auto;
+}
+
+.half-width {
+    width: 600px;
+    float: left;
+}
+
+.third-width {
+    float: left;
+    padding: 0 30px;
+    width: 339px;
+}
+
+/***** HEADER *****/
+
+header h1 {
+    float: left;
+    font-size: 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+header #rogue {
+    color: #77a466;
+}
+
+nav {
+    float: right;
+    padding: 12.5px 0;
+}
+
+nav ul li{
+    display: inline-block;
+}
+
+nav ul li a {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 700;
+    color: #77a466;
+    padding-left: 25px;
+}
+
+header #header-img {
+    background-color: #77a466;
+    display: inline-block;
+    padding: 3px 0 0 0;
+}
+
+/***** ABOUT *****/
+
+#about h2 {
+    color: #77a466;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 7px 0 7px 0;
+    text-transform: uppercase;
+}
+ 
+#about p {
+    line-height: 24px;
+}
+
+/***** INFO *****/
+
+#info {
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    overflow: auto;
+}
+
+#info .first {
+    border-right: 1px solid lightgrey;
+    padding-bottom: 30px;
+    padding-left: 0;
+    width: 369px;
+}
+
+#info .second {
+    border-right: 1px solid lightgrey;
+}
+
+#info .third {
+    border-style: none;
+}
+
+#info h4 {
+    font-size: 12px;
+    margin: 30px 0 0 0;
+    text-transform: uppercase;
+}
+
+#info p a {
+    text-decoration: none;
+    color: #77a466;
+}
+
+#info p {
+    line-height: 21px;
+}
+
+#info .third p {
+    line-height: 25px;
+}
+
+/***** FOOTER *****/
+
+footer h3 {
+    font-size: 16px;
+    font-weight: 700;
+    clear: both;
+    padding: 14px 0 0 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+footer span {
+    color: #77a466;
+    font-family: 'Galada', cursive;
+    text-transform: lowercase;
+}
