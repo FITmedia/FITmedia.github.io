@@ -1,0 +1,347 @@
+body {
+    font-family: Helvetica, sans-serif;
+  }
+  
+  table {
+    font-family: "Messina Sans", "Century Gothic", Helvetica, sans-serif;
+    display: inline-block;
+    color: #5d6a7a;
+    border-collapse: separate;
+    border-spacing: 15px;
+    width: 100%;
+  }
+  
+  tr {
+    width: 100%;
+  }
+  
+  th,
+  td {
+    padding: 4px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .nu {
+    text-decoration: none;
+  }
+  
+  .a:hover {
+    color: #15b101;
+  }
+  
+  /*---5.2.20---*/
+  
+  #main {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /*------*/
+  
+  #main .card {
+    border: 1px solid #cccccc;
+    padding: 1px;
+    border-radius: 10px;
+    background: #f2f2f2;
+    width: 500px;
+  }
+  
+  #main .module {
+    position: relative;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    background: #f2f2f2;
+    font-family: Muli, sans-serif;
+    width: 500px;
+    top: 25%;
+    left: 15%;
+  }
+  
+  #main #title {
+    position: relative;
+    font-size: 22px;
+    text-align: left;
+    left: 5px;
+    top: 2px;
+    width: 80%;
+    margin: 1%;
+  }
+  
+  #main .header {
+    font-size: 22px;
+    width: 98%;
+    margin: 1%;
+  }
+  
+  #main .head {
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    margin: 2px;
+    background: #f2f2f2;
+    width: 496px;
+  }
+  
+  #main .form {
+    margin: 10px 30px;
+  }
+  
+  #main label {
+    display: block;
+    margin: 10px 15px;
+  }
+  
+  #main input {
+    border-radius: 25px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    font-size: 10pt;
+    width: 40%;
+    margin: 5px 5px;
+    padding: 1px 12px;
+    height: 25px;
+  }
+  
+  #main button {
+    display: block;
+    border-radius: 25px;
+    border-style: none;
+    background: #15b101;
+    font-size: 10pt;
+    color: white;
+    margin: 5px;
+    padding: 5px;
+    width: 100px;
+    height: 35px;
+  }
+  
+  #main button:hover {
+    background: #00e676;
+  }
+  
+  /*---5.2.20---*/
+  
+  .bit {
+    position: fixed;
+    text-align: center;
+    background: #90caf9;
+    width: 100px;
+    border: 1px solid #0d47a1;
+    border-radius: 10px;
+    font-family: Muli, sans-serif;
+    top: 25%;
+    left: 15%;
+  }
+  
+  .bit .controlBar {
+    position: relative;
+    /* so all children are positioned 
+    relative to #controlbar   */
+    width: 96%;
+    height: 20px;
+    margin: 2%;
+    font-size: 12pt;
+  }
+  
+  .bit .mini {
+    display: block;
+    font-size: 8pts;
+    margin: 2px;
+    height: 20px;
+  }
+  
+  .editable {
+    margin: 5px;
+    border: 1px solid #2196f3;
+    background: lightgrey;
+  }
+  
+  .bit #status {
+    font-size: 8pts;
+  }
+  
+  /*------*/
+  
+  #overlay {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    font-size: 100%;
+  }
+  
+  #overlay .card {
+    position: fixed;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    background: #f2f2f2;
+    font-family: Muli, sans-serif;
+    width: 500px;
+    top: 25%;
+    left: 15%;
+    z-index: 2;
+  }
+  
+  .controlBar {
+    position: relative;
+    /* so all children are positioned 
+    relative to parent */
+    width: 96%;
+    height: 50px;
+    margin: 10px 10px 0px 10px;
+    font-size: 8pt;
+  }
+  
+  .control {
+    position: absolute;
+    /* absolute position, 
+    relative to parent */
+    cursor: pointer;
+    top: 5px;
+    right: 10px;
+  }
+  
+  .grab {
+    cursor: -webkit-grab;
+    cursor: grab;
+  }
+  
+  .grabbing {
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+  }
+  
+  #overlay .header {
+    position: absolute;
+    font-size: 22px;
+    left: 5px;
+    top: 5px;
+    width: auto;
+    margin: 1%;
+  }
+  
+  #overlay .status {
+    position: fixed;
+    margin: 5px 10px;
+    font-family: Helvetica, sans-serif;
+    font-size: 8pt;
+  }
+  
+  #overlay .form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 450px;
+    min-height: 100px;
+    margin: 10px 30px;
+    font-family: Muli, sans-serif;
+    text-align: left;
+  }
+  
+  #overlay .noForm {
+    position: relative;
+    color: #455a64;
+    font-size: 14pt;
+    text-align: center;
+    width: 100%;
+    margin: 30px;
+  }
+  
+  #overlay input {
+    border-radius: 25px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    font-size: 10pt;
+    width: 40%;
+    margin: 5px 5px;
+    padding: 1px 12px;
+    height: 25px;
+  }
+  
+  #overlay button {
+    display: block;
+    border-radius: 25px;
+    border-style: none;
+    background: #15b101;
+    font-size: 10pt;
+    color: white;
+    margin: 10px 30px;
+    padding: 5px;
+    width: 46%;
+    height: 35px;
+  }
+  
+  #overlay button:hover {
+    background: #00e676;
+  }
+  
+  /* https://www.filamentgroup.com/lab/select-css.html */
+  
+  #overlay .form select {
+    display: block;
+    font-size: 16px;
+    font-family: Muli, sans-serif;
+    font-weight: 700;
+    color: #444;
+    line-height: 1.3;
+    padding: 0.6em 1.4em 0.5em 0.8em;
+    width: 95%;
+    max-width: 95%;
+    box-sizing: border-box;
+    margin: 5px;
+    border: 1px solid #aaa;
+    box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+    border-radius: 0.5em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"),
+      linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
+    background-repeat: no-repeat, repeat;
+    background-position: right 0.7em top 50%, 0 0;
+    background-size: 0.65em auto, 100%;
+  }
+  
+  #overlay .form select::-ms-expand {
+    display: none;
+  }
+  
+  #overlay .form select:hover {
+    border-color: #888;
+  }
+  
+  #overlay .form select:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 1px 3px rgba(59, 153, 252, 0.7);
+    box-shadow: 0 0 0 3px -moz-mac-focusring;
+    color: #222;
+    outline: none;
+  }
+  
+  #overlay .form option {
+    font-weight: normal;
+  }
+  
+  /*------MISC------*/
+  
+  .test1 {
+    background: red;
+  }
+  
+  .code {
+    font-family: monospace;
+  }
+  
