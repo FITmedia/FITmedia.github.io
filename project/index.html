@@ -7,11 +7,82 @@
     <body>
         <div id="main"></div>
         <script>
-            var inst = [
-                ["HEADER", "Test Title", "card"],
-                ["INPUT", "input1", "form"]
-            ];
-            var form = new HTMLform(inst);
+            function paceCalc() {
+                var inst5 = [
+                ["HEADER", "Pacing Calculator", "module"],
+                ["LABEL", "ttlWorkLbl", "form", {
+                    innerHTML: "Total Work Units"
+                }],
+                ["INPUT", "ttlWork", "ttlWorkLbl", {
+                    placeholder: "Total Work Units",
+                    value: 12
+                }],
+                ["LABEL", "expTimeLbl", "form", {
+                    innerHTML: "Expected Time"
+                }],
+                ["INPUT", "expTime", "expTimeLbl", {
+                    placeholder: "Expected Time",
+                    value: 10
+                }],
+                ["LABEL", "expRateLbl", "form", {
+                    innerHTML: "Expected Rate"
+                }],
+                ["INPUT", "expRate", "expRateLbl", {
+                    placeholder: "Expected Rate"
+                }],
+                ["LABEL", "unitsCompleteLbl", "form", {
+                    innerHTML: "Units Complete"
+                }],
+                ["INPUT", "unitsComplete", "unitsCompleteLbl", {
+                    placeholder: "Units Complete"
+                }],
+                ["LABEL", "timeUsedLbl", "form", {
+                    innerHTML: "Time Used"
+                }],
+                ["INPUT", "timeUsed", "timeUsedLbl", {
+                    placeholder: "Time Used",
+                    value: 1
+                }],
+                ["LABEL", "actualRateLbl", "form", {
+                    innerHTML: "Actual Rate"
+                }],
+                ["INPUT", "actualRate", "actualRateLbl", {
+                    placeholder: "Actual Rate"
+                }],
+                ["LABEL", "pacingLbl", "form", {
+                    innerHTML: "Pacing"
+                }],
+                ["INPUT", "pacing", "pacingLbl", {
+                    placeholder: "Pacing"
+                }]
+                ];
+                var thing = new HTMLform(inst5);
+                expRate.onfocus = function() {
+                var work = ttlWork.value;
+                var time = expTime.value;
+                if (work && time) {
+                    var result = work / time;
+                    expRate.value = Math.round(result * 100) / 100;
+                }
+                };
+                actualRate.onfocus = function() {
+                var units = unitsComplete.value;
+                var time = timeUsed.value;
+                if (units && time) {
+                    var result = units / time;
+                    actualRate.value = Math.round(result * 100) / 100;
+                }
+                };
+                pacing.onfocus = function() {
+                var exp = expRate.value;
+                var act = actualRate.value;
+                if (exp && act) {
+                    var result = act / exp;
+                    pacing.value = Math.round(result * 100) + "%";
+                }
+                };
+            }
+            paceCalc();
         </script>
     </body>
 </html>
