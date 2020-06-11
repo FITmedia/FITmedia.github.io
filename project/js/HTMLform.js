@@ -298,7 +298,9 @@ class HTMLelement {
         types.push(ea);
       }
       // ---- Header array success and error handlers
-      if (inst[0][0] === "HEADER") {
+      if (inst === "help") {
+        alert("var inst = [\n    [\"HEADER\", title, type],\n    [tag, id, parent, options]\n];");
+      } else if (inst[0][0] === "HEADER") {
         warn("build() inst: " + inst);
         let header = inst.shift();
         var type = (this.type = header[2]);
@@ -457,13 +459,19 @@ class HTMLelement {
           ]
         }); */
         // insert
+        var fieldObj = {};
         for (let i in forms[type].fields) {
           let f = forms[type].fields;
           let tag = f[i][0];
           let id = f[i][1];
+          let parent = f[i][2];
           let opt = f[i][3];
-          var field = new HTMLelement(tag, id, opt);
-          form.appendChild(field);
+          fieldObj[id] = new HTMLelement(tag, id, opt);
+          if (parent !== "form" && fieldObj[parent]) {
+            fieldObj[parent].appendChild(fieldObj[id]);
+          } else {
+            form.appendChild(fieldObj[id]);
+          }
         }
   
         //----FOOTER----
@@ -649,170 +657,3 @@ class HTMLelement {
     //alert(msg);
     console.log(msg);
   }
-  
-  //--------INTERFACE--------
-  
-  // 5.5.20 - dragElement() - removed from [Form Generator](https://codepen.io/jklueck/pen/bGVNEzV) in favor of `dragElements()` located here: [Visual Sorter Experiment](https://codepen.io/jklueck/pen/wvKrLrK)
-  
-  //-------TEST FUNCTIONS--------
-  
-  function build_v2(inst) {
-    //  var inst object = {
-    //    header: [],
-    //    form: [],
-    //    footer: []
-    //  };
-    // handle "HEADER"
-    // i.e.: buildElement(inst.header) ?
-    // handle 'parent'
-    // Handle "FOOTER"
-    // i.e.: buildElement(inst.footer) ?
-    // handle "FORM"
-    // i.e.: buildElement(inst.form) ?
-    // if not provided, append 'noForm'
-    // 'addField()' --> "FOOTER"
-  }
-  
-  function buildElementX(type) {
-    if (!window.drags) {
-      window.drags = 0;
-    }
-    if (!type) {
-      // added 'if' 5.14.20 - TODO: get "parentName" from HEADER?
-      type = "module";
-    }
-    var parentName = "main"; // forms[type].head[0][2]
-    if (document.getElementById(parentName)) {
-      var parent = document.getElementById(parentName);
-    } else {
-      var parent = new HTMLelement("DIV", parentName, {
-        cssClass: parentName
-      });
-      document.body.appendChild(parent);
-    }
-    let num = window.drags + 1; // set to 1-9 numbering
-    let boxId = "box" + num;
-    let ctrlBarId = boxId + "controlBar";
-    let titleId = boxId + "header";
-    let controlId = boxId + "control";
-    let textId = boxId + "text";
-    var formId = boxId + "form";
-    let subBarId = boxId + "subBar";
-    let submitId = boxId + "submit";
-    let adderId = boxId + "adder";
-  
-    //----BOX AND HEAD----
-    var box = new HTMLelement("DIV", boxId, {
-      cssClass: type,
-      style: "top: " + (50 + num * 20) + "px; left: " + (50 + num * 10) + "px"
-    });
-    var ctrlBar = new HTMLelement("DIV", ctrlBarId, {
-      cssClass: "controlBar"
-    });
-    var title = new HTMLelement("DIV", titleId, {
-      cssClass: "header",
-      innerHTML: titleId
-    });
-    var control = new HTMLelement("SPAN", titleId, {
-      cssClass: "a nu control",
-      innerHTML: "close",
-      listen: [
-        true,
-        "click",
-        function () {
-          box.outerHTML = "";
-          window.drags = window.drags - 1;
-          if (document.getElementById(parentName).innerHTML === "") {
-            document.getElementById(parentName).style.display = "none";
-          }
-        }
-      ]
-    });
-    var form = new HTMLelement("DIV", formId, {
-      cssClass: "form"
-    });
-  
-    //----FORM CONTENTS----
-    var noForm = new HTMLelement("DIV", boxId + "noForm", {
-      cssClass: "noForm a nu",
-      innerHTML: "No Form",
-      listen: [
-        true,
-        "click",
-        function () {
-          let elem = document.getElementById(formId);
-          addFieldX(elem, "INPUT");
-        }
-      ]
-    });
-    // insert
-  
-    //----FOOTER----
-    var subBar = new HTMLelement("DIV", subBarId, {
-      cssClass: "controlBar"
-    });
-    var submit = new HTMLelement("BUTTON", submitId, {
-      innerHTML: "submit",
-      listen: [
-        true,
-        "click",
-        function () {
-          var elem = document.getElementById(formId);
-          var children = elem.children;
-          var array = [];
-          for (let ea = 0; ea < children.length; ea++) {
-            if (children[ea].value !== "") {
-              array.push(children[ea].value);
-            }
-          } // end ea loop
-          elem.innerText = array.join("\n");
-        }
-      ]
-    });
-    var adder = new HTMLelement("SPAN", boxId + "adder", {
-      cssClass: "control a",
-      innerHTML: "add field",
-      listen: [
-        true,
-        "click",
-        function () {
-          let elem = document.getElementById(formId);
-          addFieldX(elem, "INPUT");
-        }
-      ]
-    });
-  
-    //----APPENDS----
-    box.appendChild(ctrlBar);
-    ctrlBar.appendChild(title);
-    ctrlBar.appendChild(control);
-    box.appendChild(form);
-    form.appendChild(noForm);
-    // form.appendChild(fields[ea]);
-    box.appendChild(subBar);
-    subBar.appendChild(submit);
-    subBar.appendChild(adder);
-    parent.appendChild(box);
-    if (parent.style.display === "none") {
-      parent.style.display = "block";
-    }
-    window.drags++;
-    return dragElements(box);
-  }
-  
-  function addFieldX(parent, tag) {
-    let n = parent.id.match(/\d+/);
-    if (!parent.fields) {
-      parent.fields = 0;
-    }
-    let f = ++parent.fields;
-    let fieldId = "box" + n + "field" + f;
-    var field = new HTMLelement(tag, fieldId, {
-      placeholder: fieldId
-    });
-    if (parent.querySelector(".noForm") !== null) {
-      parent.querySelector(".noForm").remove();
-    }
-    parent.appendChild(field);
-  }
-  
