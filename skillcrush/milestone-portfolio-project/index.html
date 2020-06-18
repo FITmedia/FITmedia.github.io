@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Jamie Klueck | Web Developer</title>
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Source+Code+Pro:wght@600&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <div class="full-width">
+                <div class="half-width">
+                    <p>&#60;jamie klueck | web developer /&#62;</p>
+                </div>
+                <div class="half-width">
+                    <nav>
+                        <ul>
+                            <li><a href="" class="nopad">portfolio</a></li>
+                            <li><a href="">about</a></li>
+                            <li><a href="">contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div id="hero">
+                <div class="half-width">
+                    <h1>let's <span>code</span> something cool</h1>
+                </div>
+            </div>
+        </header>
+        <main>
+            <section id="portfolio" class="full-width">
+                <h2 id="portfolio-title">my portfolio</h2>
+                <div id="first" class="full-width">
+                    <div class="half-width">
+                        <img src="img/rogue-screen.png" alt="Rogue Pickings Website" />
+                    </div>
+                    <div class="half-width">
+                        <h4>Rogue Pickings Website</h4>
+                        <p>HTML & CSS from Photoshop Design Comp</p>
+                        <p>A clean, simple design that places all information conveniently on one screen. No scrolling required to access basic information on this page!</p>
+                    </div>
+                </div>
+                <div id="second" class="full-width">
+                    <div class="half-width right">
+                        <h4>Jubilee Austen Project</h4>
+                        <p>HTML5 & CSS Website</p>
+                        <p>A great example of a professional website, this page has navigation links at the top to jump between sections below. Each section is clearly divided and there is ample space around the elements to give it a light feeling.</p>
+                    </div>
+                    <div class="half-width">
+                        <img src="img/jubilee-screen.png" alt="Jubilee Austen Website" />
+                    </div>
+                </div>
+                <div id="third" class="full-width">
+                    <div class="half-width">
+                        <img src="img/FITmedia-screen.png" alt="FITmedia Website" />
+                    </div>
+                    <div class="half-width">
+                        <h4>FITmedia Website</h4>
+                        <p>HTML5 & CSS Exercise</p>
+                        <p>A bit of an older design from my own website. This site features a dark hero image reminiscent of a movie opener or an application splash-screen. However, the theme lightens (both in color and humor) as the lower page scrolls up to cover the darker theme.</p>
+                    </div>
+                </div>
+            </section>
+            <section id="about">
+                <div id="about-bg">
+                    <h2>about me</h2>
+                    <div class="half-width">
+                        <h4>I like to do work that stays done.</h4>
+                        <p>I’ve been working in the finance industry for more than 5 years and have gotten frustrated with the never-ending repetition of “canned” sales speeches. Coding lets me tell a computer how to do the repetitive stuff, so I can focus on the important things!</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <h2>let's connect</h2>
+            <section id="contact" class="third-width">
+                <h4>Hire Me</h4>
+                <p>231-794-9845</p>
+                <p>jklueck@thefitmedia.com</p>
+            </section>
+            <section id="follow" class="third-width">
+                <h4>Follow Me</h4>
+                <div><a href=""><img src="img/Twitter_transp_green.png" alt="Twitter" /></a></div>
+                <div><a href=""><img src="img/GitHub_transp_green.png" alt="Github" /></a></div>
+                <div><a href=""><img src="img/LinkedIn_transp_green.png" alt="LinkedIn" /></a></div>
+            </section>
+            <section id="meet" class="third-width">
+                <h4>Meet Me</h4>
+                <p>Grand Rapids, MI</p>
+                <p>Let's go to meetups together!</p>
+            </section>
+            <div class="full-width">
+                <p>Copyright 2020 | Jamie Klueck</p>
+            </div>
+        </footer>
+        <div id="cssData" style="display: none"></div>
+        <script>
+            function getForCSS() {
+                var code = document.body.outerHTML.toString();
+                var patt = /\<[^\/][^\s\>]+/gi;
+                var patt2 = /id="[^"]+"/gi;
+                var patt3 = /class="[^"]+"/gi;
+                var tags = code.match(patt).join("~br>").replace(/\</g,"");
+                tags = tags.replace(/~/g,"<");
+                var ids = code.match(patt2).join("<br>").replace(/id=/g,"#").replace(/"/gi,"");
+                var classes = code.match(patt3).join("<br>").replace(/class=/g,".").replace(/"/gi,"");
+                //if ("<") .join("\n").replace(/\</g,"");
+                cssData.innerHTML = [tags,ids,classes].join("<br>");
+            }
+            getForCSS();
+        </script>
+    </body>
+</html>

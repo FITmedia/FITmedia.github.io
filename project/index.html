@@ -81,8 +81,120 @@
                     pacing.value = Math.round(result * 100) + "%";
                 }
                 };
+                addSearchSuggest(pacing);
             }
             paceCalc();
+
+        function inputTime() {
+            setTimeout(function() {
+            spec.db = ["Jamie","Liz","Elizabeth","Killien","Miriam"];
+            }, 10000);
+            var inst = [
+                ["HEADER", "Title", "card"],
+                ["LABEL", "catLbl", "form", {innerHTML: "Category"}],
+                ["SELECT", "cat", "catLbl",
+                    {innerHTML: "<option value=''>first option</value>"}
+                ],
+                ["LABEL", "subCatLbl", "form", {innerHTML: "Sub-Category"}],
+                ["SELECT", "subCat", "subCatLbl"],
+                ["LABEL", "specLbl", "form", {innerHTML: "Specific"}],
+                ["INPUT", "spec", "specLbl"],
+                ["LABEL", "notesLbl", "form", {innerHTML: "Notes"}],
+                ["INPUT", "notes", "notesLbl"]
+            ];
+            var boxElem = new HTMLform(inst);
+            addSearchSuggest(spec);
+        }
+           
+  function openIt(elem,disp) {
+    if (disp === "" || disp === null || disp === undefined) {
+      disp = "block"; // default
+    }
+    if (typeof elem === 'string' || elem instanceof String) {
+      document.getElementById(elem).style.display = "block";
+    } else if (typeof elem === 'object' || elem instanceof Object) {
+      elem.style.display = "block";
+    }
+  }
+
+  function closeIt(elem) {
+    if (typeof elem === 'string' || elem instanceof String) {
+      document.getElementById(elem).style.display = "none";
+    } else if (typeof elem === 'object' || elem instanceof Object) {
+      elem.style.display = "none";
+    }
+  }
+  
+  function search(input,elem) {
+    let data = elem.db;
+    if (data !== "" && input.length > 2) {
+      if (!document.getElementById("popOver")) {
+        let over = document.createElement("div");
+        over.id = "popOver";
+        over.style.display = "none";
+        over.style.position = "absolute";
+        over.style.zIndex = 5;
+        over.style.background = "lightblue";
+        document.body.appendChild(over);
+      }
+      if (!document.getElementById("searchRes")) {
+        var newElem = document.createElement("UL");
+        newElem.id = "searchRes";  	
+        document.getElementById("popOver")
+          .appendChild(newElem);
+      }
+      let array = [];
+      let ct = 0;
+      for (var i = 0; i < data.length; i++) {
+        let item = data[i].toString().toLowerCase();
+        let search = input.toLowerCase();
+        let records = array.toString().toLowerCase();
+        if (data[i] !== "" 
+            && item.match(search) !== null // if search term matches item
+            && records.match(item) === null // if item is not already in array
+            ) {
+            var line = document.createElement("li");
+            line.innerHTML = data[i];
+            line.onclick = function () {
+              document.getElementById(elem.id).value = data[i];
+              closeIt("popOver");
+            };
+            line.onmouseover = function () {
+              this.style.color = '#15b101';
+            };
+            line.onmouseout = function () {
+              this.style.color = 'black';
+            };
+            array.push(line.outerHTML);
+            document.getElementById("searchRes").appendChild(line);
+        }
+      } // end i loop
+      if (array.length > 0) {
+        var searchRes = document.getElementById("searchRes");
+        searchRes.innerHTML = array.join("");
+        var rect = elem.getBoundingClientRect();
+      //  alert(JSON.stringify(rect));
+        var top = rect.top + 23;
+        var right = rect.right;
+        popOver.style.top = top+"px";
+        openIt("popOver");
+        popOver.style.left = (rect.right 
+        - searchRes.offsetWidth)+"px";
+      } else {
+        closeIt("popOver");
+      }
+    } else {
+      closeIt("popOver");
+    }
+  }
+function addSearchSuggest(elem,data){
+    if(!elem) {return false;}
+    if (!data) { // for testing
+        data = ["Jamie","Liz","Elizabeth","Killien","Miriam"];
+    }
+    elem.db = data;
+    elem.onkeyup = function () {search(elem.value,elem)};
+}
         </script>
     </body>
 </html>

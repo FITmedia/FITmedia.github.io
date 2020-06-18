@@ -1,0 +1,204 @@
+/***** BASE STYLES *****/
+
+body {
+    background: black;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+}
+
+/***** GRID *****/
+
+.full-width {
+    width: 1260px;
+    margin: 0;
+    overflow: auto;
+}
+
+.half-width {
+    display: inline-block;
+    width: 620px;
+}
+
+.third-width {
+    width: 420px;
+    float: left;
+}
+
+/***** HEADER *****/
+
+header p {
+    float: left; 
+    font-size: 30px;
+}
+
+header .half-width {
+    box-sizing: border-box;
+    padding: 0 40px;
+}
+
+nav {
+    display: block;
+    float: right;
+    padding: 6px 0;
+}
+
+nav ul li {
+    display: inline-block; 
+    font-size: 30px;
+}
+
+nav ul li a {
+    color: #ffffff;
+    padding-left: 45px;
+    text-transform: lowercase;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    color: #15b101;
+}
+
+.nopad {
+    padding: 0;
+}
+
+header #hero {
+    background-image: url(../img/hero-background-green.jpg);
+    background-size: cover;
+    background-position-x: center;
+    box-sizing: border-box;
+    height: 600px;
+    padding-top: 225px;
+}
+
+h1 {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 72px;
+    padding-left: 56px;
+}
+
+header span {
+    color: #15b101;
+}
+
+h2 {
+    color: #15b101;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 36px;
+    text-align: center;
+}
+
+h3 {
+    font-size: 30px;
+}
+
+h4 {
+    font-weight: bold;
+    margin: 21px 0;
+}
+
+/***** PORTFOLIO *****/
+
+#portfolio div{
+    box-sizing: border-box;
+}
+
+#portfolio .half-width {
+    padding: 50px;
+    vertical-align: middle;
+}
+
+#portfolio .right {
+    text-align: right;
+}
+
+#portfolio img {
+    width: 525px;
+}
+
+/***** ABOUT *****/
+
+#about-bg {
+    padding-top: 20px;
+}
+
+#about div{
+    box-sizing: border-box;
+    color: #000000;
+}
+
+#about-bg {
+    background: url(../img/about-me.png);
+    background-size: cover;
+    background-position-x: center;
+    box-sizing: border-box;
+    height: 495px;
+}
+
+#about .half-width {
+    float: left;
+    padding: 10px 50px 50px 50px;
+}
+
+#about h2 {
+    text-shadow: 2px 2px 3px #000000;
+}
+
+/***** CONTACT *****/
+
+footer .third-width {
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+}
+
+#follow div {
+    display: inline-block;
+    margin: 2px 25px;
+}
+
+footer .full-width {
+    font-size: 18px;
+    padding-top: 100px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+/*
+header √
+na
+#hero √
+h3
+ul √
+li
+div
+p
+span
+main
+section
+section #portfolio
+div #portfolio-title
+  #first
+  #second
+  #third
+  #portfolio img
+section #about
+div #about-title
+strong
+footer
+#about
+#about-bg
+#about-title
+#contact-title
+#contact
+#follow
+#meet
+*/
+
+#cssData {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+}
