@@ -24,7 +24,7 @@
             </div>
             <div id="hero">
                 <div class="half-width">
-                    <h1>let's <span>code</span> something cool</h1>
+                    <h1>let's <span onmouseover="switchImg(hero)">code</span> something cool</h1>
                 </div>
             </div>
         </header>
@@ -94,21 +94,15 @@
                 <p>Copyright 2020 | Jamie Klueck</p>
             </div>
         </footer>
-        <div id="cssData" style="display: none"></div>
         <script>
-            function getForCSS() {
-                var code = document.body.outerHTML.toString();
-                var patt = /\<[^\/][^\s\>]+/gi;
-                var patt2 = /id="[^"]+"/gi;
-                var patt3 = /class="[^"]+"/gi;
-                var tags = code.match(patt).join("~br>").replace(/\</g,"");
-                tags = tags.replace(/~/g,"<");
-                var ids = code.match(patt2).join("<br>").replace(/id=/g,"#").replace(/"/gi,"");
-                var classes = code.match(patt3).join("<br>").replace(/class=/g,".").replace(/"/gi,"");
-                //if ("<") .join("\n").replace(/\</g,"");
-                cssData.innerHTML = [tags,ids,classes].join("<br>");
+            function switchImg(elem) {
+                elem.style.backgroundImage = "url('img/hero-background-glitch.png')";
+                setTimeout(
+                    function () {
+                        elem.style.backgroundImage = "url('img/hero-background-green.png')";
+                    }, 100
+                )
             }
-            getForCSS();
         </script>
     </body>
 </html>

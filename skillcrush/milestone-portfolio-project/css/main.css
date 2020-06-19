@@ -67,7 +67,7 @@ nav ul li a {
 }
 
 header #hero {
-    background-image: url(../img/hero-background-green.jpg);
+    background-image: url(../img/hero-background-green.png);
     background-size: cover;
     background-position-x: center;
     box-sizing: border-box;
