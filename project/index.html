@@ -15,26 +15,27 @@
                 }],
                 ["INPUT", "ttlWork", "ttlWorkLbl", {
                     placeholder: "Total Work Units",
-                    value: 12
+                    value: 15
                 }],
                 ["LABEL", "expTimeLbl", "form", {
-                    innerHTML: "Expected Time"
+                    innerHTML: "Est. Weeks"
                 }],
                 ["INPUT", "expTime", "expTimeLbl", {
-                    placeholder: "Expected Time",
-                    value: 10
+                    placeholder: "e.g.: 3.5 [weeks]",
+                    value: 30
                 }],
                 ["LABEL", "expRateLbl", "form", {
-                    innerHTML: "Expected Rate"
+                    innerHTML: "Expected Rate",
+                    style: "display: none"
                 }],
                 ["INPUT", "expRate", "expRateLbl", {
                     placeholder: "Expected Rate"
                 }],
                 ["LABEL", "unitsCompleteLbl", "form", {
-                    innerHTML: "Units Complete"
+                    innerHTML: "Percent Complete"
                 }],
                 ["INPUT", "unitsComplete", "unitsCompleteLbl", {
-                    placeholder: "Units Complete"
+                    placeholder: "Percent Complete"
                 }],
                 ["LABEL", "timeUsedLbl", "form", {
                     innerHTML: "Time Used"
@@ -44,7 +45,8 @@
                     value: 1
                 }],
                 ["LABEL", "actualRateLbl", "form", {
-                    innerHTML: "Actual Rate"
+                    innerHTML: "Actual Rate",
+                    style: "display: none"
                 }],
                 ["INPUT", "actualRate", "actualRateLbl", {
                     placeholder: "Actual Rate"
@@ -57,29 +59,54 @@
                 }]
                 ];
                 var thing = new HTMLform(inst5);
-                expRate.onfocus = function() {
-                var work = ttlWork.value;
-                var time = expTime.value;
-                if (work && time) {
-                    var result = work / time;
-                    expRate.value = Math.round(result * 100) / 100;
-                }
+                
+                expTime.onblur = expRate.onfocus = function() {
+                  var work = ttlWork.value;
+                  var weeks = expTime.value;
+                  if (weeks > 8) {
+                    var time = weeks; // i.e.: hours must have been provided instead
+                  } else {
+                    var time = weeks * 5 * 2; // 2 hrs / day
+                  }
+                  if (work && time) {
+                      var result = work / time;
+                      expRate.value = Math.round(result * 100) / 100;
+                  }
                 };
-                actualRate.onfocus = function() {
-                var units = unitsComplete.value;
-                var time = timeUsed.value;
-                if (units && time) {
-                    var result = units / time;
-                    actualRate.value = Math.round(result * 100) / 100;
-                }
+                unitsComplete.onblur = function () {
+                  var units = unitsComplete.value;
+                  if (units >= 1 || units.toString().match("%") !== null) {
+                    if (units.toString().match("%") !== null) {
+                      units.toString().pop();
+                      units = parseInt(units);
+                    }
+                    units = units / 100;
+                  }
+                  unitsComplete.factor = units;
+                  unitsComplete.value = Math.round(units * 100) + "%";
+                };
+                timeUsed.onblur = actualRate.onfocus = function() {
+                  var units = unitsComplete.factor || unitsComplete.value;
+                  if (units >= 1 || units.toString().match("%") !== null) {
+                    if (units.toString().match("%") !== null) {
+                      units.toString().pop();
+                      units = parseInt(units);
+                    }
+                    units = units / 100;
+                  }
+                  var work = ttlWork.value;
+                  if (units && work) {
+                      var result = units * work;
+                      actualRate.value = Math.round(result * 100) / 100;
+                  }
                 };
                 pacing.onfocus = function() {
-                var exp = expRate.value;
-                var act = actualRate.value;
-                if (exp && act) {
-                    var result = act / exp;
-                    pacing.value = Math.round(result * 100) + "%";
-                }
+                  var exp = expRate.value;
+                  var act = actualRate.value;
+                  if (exp && act) {
+                      var result = act / exp;
+                      pacing.value = Math.round(result * 100) + "%";
+                  }
                 };
                 addSearchSuggest(pacing);
             }
@@ -87,7 +114,7 @@
 
         function inputTime() {
             setTimeout(function() {
-            spec.db = ["Jamie","Liz","Elizabeth","Killien","Miriam"];
+              spec.db = ["Jamie","Liz","Elizabeth","Killien","Miriam"];
             }, 10000);
             var inst = [
                 ["HEADER", "Title", "card"],
@@ -194,6 +221,36 @@ function addSearchSuggest(elem,data){
     }
     elem.db = data;
     elem.onkeyup = function () {search(elem.value,elem)};
+}
+
+function save(elem) {
+  if (typeof(Storage) !== undefined) {
+    // Code for localStorage/sessionStorage.
+    var data = elem.getElementsByTagName("INPUT");
+    var name = "uniqueName"; // TODO: add name param
+    for (var each of data) {
+      var val = each.value;
+      var id = each.id;
+      localStorage.setItem(name+"-"+id,val);
+    } // end each loop
+    demo.innerHTML = localStorage.getItem(name+"-"+id)+" - Saved";
+  } else {
+    alert("Oops! No web storage support.");
+  }
+}
+
+function retrieve(elem) {
+  if (typeof(Storage) !== undefined) {
+    var target = elem.getElementsByTagName("INPUT");
+    var name = "uniqueName"; // TODO: add name param
+    for (var each of target) {
+      var id = each.id;
+      each.value = localStorage.getItem(name+"-"+id);
+    } // end each loop
+    demo.innerHTML = localStorage.getItem(name+"-"+id)+" - Loaded";
+    } else {
+      alert("Oops! Nothing to retrieve.");
+  }
 }
         </script>
     </body>
