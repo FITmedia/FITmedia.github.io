@@ -16,6 +16,7 @@ class HTMLelement {
             }
           }
         ],
+        htmlFor: "", // assign label to input element
         innerHTML: "",
         placeholder: "",
         value: "",
@@ -94,7 +95,10 @@ class HTMLelement {
             this.options.value ||
             this.options.placeholder;
         }
-        elem.contentEditable = this.options.edit;
+        if (this.options.edit === true) {
+          // 6.28.20 - should prevent contenteditable="false" from appearing - not working?
+          elem.contentEditable = this.options.edit;
+        }
         elem.noAppend = this.options.noAppend;
         console.log("'" + this.id + "' created by HTMLelement!");
         return elem;
