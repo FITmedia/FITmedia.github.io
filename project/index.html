@@ -22,7 +22,7 @@
                 }],
                 ["INPUT", "expTime", "expTimeLbl", {
                     placeholder: "e.g.: 3.5 [weeks]",
-                    value: 30
+                    value: 3.5
                 }],
                 ["LABEL", "expRateLbl", "form", {
                     innerHTML: "Expected Rate",
@@ -46,7 +46,7 @@
                 }],
                 ["LABEL", "actualRateLbl", "form", {
                     innerHTML: "Actual Rate",
-                    style: "display: none"
+                    //style: "display: none"
                 }],
                 ["INPUT", "actualRate", "actualRateLbl", {
                     placeholder: "Actual Rate"
@@ -85,12 +85,18 @@
                   unitsComplete.factor = units;
                   unitsComplete.value = Math.round(units * 100) + "%";
                 };
-                timeUsed.onblur = actualRate.onfocus = function() {
+                timeUsed.onblur = /*actualRate.onfocus = */ function() {
                   var units = unitsComplete.factor || unitsComplete.value;
                   if (units >= 1 || units.toString().match("%") !== null) {
+                    // (units variable is a number or is a string containing "%")
                     if (units.toString().match("%") !== null) {
-                      units.toString().pop();
+                      // (units is a string containing "%")
+                      try{
+                      var len = units.length - 1;
+                      units.toString().slice(0,len);
+                    //  alert(units);
                       units = parseInt(units);
+                      }catch(err){alert(err.message)}
                     }
                     units = units / 100;
                   }
@@ -106,6 +112,7 @@
                   if (exp && act) {
                       var result = act / exp;
                       pacing.value = Math.round(result * 100) + "%";
+                     // alert(result);
                   }
                 };
                 addSearchSuggest(pacing);

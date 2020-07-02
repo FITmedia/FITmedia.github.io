@@ -16,8 +16,8 @@ class HTMLelement {
             }
           }
         ],
-        htmlFor: "", // assign label to input element
         innerHTML: "",
+        label: "", // assign label to input element
         placeholder: "",
         value: "",
         edit: false,
@@ -471,12 +471,15 @@ class HTMLelement {
           let parent = f[i][2];
           let opt = f[i][3];
           fieldObj[id] = new HTMLelement(tag, id, opt);
+          if (opt.label) {
+            fieldObj[id] = addLabel(fieldObj[id],opt.label);
+          }
           if (parent !== "form" && fieldObj[parent]) {
             fieldObj[parent].appendChild(fieldObj[id]);
           } else {
             form.appendChild(fieldObj[id]);
           }
-        }
+        } // end i loop
   
         //----FOOTER----
         var subBar = new HTMLelement("DIV", subBarId, {
@@ -544,6 +547,20 @@ class HTMLelement {
         }
         return box;
       }; // end buildElement()
+
+      function addLabel(elem,label) {
+        if (label) {
+          var divElem = document.createElement("div");
+          var labelElem = document.createElement("span");
+          labelElem.id = elem.id+"Lbl";
+          labelElem.classList.add("label");
+          labelElem.innerHTML = label;
+          divElem.appendChild(labelElem);
+          divElem.appendChild(elem);
+          return divElem;
+        }
+        return elem;
+      }
   
       function addField(parent, tag) {
         let n = parent.id.match(/\d+/);

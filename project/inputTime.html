@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/HTMLform.js"></script>
+  </head>
+  <body>
+    <script>
+      var inst = [
+        ["HEADER", "Title", "module"],
+        ["SELECT", "cat", "form",
+          {label: "Category"}
+        ],
+        ["OPTION", "def", "cat", 
+          {innerHTML: "--"},
+        ],
+        ["SPAN", "subCatLbl", "form",
+          {innerHTML: "Sub-Category",
+          cssClass: "label"}
+        ],
+        ["SELECT", "subCat", "form",
+          {innerHTML: () => "<option id='default'>--</option>" }
+        ],
+        ["SPAN", "specLbl", "form",
+          {innerHTML: "Specific",
+          cssClass: "label"}
+        ],
+        ["INPUT", "spec", "form"],
+        ["SPAN", "notesLbl", "form",
+          {innerHTML: "Notes",
+          cssClass: "label"}
+        ],
+        ["INPUT", "notes", "form"]
+      ];
+      var formBox = new HTMLform(inst);
+      var db = {
+        cat: ["Project", "Process", "Research"],
+        subCat: ["example1","example2"]
+      };
+      function loadSelections(elem) {
+        var selects = elem.getElementsByTagName("select");
+        var found = [];
+        for (var i in selects) {
+          var id = selects[i].id;
+          found.push(id);
+          if (db[id]) {
+            for (var ea in db[id]) {
+              let child = new HTMLelement("option", "", {innerHTML: db[id][ea]});
+              selects[i].appendChild(child);
+            } // end ea loop
+          }
+        } // end i loop
+        console.log("Found the following SELECT elements:\n"+found.join("\n"));
+      }
+      loadSelections(formBox);
+    </script>
+  </body>
+</html>
