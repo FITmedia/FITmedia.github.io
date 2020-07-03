@@ -35,16 +35,19 @@ body {
     color: #15b101;
   }
 
-  .form>div {
-    float: right;
+  .form {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
   }
   
-  .form>div>input {
-    float: right;
-  }
-  
-  .form .label {
+  .form label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-right: 10px;
+    width: 300px;
   }
 
   /****** MODULES ******/
