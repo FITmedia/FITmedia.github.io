@@ -24,6 +24,13 @@
                     placeholder: "e.g.: 3.5 [weeks]",
                     value: 3.5
                 }],
+                ["LABEL", "strtDateLbl", "form", {
+                    innerHTML: "Start Date"
+                }],
+                ["INPUT", "strtDate", "strtDateLbl", {
+                    placeholder: "Start Date",
+                    value: "6/23/2020"
+                }],
                 ["LABEL", "expRateLbl", "form", {
                     innerHTML: "Expected Rate",
                     style: "display: none"
@@ -41,8 +48,7 @@
                     innerHTML: "Time Used"
                 }],
                 ["INPUT", "timeUsed", "timeUsedLbl", {
-                    placeholder: "Time Used",
-                    value: 1
+                    placeholder: "Time Used"
                 }],
                 ["LABEL", "actualRateLbl", "form", {
                     innerHTML: "Actual Rate",
@@ -52,27 +58,41 @@
                     placeholder: "Actual Rate"
                 }],
                 ["LABEL", "pacingLbl", "form", {
-                    innerHTML: "Pacing"
+                    innerHTML: "Use of Hours"
                 }],
-                ["INPUT", "pacing", "pacingLbl", {
-                    placeholder: "Pacing"
+                ["SPAN", "pacing", "pacingLbl", {
+                    placeholder: "___",
+                    cssClass: "output"
+                }],
+                ["LABEL", "schPacingLbl", "form", {
+                    innerHTML: "Use of Weeks"
+                }],
+                ["SPAN", "schPacing", "schPacingLbl", {
+                    placeholder: "___",
+                    cssClass: "output"
                 }]
                 ];
                 var thing = new HTMLform(inst5);
                 document.onchange = function() {
+                  var settings = {
+                    workDays: 5,
+                    dailyHrs: 2
+                  };
                   var work = ttlWork.value;
                   var weeks = expTime.value;
+                  var start = strtDate.value;
                   var units = unitsComplete.value;
-                  var x = timeUsed.value;
+                  var time = timeUsed.value;
                   var exp = expRate.value;
                   var act = actualRate.value;
                   if (weeks > 8) {
-                    var time = weeks; // i.e.: hours must have been provided instead
+                    var hours = weeks; // i.e.: assumes hours were provided, not weeks
+                    weeks = weeks / settings.workDays / settings.dailyHrs; // convert to weeks
                   } else {
-                    var time = weeks * 5 * 2; // 2 hrs / day
+                    var hours = weeks * settings.workDays * settings.dailyHrs; // 2 hrs / day
                   }
-                  if (work && time) {
-                    let result = work / time;
+                  if (work && hours) {
+                    let result = work / hours;
                     expRate.value = Math.round(result * 100) / 100;
                   }
                   if (units >= 1 || units.toString().match("%") !== null) {
@@ -86,15 +106,57 @@
                     }
                     units = units / 100;
                   }
-                  unitsComplete.value = Math.round(units * 100) + "%";
+                  unitsComplete.numVal = Math.round(units * 100);
+                  unitsComplete.value = unitsComplete.numVal + "%";
                   if (units && work) {
-                    var result = units * work;
+                    let progress = units * work;
                     actualRate.value = Math.round(result * 100) / 100;
                   }
-                  if (exp && act) {
-                    var result = act / exp;
-                    pacing.value = Math.round(result * 100) + "%";
-                    // alert(result);
+                  /*
+                  if (time.toString().match(":") !== null) {
+                    let split = time.toString().split(":");
+                    let hr = parseInt(split[0]);
+                    let min = parseInt(split[1]);
+                    time = hr + (min / 60);
+                  } else if (time) {
+                    let hr = Math.floor(time);
+                    let min = time - hr;
+                    time = hr + min;
+                    timeUsed.value = hr + ":" + min;
+                  } */
+                  
+                  // calculate progress in course vs hours used to hours expected
+                  if (units && ttlWork.value && timeUsed.value) {
+                    let act = (units * ttlWork.value) / timeUsed.value;
+                    actualRate.value = Math.round(act * 100) / 100;
+                    let exp = ttlWork.value / hours;
+                    expRate.value = Math.round(exp * 100) / 100;
+                   //  alert(act + "\n" + exp);
+                    var result = Math.round(act / exp * 100);
+                    if (result >= 100) {
+                      pacing.style.color = "green";
+                    } else if (result < 100) {
+                      pacing.style.color = "red";
+                    }
+                    pacing.value = pacing.innerHTML = result + "%";
+                  }
+
+                  // calculate progress in course vs progress in time
+                  if (start && unitsComplete.numVal) {
+                    let d = new Date();
+                    let sd = new Date(start);
+                    let timeSpan = Math.ceil((d - sd) / 1000 / 60 / 60 / 24); // to include today
+                    // schedule progress - (time invested vs time alotted):
+                    let schProg = Math.round(timeSpan / Math.ceil(weeks * 7) * 100);
+                    // schedule pacing - (schedule progress vs work progress):
+                    let schPace = Math.round(unitsComplete.numVal / schProg * 100);
+                    if (schPace >= 100) {
+                      schPacing.style.color = "green";
+                    } else if (schPace < 100) {
+                      schPacing.style.color = "red";
+                    }
+                    schPacing.numVal = schPace;
+                    schPacing.value = schPacing.innerHTML = schPace + "%";
                   }
                 };
                 addSearchSuggest(pacing);
