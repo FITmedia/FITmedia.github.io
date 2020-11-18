@@ -1,0 +1,107 @@
+<html>
+
+<head>
+  <script src="http://www.thefitmedia.com/workbench/js/main.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+<link rel="stylesheet" href="http://www.thefitmedia.com/workbench/css/main.css" >
+</head>
+
+<body>
+  <main>
+    <div id="info">
+      <span id="version" onclick="window.open('https://codepen.io/jklueck/full/KKzymGr')" class="click">v1 10.12.20 (static vers.)</span>
+      <span id="warn">-</span>
+    </div>
+    <div class="wrapper">
+    <!--  <label class="disabled">Paste to:
+        <select id="pasteTo">
+          <option value="full">Full Database</option>
+        </select>
+      </label> -->
+      <label><input id="optMarkChange" type="checkbox">
+        Mark copied changes with "#"
+      </label>
+      <label>View:
+        <select id="view" onchange="build()">
+          <option value="originatedFix">Originated Fix</options>
+          <option value="investFix">Invest Fix</options>
+          <option value="gmi">GMI Only</option>
+          <option value="refiDocs">Refi Docs</options>
+          <option value="full">All Lines</option>
+          <option value="automatedUnderwriting">AUS Only</option>
+          <option value="refi">Refinance</option>
+        </select>
+      </label>
+      <input id="paste">
+   <!-- <div id="investProj" style="display: none">
+      <label><input type="checkbox">
+        Total Loan Costs: NA
+      </label>
+      <label><input type="checkbox">
+        Origination Charges: NA
+      </label>
+        <label><input type="checkbox">
+Discount Points: NA
+      </label>
+        <label><input type="checkbox">
+Lender Credits: NA
+      </label>
+        <label><input type="checkbox">
+Prepayment Penalty: NA
+      </label>
+        <label><input type="checkbox">
+HOEPA [Status]: 3
+      </label>
+        <label><input type="checkbox">
+Business or Commercial Purpose: 1
+      </label>
+
+    </div> -->
+      <div id="copyTerms">
+        <div class="term">
+          <p onclick="copyNotice(this, 'copied!')" style="cursor: pointer">Automated Underwriting</p>
+        </div>
+        <div class="term">
+          <p onclick="copyNotice(this, 'copied!')" style="cursor: pointer">Loan Summary Details</p>
+        </div>
+        <div class="term">
+          <p onclick="copyNotice(this, 'copied!')" style="cursor: pointer">Disclosure Delivery Tracking</p>
+        </div>
+        <div class="term">
+          <p onclick="copyNotice(this, 'copied!')" style="cursor: pointer">Document Tracking</p>
+        </div>
+        <div class="term">
+          <p onclick="copyNotice(this, 'copied!')" style="cursor: pointer">HMDA Information Screen</p>
+        </div>
+        <table class="term">
+          <tr onclick="copyNotice(this.children[0], 'X')" style="cursor: pointer">
+            <td>1</td>
+            <td>Equifax</td>
+          </tr>
+          <tr onclick="copyNotice(this.children[0], 'X')" style="cursor: pointer">
+            <td>2</td>
+            <td>Experian</td>
+          </tr>
+          <tr onclick="copyNotice(this.children[0], 'X')" style="cursor: pointer">
+            <td>3</td>
+            <td>TransUnion</td>
+          </tr>
+        </table>
+      </div>
+      <div id="output">
+
+      </div> <!-- output -->
+  <div class="doc-wrapper">
+    <button onclick="clearDatabase()">Reset</button>
+    <button onclick="showAll()">Show All</button></div>
+      </div>
+  </main>
+  <input id="hiddenInput" style="display: none">
+
+  <script>
+    //setTimeout(addListeners(), 1000);
+  </script>
+</body>
+
+</html>

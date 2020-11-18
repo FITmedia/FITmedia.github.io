@@ -1,0 +1,267 @@
+body {
+  font-size: 16px;
+  font-family: Helvetica, sans-serif;
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#f2f9fe+0,e2ecff+100 */
+  background: #f2f9fe; /* Old browsers */
+  background: -moz-linear-gradient(
+    left,
+    #f2f9fe 0%,
+    #e2ecff 100%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    left,
+    #f2f9fe 0%,
+    #e2ecff 100%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to right,
+    #f2f9fe 0%,
+    #e2ecff 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f9fe', endColorstr='#e2ecff',GradientType=1 ); /* IE6-9 */
+}
+
+main {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+#info {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  height: 25px;
+  width: 100%;
+}
+
+#version {
+  color: grey;
+  font-size: 0.75rem;
+}
+
+#warn {
+  color: grey;
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+#investProj {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#investProj label {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+}
+
+#investProj input {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 15px;
+}
+
+.wrapper {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#paste {
+  color: black;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  border-style: solid;
+  border-radius: 25px;
+}
+
+#copyTerms {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 400px;
+}
+
+#copyTerms .term {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 49%;
+}
+
+#output {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  min-width: 350px;
+  max-width: 701px;
+}
+
+#output #hmda {
+  display: flex;
+}
+
+.doc-wrapper {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  border: solid 1px lightgrey;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath fill-rule="evenodd" d="M0 0h4v4H0V0zm4 4h4v4H4V4z"/%3E%3C/g%3E%3C/svg%3E');
+  margin: 10px;
+  width: 325px;
+}
+
+.doc-banner {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  background: rgba(255, 255, 255, 0.75);
+  box-sizing: border-box;
+  padding: 5px;
+  width: 100%;
+}
+
+.doc-title {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.doc-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: none;
+  font-size: 0.85rem;
+}
+
+.items {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.line {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  border: solid 1px grey;
+  background: #eceff1;
+  padding: 10px;
+  margin: 10px 0;
+  width: 350px;
+}
+
+#ln36 {
+  margin-top: 50px;
+}
+
+.label {
+  display: flex;
+  color: black;
+  font-size: 0.75em;
+  text-align: left;
+  margin: 0 10px 0 0;
+  width: 40%;
+}
+
+.click {
+  cursor: pointer;
+}
+
+.ans {
+  display: flex;
+  font-size: 1.5rem;
+  color: black;
+  text-align: left;
+  margin: 0 10px;
+}
+
+.edit {
+  display: flex;
+  font-size: 1.5rem;
+  color: blue;
+  text-align: left;
+  margin: 0 10px;
+}
+
+.line input {
+  border-radius: 25px;
+  box-sizing: border-box;
+  border: solid 1px lightgrey;
+  text-align: center;
+  font-size: 24px;
+  height: 30px;
+  outline: 0;
+  width: 200px;
+  margin: 5px 5px 5px 5px;
+  padding: 0 5px;
+}
+
+.trans {
+  color: black;
+  font-size: 1rem;
+  margin: 0 0 0 10px;
+  text-align: right;
+  width: 37%;
+}
+
+.doc-buttons {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+button {
+  margin: 0;
+  width: 45%;
+}
+
+button:hover {
+  color: blue;
+  background: #fafafa;
+}
+
+.disabled {
+  color: grey;
+  text-decoration: line-through;
+}
+
+*:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px blue;
+}
+
+.hidden {
+  display: none;
+}
