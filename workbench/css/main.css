@@ -265,3 +265,8 @@ button:hover {
 .hidden {
   display: none;
 }
+
+*:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px blue;
+}
