@@ -1,6 +1,7 @@
 /****** LISTENERS ******/
 console.log("LISTENERS");
 
+/* removed 12.3.20 due to issues with running loadData repeatedly
 paste.addEventListener("blur", (event) => {
   if (paste.value.trim() !== "") {
     var key = event.which || event.keyCode;
@@ -12,6 +13,7 @@ paste.addEventListener("blur", (event) => {
     }
   }
 });
+*/
 
 paste.addEventListener("change", (event) => {
   window.header.options.warnOnReset = true;
