@@ -201,9 +201,11 @@ function checkOption(id) {
   var elem = document.getElementById(id);
   var opt = window.header.options;
   if (elem.checked) {
-    return opt[id][0]();
+    var ifChecked = opt[id][0];
+    return ifChecked();
   } else {
-    return opt[id][1]();
+    var ifUnchecked = opt[id][1];
+    return ifUnchecked();
   }
 }
 
