@@ -18,6 +18,7 @@ paste.onchange = (event) => {
 };
 
 paste.onkeyup = (event) => {
+  // allows for a blank first cell
   var split = paste.value.split("\t");
   if (split[0] === "" && split[1] !== "" && paste.value !== "") {
     paste.value = "\t" + paste.value.trim();
