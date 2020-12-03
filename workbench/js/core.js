@@ -1,5 +1,5 @@
 /****** CORE ******/
-console.log("CORE");
+console.log("CORE "+(window.vers || ""));
 
 function viewCount() {
   // move to Utilities

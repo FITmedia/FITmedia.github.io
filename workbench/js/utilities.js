@@ -1,5 +1,5 @@
 /****** UTILITIES ******/
-console.log("UTILITIES");
+console.log("UTILITIES "+(window.vers || ""));
 
 function camelCase(str) {
   // UTILITIES

@@ -1,5 +1,5 @@
 /****** LISTENERS ******/
-console.log("LISTENERS");
+console.log("LISTENERS "+(window.vers || ""));
 
 /* removed 12.3.20 due to issues with running loadData repeatedly
 paste.addEventListener("blur", (event) => {
@@ -32,7 +32,6 @@ paste.addEventListener("keyup", (event) => {
 document.addEventListener("keypress", (event) => {
   var key = event.which || event.keyCode;
   var elem = document.activeElement;
-  alert(paste.value);
   if (key === 13) {
     // Enter
     if (elem.classList.contains("calc")) {

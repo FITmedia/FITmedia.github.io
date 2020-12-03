@@ -1,5 +1,5 @@
 /****** HELPERS ******/
-console.log("HELPERS");
+console.log("HELPERS "+(window.vers || ""));
 
 function simpleCopy(text) {
   var active = document.activeElement;
