@@ -209,18 +209,22 @@ function copyNotice(elem, text, ms, all) {
 
 function fixData(data) {
   // scrub account # and name from array (if provided)
-  if (data[1].match(/\d{10}/) !== null) {
-    data.shift(); // remove [0]
-    var acctNum = data.shift();
-    simpleCopy(acctNum); // copy & remove [1]
+  if (checkOption("optFilterAcct")) {
+    if (data[1].match(/\d{10}/) !== null) {
+      data.shift(); // remove [0]
+      var acctNum = data.shift();
+      simpleCopy(acctNum); // copy & remove [1]
+    }
   }
-  if (data[0].match(/[a-z]+/i) !== null && data[1].match(/[a-z]+/i) !== null) {
-    data.shift();
-    data.shift(); // ...shift again
-  } else if (data[0].match(/[a-z]+/i) !== null) {
-    data.shift();
+  if (checkOption("optFilterName")) {
+    if (data[0].match(/[a-z]+/i) !== null && data[1].match(/[a-z]+/i) !== null) {
+      data.shift();
+      data.shift(); // ...shift again
+    } else if (data[0].match(/[a-z]+/i) !== null) {
+      data.shift();
+    }
+    // && data[i].match(/\d{1,2}\/\d{1,2}\/\d{2,4}/) === null
   }
-  // && data[i].match(/\d{1,2}\/\d{1,2}\/\d{2,4}/) === null
   return data;
 }
 
