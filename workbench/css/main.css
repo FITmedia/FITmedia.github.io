@@ -80,6 +80,15 @@ main {
   align-items: center;
 }
 
+.flexbox {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: left;
+  align-items: center;
+  margin: 20px;
+  width: 300px;
+}
+
 #paste {
   color: black;
   font-size: 1.5rem;
