@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <!-- <script src="http://www.thefitmedia.com/workbench/js/main.js"></script>  -->
+    <script>
+        window.header = { "codes": { "iter": "" }, "database": { "ln0": { "question": "Name", "ans": "", "edit": "" }, "ln1": { "question": "Phone Number", "ans": "", "edit": "" }, "ln2": { "question": "Email", "ans": "", "edit": "" }, "ln3": { "question": "Source", "ans": "", "edit": "" }, "ln4": { "question": "Married", "ans": "", "edit": "" }, "ln5": { "question": "Age 25-65", "ans": "", "edit": "" }, "ln6": { "question": "Children", "ans": "", "edit": "" }, "ln7": { "question": "Homeowner", "ans": "", "edit": "" }, "ln8": { "question": "Occupation", "ans": "", "edit": "" }, "ln9": { "question": "Notes", "ans": "", "edit": "" }, "ln10": { "question": "Result of call", "ans": "", "edit": "" } } };
+        window.order = { "full": { "title": "All Lines", "docOrder": ["thisDocument"], "hidden": { "docs": [], "lines": [], "unless": {} }, "thisDocument": { "title": "This Document", "lnOrder": ["ln0", "ln1", "ln2", "ln3", "ln4", "ln5", "ln6"] } } };
+    </script>
+    <!-- <link rel="stylesheet" href="http://www.thefitmedia.com/workbench/css/main.css">  -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- <style>
+      <?!= css ?>
+    </style> -->
+</head>
+
+<body>
+    <main>
+        <div id="info">
+            <span id="version" onclick="window.open('https://codepen.io/jklueck/full/KKzymGr')" class="click">v1
+                10.12.20 (static vers.)</span>
+            <span id="warn"><span onclick="output.innerHTML = showDatabase()" style="cursor: pointer">test</span></span>
+        </div>
+        <div class="wrapper">
+            <div class="flexbox">
+                <label><input id="optMarkChange" type="checkbox">
+                    Mark copied changes with "#"
+                </label><br>
+                <label><input id="optFilterName" type="checkbox">
+                    Filter out client name.
+                </label><br>
+                <label><input id="optFilterAcct" type="checkbox">
+                    Filter out account number.
+                </label>
+            </div>
+            <label>View:
+                <select id="view" onchange="build()">
+                    <option value="full">All Lines</option>
+                </select>
+            </label><br>
+            <input id="paste">
+            <div id="copyTerms">
+                <!-- NOTICE: Example content - DO NOT DELETE
+        
+        <div class="term">
+          <p onclick="copyNotice(this, 'copied!')" style="cursor: pointer">Click to Copy!</p>
+        </div> 
+        
+        -->
+            </div>
+            <div id="output">
+
+            </div> <!-- output -->
+            <div class="doc-wrapper">
+                <button onclick="clearDatabase()">Reset</button>
+                <button onclick="showAll()">Show All</button></div>
+        </div>
+    </main>
+    <input id="hiddenInput" style="display: none">
+    <script src="js/core.js"></script>
+    <script src="js/helpers.js"></script>
+    <script src="js/utilities.js"></script>
+    <script src="js/listeners.js"></script>
+    <script>
+        function updateViews() {
+            if (window.order) {
+                var array = [];
+                for (var vw in window.order) {
+                    array.push(`<option value="${vw}">${window.order[vw].title}</option>`);
+                } // end window.order loop
+            }
+            view.innerHTML = array.join();
+        }
+        setTimeout(updateViews(), 250);
+        setTimeout(addListeners(), 500);
+
+        function search(str) {
+
+        }
+    </script>
+</body>
+
+</html>

@@ -73,7 +73,7 @@ document.addEventListener("keydown", (e) => {
 
 document.addEventListener("change", (event) => {
   var active = document.activeElement;
-  if ((active.type = "checkbox")) {
+  if (active.type === "checkbox" && active.id !== "paste") {
     var text = active.parentNode.innerText.split(/[\[\:]/)[0];
     simpleCopy(text);
   }
