@@ -19,13 +19,14 @@ function viewCount() {
 }
 
 //console.log(JSON.stringify(viewCount()));
+window.testCount = 0;
 
 function loadData_v2(str) {
   if (!str) {
     str = "\t\t\t\t";
   }
   var data = str.split(/\t/g);
-  data = fixData(data);
+ // data = fixData(data); - removed 12.3.20 due to problems with filter options
   var db = window.header.database;
   var vw = window.order[view.value];
   var docOrder = vw.docOrder;

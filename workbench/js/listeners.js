@@ -1,7 +1,7 @@
 /****** LISTENERS ******/
 console.log("LISTENERS");
 
-paste.onblur = (event) => {
+paste.addEventListener("blur", (event) => {
   if (paste.value.trim() !== "") {
     var key = event.which || event.keyCode;
     var elem = document.activeElement;
@@ -11,13 +11,13 @@ paste.onblur = (event) => {
       //output.scrollIntoView({ behavior: "smooth" });
     }
   }
-};
+});
 
-paste.onchange = (event) => {
+paste.addEventListener("change", (event) => {
   window.header.options.warnOnReset = true;
-};
+});
 
-paste.onkeyup = (event) => {
+paste.addEventListener("keyup", (event) => {
   // allows for a blank first cell
   var split = paste.value.split("\t");
   if (split[0] === "" && split[1] !== "" && paste.value !== "") {
@@ -25,11 +25,12 @@ paste.onkeyup = (event) => {
   } else {
     paste.value = paste.value.trim();
   }
-};
+});
 
 document.addEventListener("keypress", (event) => {
   var key = event.which || event.keyCode;
   var elem = document.activeElement;
+  alert(paste.value);
   if (key === 13) {
     // Enter
     if (elem.classList.contains("calc")) {

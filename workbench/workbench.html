@@ -5,8 +5,21 @@
     <base target="_top">
     <!-- <script src="http://www.thefitmedia.com/workbench/js/main.js"></script>  -->
     <script>
-        window.header = { "codes": { "iter": "" }, "database": { "ln0": { "question": "Name", "ans": "", "edit": "" }, "ln1": { "question": "Phone Number", "ans": "", "edit": "" }, "ln2": { "question": "Email", "ans": "", "edit": "" }, "ln3": { "question": "Source", "ans": "", "edit": "" }, "ln4": { "question": "Married", "ans": "", "edit": "" }, "ln5": { "question": "Age 25-65", "ans": "", "edit": "" }, "ln6": { "question": "Children", "ans": "", "edit": "" }, "ln7": { "question": "Homeowner", "ans": "", "edit": "" }, "ln8": { "question": "Occupation", "ans": "", "edit": "" }, "ln9": { "question": "Notes", "ans": "", "edit": "" }, "ln10": { "question": "Result of call", "ans": "", "edit": "" } } };
-        window.order = { "full": { "title": "All Lines", "docOrder": ["thisDocument"], "hidden": { "docs": [], "lines": [], "unless": {} }, "thisDocument": { "title": "This Document", "lnOrder": ["ln0", "ln1", "ln2", "ln3", "ln4", "ln5", "ln6"] } } };
+        window.header = { 
+            "codes": { "iter": "" }, 
+            formats: {
+                money: (num, dec) => toMoney(num, dec),
+                percent: (num, dec) => toPercent(num, dec),
+                date: (num, style) => toDate(num, style)
+            },
+            options: { 
+                optMarkChange: [() => "#", () => ""],
+                optFilterName: [() => true, () => false],
+                warnOnReset: false,
+                listeningTo: ""
+            },
+            "database": { "ln0": { "question": "Name", "ans": "", "edit": "" }, "ln1": { "question": "Phone Number", "ans": "", "edit": "" }, "ln2": { "question": "Email", "ans": "", "edit": "" }, "ln3": { "question": "Source", "ans": "", "edit": "" }, "ln4": { "question": "Married", "ans": "", "edit": "" }, "ln5": { "question": "Age 25-65", "ans": "", "edit": "" }, "ln6": { "question": "Children", "ans": "", "edit": "" }, "ln7": { "question": "Homeowner", "ans": "", "edit": "" }, "ln8": { "question": "Occupation", "ans": "", "edit": "" }, "ln9": { "question": "Notes", "ans": "", "edit": "" }, "ln10": { "question": "Result of call", "ans": "", "edit": "" } } };
+        window.order = { "full": { "title": "All Lines", "docOrder": ["information"], "hidden": { "docs": [], "lines": [], "unless": {} }, "information": { "title": "Information", "lnOrder": ["ln0", "ln1", "ln2", "ln3", "ln4", "ln5", "ln6"] } } };
     </script>
     <!-- <link rel="stylesheet" href="http://www.thefitmedia.com/workbench/css/main.css">  -->
     <link rel="stylesheet" href="css/main.css">

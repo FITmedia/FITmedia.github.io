@@ -224,7 +224,7 @@ function fixData(data) {
       data.shift();
     }
     // && data[i].match(/\d{1,2}\/\d{1,2}\/\d{2,4}/) === null
-  }
+  } 
   return data;
 }
 

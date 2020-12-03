@@ -200,12 +200,11 @@ function showDatabase() {
 function checkOption(id) {
   var elem = document.getElementById(id);
   var opt = window.header.options;
+  alert("opt."+id+": "+JSON.stringify(opt));
   if (elem.checked) {
-    var ifChecked = opt[id][0];
-    return ifChecked();
+    return opt[id][0]();
   } else {
-    var ifUnchecked = opt[id][1];
-    return ifUnchecked();
+    return opt[id][1]();
   }
 }
 
