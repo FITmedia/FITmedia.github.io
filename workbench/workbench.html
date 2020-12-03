@@ -76,9 +76,6 @@
     <script src="js/utilities.js"></script>
     <script src="js/listeners.js"></script>
     <script>
-        window.vers = "Workbench v1 12.3.20";
-        version.innerHTML = window.vers;
-
         function updateViews() {
             if (window.order) {
                 var array = [];
@@ -87,6 +84,7 @@
                 } // end window.order loop
             }
             view.innerHTML = array.join();
+            version.innerHTML = window.vers;
         }
         setTimeout(updateViews(), 250);
         setTimeout(addListeners(), 500);

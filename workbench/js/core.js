@@ -1,3 +1,5 @@
+window.vers = "Workbench v1 12.3.20";
+
 /****** CORE ******/
 console.log("CORE "+(window.vers || ""));
 
