@@ -1744,6 +1744,7 @@ function copyNotice(elem, text, ms, all) {
 function fixData(data) {
   // scrub account # and name from array (if provided)
   if (checkOption("optFilterAcct")) {
+    alert("'optFilterAcct' was examined.");
     if (data[1].match(/\d{10}/) !== null) {
       data.shift(); // remove [0]
       var acctNum = data.shift();
@@ -1751,6 +1752,7 @@ function fixData(data) {
     }
   }
   if (checkOption("optFilterName")) {
+    alert("'optFilterName' was examined.");
     if (data[0].match(/[a-z]+/i) !== null && data[1].match(/[a-z]+/i) !== null) {
       data.shift();
       data.shift(); // ...shift again
