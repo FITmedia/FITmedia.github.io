@@ -1,0 +1,90 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>-->
+
+  <script src="ZEEQMrw.js">
+  </script>
+  <script src="http://www.thefitmedia.com/project/HTMLform.js"></script>
+
+<body>
+  <main>
+  <div id="wrapper">
+    <div id="panel">
+      <div class="control">
+        <span class="ctrl" onclick="reset(panel)">reset</span> | 
+        <span class="ctrl" onclick="output.innerHTML = clearIt()">clear</span>
+      </div><!-- control -->
+      <div id="link" class="tool">
+        <input id='inputStr' placeholder='Enter string'>
+        <input id='shortLink' placeholder='Enter short link'>
+        <tip>
+          <button onclick="extractor(inputStr.value,'email')" onclick="output.innerHTML = markdown(inputStr.value)">url or email</button>
+          <desc>Testing</desc>
+        </tip>
+        <button onclick="try{extractor(inputStr.value,'comment')}catch(err){alert(err.message)}">comments</button>
+        <button onclick="output.innerHTML = markdown(inputStr.value)">convert</button>
+        <button onclick='process()' onclick="output.innerHTML = markdown(inputStr.value)">process</button>
+      </div><!-- link -->
+      <div id="convert" class="tool">
+        <input id='inputHTML' placeholder='Enter HTML or blog URL'>
+        <span id="hiddenCode" style="display: none"></span>
+        <input id="hiddenInput" style="display: none">
+        <br>
+        <tip><button id="getTxtBtn" onclick="getTextFromCode(inputHTML.value)">get text</button>
+          <desc id="getTxtDesc">Creates simplified version of pasted HTML code. Copy element from developer console to get code.</desc>
+        </tip>
+        <tip>
+          <button id="getPattBtn" onclick="getTextByPattern(inputHTML.value)">get pattern</button>
+          <desc id="getPattDesc">Creates a list of strings based on RegExp provided after "-->" operator. Default is to get lines that seem to be titles.</desc>
+        </tip>
+        <tip>
+          <button id="mkDnBtn" onclick="markdownLink(inputHTML.value,'markdown')">markdown</button>
+          <desc id="mkDnDesc">Creates a link in Trello markdown format (or code for HTML) based on domain name and name of directory. Right-Click to change output type.</desc>
+        </tip>
+        <tip>
+          <button id="shoutBtn" onclick="stopShouting(inputHTML.value)">stop shouting</button>
+          <desc id="shoutDesc">Changes a string to title case (from any mix of cases). If certain characters are included, it will return the text elements as a parenthetical list.</desc>
+        </tip>
+        <tip>
+          <button id="scrapeBtn" onclick="scrapeTrelloLinks(inputHTML.value)">get links</button>
+          <desc id="scrapeDesc">Extracts links from HTML and formats as list of links in Trello markdown format.</desc>
+        </tip>
+      </div><!-- convert -->
+      <div id="command" class="tool">
+        <input id='inputCmd' placeholder='Enter command or "help" for a list'>
+        <span id="hiddenCmd" style="display: none"></span>
+        <input id="hiddenInputCmd" style="display: none" />
+        <div id="cmdHide">
+          <div id="cmdWrap">
+            <input class="cmdInput" placeholder="First PDF..."/>
+          </div>
+          <button id="addInput" onclick="">+</button>
+          <input id="cmdOutput" placeholder="Destination PDF..." />
+          <br>
+        </div>
+        <tip>
+        <button id="writeCmdBtn" onclick="writeCommand(inputCmd.value)">show command</button>
+        <desc id="writeCmdDesc">Generates Terminal command from input.</desc>
+      </tip>
+      </div><!-- command -->
+    </div><!-- panel -->
+  
+  <div id="terminal">
+    <div class="control">
+      <span onclick="funcFile(output); statusText(this,'saving...')" class="ctrl">- save</span> 
+      <span onclick="copyText(output); statusText(this,'copied!')" class="ctrl">- copy</span>
+      <span onclick="output.innerHTML = clearIt(); statusText(this,'cleared!')" class="ctrl">- clear</span>
+    </div>
+    <div id="output" contenteditable></div>
+  </div>
+</div><!-- wrapper -->
+  </main>
+</body>
+
+</html>
+
