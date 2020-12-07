@@ -84,7 +84,8 @@
                 } // end window.order loop
             }
             view.innerHTML = array.join();
-            version.innerHTML = window.vers;
+            var statVers = version.innerHTML;
+            version.innerHTML = window.vers || statVers;
         }
         setTimeout(updateViews(), 250);
         setTimeout(addListeners(), 500);
