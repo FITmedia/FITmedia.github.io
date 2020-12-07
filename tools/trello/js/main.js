@@ -615,51 +615,60 @@ function statusText(elem,text,dur) {
 
 //--------- EVENT HANDLERS --------
 
-document.getElementById("getPattBtn")
-  .addEventListener("contextmenu", 
-  function (e) {
-    e.preventDefault();
-    var types = ["get pattern","format code"];
-    var ct = types.indexOf(this.innerHTML);
-  //  alert("index is "+ct);
-    if (ct+1 >= types.length) {
-      ct = -1;
+setTimeout(() => {
+  document.getElementById("getPattBtn")
+    .addEventListener("contextmenu", 
+    function (e) {
+      e.preventDefault();
+      var types = ["get pattern","format code"];
+      var ct = types.indexOf(this.innerHTML);
+    //  alert("index is "+ct);
+      if (ct+1 >= types.length) {
+        ct = -1;
+      }
+      this.innerHTML = types[ct+1];
+      var type = types[ct+1];
+      this.removeEventListener("click", getTextByPattern);
+      this.addEventListener("click", function (e) {
+        formCode(inputHTML.value);
+      });
+      this.innerHTML = type;
     }
-    this.innerHTML = types[ct+1];
-    var type = types[ct+1];
-    this.removeEventListener("click", getTextByPattern);
-    this.addEventListener("click", function (e) {
-      formCode(inputHTML.value);
-    });
-    this.innerHTML = type;
-  }
-);
+  );
 
-document.getElementById("mkDnBtn")
-  .addEventListener("contextmenu", 
-  function (e) {
-    e.preventDefault();
-    var types = ["markdown","button"];
-    var ct = types.indexOf(this.innerHTML);
-  //  alert("index is "+ct);
-    if (ct+1 >= types.length) {
-      ct = -1;
+  document.getElementById("mkDnBtn")
+    .addEventListener("contextmenu", 
+    function (e) {
+      e.preventDefault();
+      var types = ["markdown","button"];
+      var ct = types.indexOf(this.innerHTML);
+    //  alert("index is "+ct);
+      if (ct+1 >= types.length) {
+        ct = -1;
+      }
+      this.innerHTML = types[ct+1];
+      var type = types[ct+1];
+      this.addEventListener("click", function (e) {
+        markdownLink(inputHTML.value,type);
+      });
+      this.innerHTML = type;
     }
-    this.innerHTML = types[ct+1];
-    var type = types[ct+1];
-    this.addEventListener("click", function (e) {
-      markdownLink(inputHTML.value,type);
-    });
-    this.innerHTML = type;
-  }
-);
+  );
 
-inputCmd.onkeyup = (e) => {
-  var key = e.which || e.keyCode;
-  if (key === 13) { // enter
-    
+  inputCmd.onkeyup = (e) => {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // enter
+      
+    }
   }
-}
+
+  inputCmd.addEventListener("keydown", (e) => {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // Enter
+      writeCommand(inputCmd.value);
+    }
+  });
+}, 2000); // delay to add event listeners
 
 function myfunc(text) {
   var text = `    
@@ -676,10 +685,3 @@ function myfunc(text) {
   var res2 = res1.replace(/\s+\,/g,"\", ").replace(/:\s+/g,": \"").trim();
   output.innerHTML = res2+"\"";
 }
-
-inputCmd.addEventListener("keydown", (e) => {
-  var key = e.which || e.keyCode;
-  if (key === 13) { // Enter
-    writeCommand(inputCmd.value);
-  }
-});
