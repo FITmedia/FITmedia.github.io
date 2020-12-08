@@ -253,12 +253,23 @@ function scrapeTrelloLinks(content,random) { // 6.25.20 - added support for rela
     addLink: () => `**[ADD LINK TO DESCRIPTION](${url})**`,
     trelloLink: () => `[${label}](${link})`,
   };
-  if (content.match(patts.url) !== null) {
-    postData('https://example.com/answer', { answer: 42 })
-      .then(data => {
-        console.log(data); // JSON data parsed by `data.json()` call
-      });
-  }
+ // if (content.match(patts.url) !== null) {
+    fetch("/api/foo")//, {method: "GET", mode: "cors"})
+    .then( response => {
+      alert(response);
+      if (!response.ok) { throw response }
+      return response.json();  //we only get here if there is no error
+    })
+    .then( json => {
+      alert("THEN: "+json);
+    })
+    .catch( err => {
+      err.text().then( errorMessage => {
+        alert("CATCH: "+errorMessage);
+      })
+    });
+    alert("duh");
+ // }
   var as = content.match(patts.full);
   var result =[];
   for (var i in as) {
@@ -283,6 +294,7 @@ function scrapeTrelloLinks(content,random) { // 6.25.20 - added support for rela
 // Example POST method implementation:
 async function postData(url = '', data = {}) {
   // Default options are marked with *
+  alert("postData initiated");
   const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
@@ -296,10 +308,9 @@ async function postData(url = '', data = {}) {
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: JSON.stringify(data) // body data type must match "Content-Type" header
   });
+  alert("What does it mean if this shows up?");
   return response.json(); // parses JSON response into native JavaScript objects
 }
-
-
 
 //-------- COMMAND --------
 
