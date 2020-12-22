@@ -16,7 +16,7 @@ var connectionsTable = {
 	"connected": "",
 	"response": "",*/
 	
-	"lastAction": "12/10/2020 9:00 AM",
+	"lastAction": new Date().getLocalString(),
 	"actionType": "invited",
 	"nextAction": "",
 	/*[
