@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="css/main.css">
+<script src="js/main.js"></script>
+</head>
+<body>
+<main>
+<input id="lastAction_input" placeholder="Last action date" value="12/21/2020 9:00 AM">
+<select id="actionType_input" onchange="updateMessage('actionType',this.value)">
+	<option value="invited">Invite</option>
+	<option value="accepted">Accepted</option>
+	<option value="noresponse">Noresponse</option>
+	<option value="tabled">Tabled</option>
+	<option value="connected">Connected</option>
+	<option value="scheduled">Scheduled</option>
+</select>
+<!---<button onclick="demo.innerText = generateMessage().message">Try it</button>-->
+
+<div class="flex-container">
+    <p id="profile"></p>
+	<input id="profile_input" class="hidden" onblur="updateProfile('profile',this.value); extractNameUrl(this.value); makeEdit(this.parentNode); updateMessage()">
+	<span onclick="makeEdit(this.parentNode)" class="control">edit</span>
+</div>
+<div class="flex-container">
+	<h3 id="name"></h3>
+	<input id="name_input" class="hidden" onblur="updateProfile('name',this.value); makeEdit(this.parentNode); updateMessage()">
+	<span onclick="makeEdit(this.parentNode)" class="control">edit</span>
+</div>
+<div class="flex-container">
+    <p id="timing"></p>
+</div>
+<div class="flex-container">
+	<p id="srchTxtQ"></p>
+	<input id="srchTxtQ_input" class="hidden" onblur="updateProfile('srchTxtQ',this.value); makeEdit(this.parentNode); updateMessage()">
+	<span onclick="makeEdit(this.parentNode)" class="control">edit</span>
+</div>
+<textarea id="demo"></textarea>
+<p>
+<button onclick="showRawData()">show data</button>
+</p>
+</main>
+</body>
+</html>
+
