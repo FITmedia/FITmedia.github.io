@@ -8,6 +8,7 @@ function srch(elem) {
 	var text = db[id];
 	var search = text + elem.value;
 	var encode = encodeURI(search);
+        elem.value = "";
 	var url = "https://www.google.com/search?q="+encode;
 	window.open(url);
     //location = url;
