@@ -1,6 +1,7 @@
 var db = {
 	searchIRS: "site:irs.gov ",
-	searchIntuit: "site:ttlc.intuit.com "
+	searchIntuit: "site:ttlc.intuit.com ",
+        searchUScode: "site:law.cornell.edu/uscode/text/26 "
 };
 
 function srch(elem) {
