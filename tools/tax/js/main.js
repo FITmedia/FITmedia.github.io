@@ -16,6 +16,44 @@ function srch(elem) {
     //location = url;
 }
 
+function decorCopy(elem) {
+	var border = elem.parentNode;
+	var btn = border.getElementsByClassName("copy_btn")[0];
+    btn.innerHTML = "copied!";
+	btn.classList.add("lite");
+    border.classList.add("lite");
+    simpleCopy(elem);
+    setTimeout(() => {
+        btn.innerHTML = "copy";
+        btn.classList.remove("lite");
+        border.classList.remove("lite");
+    }, 2000);
+}
+
+function simpleCopy(elem) {
+  var active = document.activeElement;
+  var text = elem.innerHTML.replace(/<br>/gi,"\n");
+  //hiddenInput.style.display = "block";
+  hiddenInput.value = text.trim(); // removed 8.24.20 - .trim();
+  hiddenInput.select();
+  console.log(
+    "Copying: " +
+      hiddenInput.value +
+      ", which has " +
+      hiddenInput.value.length +
+      " characters."
+  );
+  var success = document.execCommand("copy");
+  active.focus();
+  //hiddenInput.style.display = "none";
+  console.log("Copy successful?: " + success);
+  if (success) {
+    return "successful";
+  } else {
+    return "failed";
+  }
+}
+
 function setListeners() {
     var elems = document.getElementsByTagName("input");
     for (var ea in elems) {
