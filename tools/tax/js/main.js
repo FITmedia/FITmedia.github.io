@@ -32,7 +32,7 @@ function decorCopy(elem) {
 
 function simpleCopy(elem) {
   var active = document.activeElement;
-  var text = elem.innerHTML.replace(/<br>/gi,"\n");
+  var text = elem.innerHTML.replace(/<br>/gi,"\n").replace(/<[^>]+>/gi,"");
   //hiddenInput.style.display = "block";
   hiddenInput.value = text.trim(); // removed 8.24.20 - .trim();
   hiddenInput.select();
