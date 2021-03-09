@@ -1,46 +1,27 @@
-<!DOCTYPE html>
 <html>
-	<head>
-		<title>Common Searches</title>
-	<link href="css/main.css" rel="stylesheet">
-    <script src="js/main.js"></script>
-    </head>
-	<body>
-    <div class="wrapper">
-        <div class="flex-container">
-	        <input id="searchIRS" placeholder="search IRS.gov...">
-	        <input id="searchIntuit" placeholder="search ttlc.intuit.com...">
-                <input id="searchUScode" placeholder="search US Legal Code...">
-	</div>
-</div>
-	<div class="wrapper">
-		<div class="flex-container">
-			<div class="copy_border">
-				<span id="warn_div1" class="copy_btn warn" onclick="decorCopy(div1)">copy</span>
-				<div id="div1" contenteditable="true">This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?</div>
-			</div>
-			<div class="copy_border">
-					<span id="warn_div2" class="copy_btn warn" onclick="decorCopy(div2)">copy</span>
-					<div id="div2" contenteditable="true">The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.</div>
-			</div>
-			<div class="copy_border">
-				<span id="warn_div3" class="copy_btn warn" onclick="decorCopy(div3)">copy</span>
-				<div id="div3" contenteditable="true">Thank you, we're now connected. I won't see any private information and can only see what's on your TurboTax Live screen. You might see me outlining something on your screen with a red box, but I cannot make any changes.
-					<br>
-					If you minimize your TurboTax screen or go to a link, you may lose sight of the chat window. To return, select Live Help on your screen.
-				</div>
-		</div>
-		<div class="copy_border">
-			<span id="warn_div4" class="copy_btn warn" onclick="decorCopy(div4)">copy</span>
-			<div id="div4" contenteditable="true">Have I <span class="highlight">resolved all of your issues</span> today?</div>
-		</div>
-		<div class="copy_border">
-			<span id="warn_div5" class="copy_btn warn" onclick="decorCopy(div5)">copy</span>
-			<div id="div5" contenteditable="true">You may <span class="highlight">receive a survey</span> based on my performance, and I'd appreciate your honest feedback. Thanks for choosing TurboTax Live!
-			</div>
-	</div>
-		</div>
-	</div>
-	<textarea id="hiddenInput" style="position: absolute; top: -50px"></textarea>
-    </body>
+
+<head>
+  <title>Common Searches</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="flex-container">
+      <input id="searchIRS" placeholder="search IRS.gov...">
+      <input id="searchIntuit" placeholder="search ttlc.intuit.com...">
+      <input id="searchUScode" placeholder="search US Legal Code...">
+      <textarea id="inputCopies"></textarea>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div id="copy-items" class="flex-container">
+
+    </div>
+  </div>
+  <textarea id="hiddenInput" style="position: absolute; top: -50px"></textarea>
+
+</body>
+
 </html>
