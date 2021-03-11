@@ -50,7 +50,7 @@ function decorCopy(id, text) {
 
 function decorClose(id, text) {
   if (!text) {
-    text = "•";
+    text = "+";
   }
   var border = document.getElementById("border_" + id);
   var btn = document.getElementById("btn_close_" + id);
