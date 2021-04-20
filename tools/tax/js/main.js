@@ -4,7 +4,7 @@ var db = {
   searchUScode: "site:law.cornell.edu/uscode/text/26 "
 };
 
-var copies = {
+var copiesTA = {
   div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
   div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
   div3: `Thank you, we're now connected. I won't see any private information and can only see what's on your TurboTax Live screen. You might see me outlining something on your screen with a red box, but I cannot make any changes.
@@ -13,6 +13,23 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
   div4: `Have I <span class="highlight">resolved all of your issues</span> today?`,
   div5: `You may <span class="highlight">receive a survey</span> based on my performance, and I'd appreciate your honest feedback. Thanks for choosing TurboTax Live!`
 };
+
+var copies = { //Lead
+  div1: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`,
+  div2: `Hello __! Thank you for providing the Engagement ID, I can assist you with that! Give me a moment to get this pulled up. Are you out of the engagement?`,
+  div3: `Hello __! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
+  div4: `Hello __! Thank you for your question, I can assist you with that! Give me a moment to review this.`
+};
+
+var copiesPM = {
+  div1: `Hi [name]! I realize that your background is not in finances. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing.<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
+  div2: `Hi [name]! I saw that you have a professional background[ in finances]. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing[ as they get more secure in their careers and income].<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
+  div3: `Hello [name]! Thank you for providing the Engagement ID, I can assist you with that! Give me a moment to look into this.`,
+  div4: `Hello [name]! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
+  div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
+};
+
+var temp = {}; // to store altered copy text
 
 function srch(elem) {
   var id = elem.id;
@@ -64,7 +81,8 @@ function decorClose(id, text) {
 
 function simpleCopy(elem) {
   var active = document.activeElement;
-  var text = elem.innerHTML.replace(/<br>/gi, "\n").replace(/<[^>]+>/gi, "");
+  var src = elem.innerHTML || elem.value;
+  var text = src.replace(/<br>/gi, "\n").replace(/<[^>]+>/gi, "");
   //hiddenInput.style.display = "block";
   hiddenInput.value = text.trim(); // removed 8.24.20 - .trim();
   hiddenInput.select();
@@ -119,10 +137,11 @@ function setCopyItems(items, clear) {
     );
     var div = `<div id="border_${id}" class="copy_border">
         <div id="warn_${id}" class="copy_control"><span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span><span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span></div>
-        ${text}
+        <p id="text_${id}">${text}</p>
       </div>`;
     document.getElementById("copy-items").innerHTML += div;
     copies[id] = div;
+    buildObject(text,`text_${id}`);
     console.log(copies[id]);
     ct++;
   }
@@ -146,11 +165,45 @@ function appendInputs(txt) {
     for (var ea in matches) {
       var placeholder = matches[ea].replace(/[\[\]]*/g, "");
       var id = matches[ea].match(/\w/g).toString();
-      var html = `<input id="${id}" onblur="inputVar(this)" placeholder="${placeholder}">`;
+      var txtId = `text_${id}`;
+      var html = `<input id="${id}" onkeyup="window.db.update(this,${txtId})" placeholder="${placeholder}">`; // removed - onblur="inputVar(this)"
       txt = txt + html;
     }
   }
   return txt;
+}
+
+function buildObject(text,id) {
+  // create template object to use whenever text is changed
+  // text: string template text
+  // id: string id of display element
+  window.database = {};
+  window.database[id] = {};
+  var obj = window.database[id];
+  obj.temp = "";
+  obj.filled = "";
+  obj.vars = {};
+  obj.temp = text;
+  window.database.update = (input,output) => {
+    // input: element were input is located
+    // output: string id of display element
+    var db = window.database;
+    var id = input.id;
+    var value = input.value;
+    var vars = db[output].vars;
+    vars[id] = value;
+    for (var ea in vars) {
+      var k = ea;
+      var v = vars[ea];
+      var txt = obj.temp.replace(`[${k}]`,`${v}`);
+      document.getElementById(output).innerHTML = txt;
+    }
+  };
+  var matches = text.match(/\[[\w\s]+\]/g);
+  for (var m in matches) {
+    obj[m.replace(/[\[\]]*/g,"")] = "";
+  }
+  return obj;
 }
 
 function inputVar(elem) {
@@ -159,10 +212,55 @@ function inputVar(elem) {
   var div = document.getElementById(divName);
   var text = div.innerHTML;
   var input = elem.value;
-  elem.outerHTML = "";
-  text = text.replace(`[${txtName}]`, input);
+  if (input === "") {
+    text = `[${txtName}]`;
+  } else {
+  // elem.outerHTML = "";
+    text = text.replace(`[${txtName}]`, input);
+  }
   div.innerHTML = text;
-  copies[divName] = text;
+  //copies[divName] = text;
+}
+
+function fixVTO(elem) {
+  var str = elem.value.split(/\s/);
+  var corpID = str.shift().toLowerCase().replace("@","").trim();
+  str = str.join(" ");
+  var time = parseInt(str.match(/\d/g).join(""));
+  var timeLetters = str.match(/[a-z]{1,3}/gi);
+  var timezone = timeLetters.toString().match(/(PT|PST|PDT|MT|MST|MDT|CT|CST|CDT|ET|EST|EDT|ES)/i);
+  var timeOfDay = timeLetters.toString().match(/(AM|PM)/i);
+  var zones = "PMCE";
+  var z = "P";
+  var diff = 0;
+  if (timezone) {
+  	z = timezone[0][0].toUpperCase();
+	diff = zones.indexOf(z) * 100;
+  }
+  if (time < 100) {
+  	// ...then it must be hour only (ex: "1pm")
+  	time = time * 100;
+  }
+  var hourChk = Math.floor(time / 100);
+  if (timeOfDay[0].match(/AM/i)) {
+	if (hourChk === 12) {
+	  time += 1200;
+	}
+  	time = time - diff; 
+  } else if (timeOfDay[0].match(/PM/i)) {
+	if (hourChk === 12) {
+  	  time -= 1200;
+  	}
+  	time = time + 1200 - diff;
+  } else {
+	time -= diff;
+  }
+  if (time < 100) {
+	time += 2400;
+  }
+  var eos = time + " PST";
+  elem.value = corpID + " " + eos;
+  return corpID + " " + eos;
 }
 
 function setListeners() {
@@ -183,7 +281,12 @@ function setListeners() {
     if (e.key === "Enter" && e.shiftKey) {
       e.preventDefault();
       var elem = document.activeElement;
-      inputCopyItems(elem);
+      if (elem.value.match(/^@/)) {
+        fixVTO(elem);
+        simpleCopy(elem);
+      } else {
+        inputCopyItems(elem);
+      }
     }
   });
   for (var t in copyFields) {
@@ -200,4 +303,3 @@ setTimeout(setListeners, 3000);
 
 //let items = ["Testing 1", "Testing 2"];
 setTimeout(() => { setCopyItems(copies, true) }, 2000);
-
