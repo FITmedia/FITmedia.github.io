@@ -226,10 +226,17 @@ function fixVTO(elem) {
   var str = elem.value.split(/\s/);
   var corpID = str.shift().toLowerCase().replace("@","").trim();
   str = str.join(" ");
-  var time = parseInt(str.match(/\d/g).join(""));
-  var timeLetters = str.match(/[a-z]{1,3}/gi);
-  var timezone = timeLetters.toString().match(/(PT|PST|PDT|MT|MST|MDT|CT|CST|CDT|ET|EST|EDT|ES)/i);
-  var timeOfDay = timeLetters.toString().match(/(AM|PM)/i);
+  var timeExp = str.match(/[\d:]{1,5}(\s|)(a|p|)(m|)/gi);
+  if (timeExp.length > 1) {
+    timeExp = timeExp[timeExp.length - 1];
+  } else {
+      timeExp = timeExp[0];
+  }
+  var timeDigits = timeExp.match(/\d/g);
+  var time = parseInt(timeDigits.join(""));
+  //var timeLetters = timeExp.match(/[a-z]{1,3}/gi);
+  var timezone = str.match(/(PT|PST|PDT|MT|MST|MDT|CT|CST|CDT|ET|EST|EDT|ES)/i);
+  var timeOfDay = timeExp.toString().match(/[amp]{1,2}/i);
   var zones = "PMCE";
   var z = "P";
   var diff = 0;
@@ -241,24 +248,28 @@ function fixVTO(elem) {
   	// ...then it must be hour only (ex: "1pm")
   	time = time * 100;
   }
-  var hourChk = Math.floor(time / 100);
-  if (timeOfDay[0].match(/AM/i)) {
+  var hourChk = Math.floor(time / 100); //3
+  if (timeOfDay && timeOfDay[0].match(/a/i)) {
 	if (hourChk === 12) {
 	  time += 1200;
 	}
   	time = time - diff; 
-  } else if (timeOfDay[0].match(/PM/i)) {
-	if (hourChk === 12) {
-  	  time -= 1200;
-  	}
-  	time = time + 1200 - diff;
+  } else if (timeOfDay && timeOfDay[0].match(/p/i)) { //pm
+  	if (hourChk === 12) { //3
+      time = time - diff;
+    } else {
+  	  time = time + 1200 - diff; //300 + 1200 - 300
+    }
   } else {
 	time -= diff;
   }
   if (time < 100) {
 	time += 2400;
   }
-  var eos = time + " PST";
+  var digits = time.toString().match(/\d/g);
+  var dl2 = digits.pop();
+  var dl1 = digits.pop();
+  var eos = digits.join("")+":"+dl1+dl2;
   elem.value = corpID + " " + eos;
   return corpID + " " + eos;
 }
