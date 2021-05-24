@@ -94,7 +94,7 @@ a:hover{border-color:transparent}
 .home-section__header h1{margin-bottom:10px;font-size:100px;font-family:"Open Sans",Tahoma,Verdana,Arial,sans-serif;font-weight:700;color:#fff;text-shadow:1px 1px 1px #111}
 .home-section__header h2{color:#fff}
 .home-section__header-label{font-family:Georgia,Times,"Times New Roman",serif;font-size:40px;color:#fff}
-.about-section{position:relative;margin-top:-200px}
+.about-section{position:relative;margin-top:-200px;margin-left:16%;max-width:67%}
 .about-section__card{-webkit-box-shadow:2px 2px 4px -2px #111;box-shadow:2px 2px 4px -2px #111;float:left;width:98%;width:-webkit-calc(100% - 40px);width:calc(100% - 40px);margin-left:1%;margin-right:1%;margin-left:-webkit-calc(20px);margin-left:calc(20px);margin-right:-webkit-calc(20px);margin-right:calc(20px);height:auto;margin-top:0;margin-bottom:0}
 .about-section__card-header{padding:20px;background-color:#15b101}
 .about-section__card-header h2,.about-section__card-header h4{color:#fff}
