@@ -164,9 +164,9 @@ function appendInputs(txt) {
   if (matches) {
     for (var ea in matches) {
       var placeholder = matches[ea].replace(/[\[\]]*/g, "");
-      var id = matches[ea].match(/\w/g).toString();
+      var id = matches[ea].match(/\w/g).join("");
       var txtId = `text_${id}`;
-      var html = `<input id="${id}" onkeyup="window.db.update(this,${txtId})" placeholder="${placeholder}">`; // removed - onblur="inputVar(this)"
+      var html = `<input id="${id}" onkeyup="window.database.update(this,${txtId})" placeholder="${placeholder}">`; // removed - onblur="inputVar(this)"
       txt = txt + html;
     }
   }
