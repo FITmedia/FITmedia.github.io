@@ -164,9 +164,9 @@ function appendInputs(txt) {
   if (matches) {
     for (var ea in matches) {
       var placeholder = matches[ea].replace(/[\[\]]*/g, "");
-      var id = matches[ea].match(/\w/g).toString();
+      var id = matches[ea].match(/\w/g).join("");
       var txtId = `text_${id}`;
-      var html = `<input id="${id}" onkeyup="window.db.update(this,${txtId})" placeholder="${placeholder}">`; // removed - onblur="inputVar(this)"
+      var html = `<input id="${id}" onkeyup="window.database.update(this,${txtId})" placeholder="${placeholder}">`; // removed - onblur="inputVar(this)"
       txt = txt + html;
     }
   }
@@ -291,7 +291,7 @@ function setListeners() {
   field.addEventListener("keypress", (e) => {
     if (e.key === "Enter" && e.shiftKey) {
       e.preventDefault();
-      var elem = document.activeElement;
+      var elem = e.target;
       if (elem.value.match(/^@/)) {
         fixVTO(elem);
         simpleCopy(elem);
@@ -302,8 +302,8 @@ function setListeners() {
   });
   for (var t in copyFields) {
     if (copyFields[t].id) {
-      copyFields[t].addEventListener("keyup", (txt) => {
-        var elem = document.activeElement;
+      copyFields[t].addEventListener("keyup", (e) => {
+        var elem = e.target;
         copies[elem.id] = elem.innerHTML;
       });
     }
