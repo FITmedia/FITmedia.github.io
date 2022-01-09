@@ -139,9 +139,12 @@ function setCopyItems(items, clear) {
         <div id="warn_${id}" class="copy_control"><span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span><span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span></div>
         <p id="text_${id}">${text}</p>
       </div>`;
-    document.getElementById("copy-items").innerHTML += div;
+    //var refElem = document.getElementById("copy-items").children[0];
+    //document.getElementById("copy-items").insertBefore(div,refElem);
+    var currText = document.getElementById("copy-items").innerHTML;
+    document.getElementById("copy-items").innerHTML = div + currText;
     copies[id] = div;
-    buildObject(text,`text_${id}`);
+   // buildObject(text,`text_${id}`);
     console.log(copies[id]);
     ct++;
   }
@@ -165,8 +168,8 @@ function appendInputs(txt) {
     for (var ea in matches) {
       var placeholder = matches[ea].replace(/[\[\]]*/g, "");
       var id = matches[ea].match(/\w/g).join("");
-      var txtId = `text_${id}`;
-      var html = `<input id="${id}" onkeyup="window.database.update(this,${txtId})" placeholder="${placeholder}">`; // removed - onblur="inputVar(this)"
+      //var txtId = `text_${id}`;
+      var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
       txt = txt + html;
     }
   }
@@ -184,42 +187,60 @@ function buildObject(text,id) {
   obj.filled = "";
   obj.vars = {};
   obj.temp = text;
-  window.database.update = (input,output) => {
+ /* window.database.update = (input,output) => {
     // input: element were input is located
-    // output: string id of display element
+    // output: display element
     var db = window.database;
     var id = input.id;
+    var outId = output.id;
     var value = input.value;
-    var vars = db[output].vars;
+    var vars = db[outId].vars;
     vars[id] = value;
     for (var ea in vars) {
       var k = ea;
       var v = vars[ea];
       var txt = obj.temp.replace(`[${k}]`,`${v}`);
-      document.getElementById(output).innerHTML = txt;
+      document.getElementById(outId).innerHTML = txt;
     }
   };
   var matches = text.match(/\[[\w\s]+\]/g);
-  for (var m in matches) {
-    obj[m.replace(/[\[\]]*/g,"")] = "";
-  }
+  for (var m in matches) {*/
+  //  obj[m.replace(/[\[\]]*/g,"")] = "";
+  //}
   return obj;
 }
 
-function inputVar(elem) {
-  var txtName = elem.placeholder;
-  var divName = elem.parentNode.id.replace("border_", "");
-  var div = document.getElementById(divName);
-  var text = div.innerHTML;
-  var input = elem.value;
-  if (input === "") {
-    text = `[${txtName}]`;
+function fillTemplate(inputs,parag) {
+  if (!parag.temp) {
+  	var text = parag.innerHTML;
+    parag.temp = text;
+    parag.contentEditable = false;
   } else {
-  // elem.outerHTML = "";
-    text = text.replace(`[${txtName}]`, input);
+    var text = parag.temp;
   }
-  div.innerHTML = text;
-  //copies[divName] = text;
+  for (var i in inputs) {
+    var input = inputs[i];
+    if (typeof input === "object") {
+      var key = input.id;
+      var value = input.value;
+      text = text.replace(`[${key}]`,value);
+    }
+  }
+  //alert("text at close: "+text);
+  parag.innerHTML = text;
+}
+
+function fillTemplateListener() {
+  document.addEventListener("keyup", (e) => {
+    if (e.target.tagName === "INPUT") {
+      var parent = e.target.parentElement;
+      while (!parent.classList.contains("copy_border")) {
+        parent = parent.parentElement;
+      }
+      var parag = parent.getElementsByClassName("copy_text")[0];
+      fillTemplate(parent.getElementsByTagName('input'),parag);
+    }
+  });
 }
 
 function fixVTO(elem) {
