@@ -314,7 +314,7 @@ function setListeners() {
   field.addEventListener("keypress", (e) => {
     if (e.key === "Enter" && e.shiftKey) {
       e.preventDefault();
-      var elem = document.activeElement;
+      var elem = e.target;
       if (elem.value.match(/^@/)) {
         fixVTO(elem);
         simpleCopy(elem);
@@ -325,8 +325,8 @@ function setListeners() {
   });
   for (var t in copyFields) {
     if (copyFields[t].id) {
-      copyFields[t].addEventListener("keyup", (txt) => {
-        var elem = document.activeElement;
+      copyFields[t].addEventListener("keyup", (e) => {
+        var elem = e.target;
         copies[elem.id] = elem.innerHTML;
       });
     }
@@ -335,4 +335,7 @@ function setListeners() {
 
 setTimeout(setListeners, 3000);
 
-setTimeout(() => { setCopyItems(copies, true) }, 2000);
+setTimeout(() => { 
+  setCopyItems(copies, true);
+  fillTemplateListener(); 
+}, 2000);
