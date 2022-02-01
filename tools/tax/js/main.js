@@ -20,7 +20,8 @@ var copies = { //Lead
   div3: `Hello [name]! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
   div4: `Hello [name]! Thank you for your question, I can assist you with that! Give me a moment to review this.`,
   div5: `Hi [agent]! Please check your phone tool. You are showing in After Call Work for [minutes] mins! Please switch back to Available ASAP. :sweat_smile:`,
-  div6: `Hey [manager]! I'm seeing [agent] in [status] for [minutes] mins. I did a callout in Support, and DM'd already. No response.`
+  div6: `Hey [manager]! I'm seeing [agent] in [status] for [minutes] mins. I did a callout in Support, and DM'd already. No response.`,
+  div7: `in:#nicole15-watercooler from:@[agentID]`
 };
 
 var copiesPM = {
@@ -176,6 +177,34 @@ function appendInputs(txt) {
     }
   }
   return txt;
+}
+
+function altSearch(input) {
+  var text = input.value;
+  var search = matcher(obj,text);
+  if (search) {
+    return search;
+  } else {
+    return text;
+  }
+}
+
+function matcher(obj,text) {
+  for (var i in obj) {
+    var code = i;
+    var search = obj[i];
+    var patt = new RegExp(`\\s${code}\\s`,"i");
+    var result = text.match(patt);
+    var done = text.match(search);
+    if (result && !done) {
+       result = result[0].replace(/\s/g,"");
+       text = text.replace(result+" ","");
+       result = obj[result];
+       return search + " " + text;
+    } else {
+      return false;    
+    }
+  }
 }
 
 function buildObject(text,id) {
