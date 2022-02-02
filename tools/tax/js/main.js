@@ -4,6 +4,17 @@ var db = {
   searchUScode: "site:law.cornell.edu/uscode/text/26 "
 };
 
+var states = {
+  AL:"site:revenue.alabama.gov",
+  AZ:"site:azdor.gov",
+  CA:"site:cdtfa.ca.gov",
+  IL:"site:www2.illinois.gov/rev",
+  MD:"site:marylandtaxes.gov",
+  MI:"site:michigan.gov/taxes",
+  NY:"site:tax.ny.gov",
+  PA:"site:revenue.pa.gov"
+}
+
 var copiesTA = {
   div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
   div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
@@ -193,10 +204,9 @@ function matcher(obj,text) {
   for (var i in obj) {
     var code = i;
     var search = obj[i];
-    var patt = new RegExp(`\\s${code}\\s`,"i");
+    var patt = new RegExp(`(\\s|^)${code}\\s`,"");
     var result = text.match(patt);
-    var done = text.match(search);
-    if (result && !done) {
+    if (result) {
        result = result[0].replace(/\s/g,"");
        text = text.replace(result+" ","");
        result = obj[result];
