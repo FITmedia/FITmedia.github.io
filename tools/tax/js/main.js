@@ -212,7 +212,7 @@ function matcher(obj,text) {
        result = obj[result];
        return search + " " + text;
     } else {
-      return false;    
+      return text;    
     }
   }
 }
