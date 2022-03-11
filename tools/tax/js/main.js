@@ -43,7 +43,7 @@ var copiesPM = {
   div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
 };
 
-var temp = {}; // to store altered copy text
+var temps = {}; // to store altered copy text
 
 function srch(elem) {
   var id = elem.id;
@@ -252,12 +252,12 @@ function buildObject(text,id) {
 }
 
 function fillTemplate(inputs,parag) {
-  if (!parag.temp) {
+  if (!temps[parag.id]) {
   	var text = parag.innerHTML;
-    parag.temp = text;
+    temps[parag.id] = text;
     parag.contentEditable = false;
   } else {
-    var text = parag.temp;
+    var text = temps[parag.id];
   }
   for (var i in inputs) {
     var input = inputs[i];
