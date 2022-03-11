@@ -252,13 +252,7 @@ function buildObject(text,id) {
 }
 
 function fillTemplate(inputs,parag) {
-  if (!temps[parag.id]) {
-  	var text = parag.innerHTML;
-    temps[parag.id] = text;
-    parag.contentEditable = false;
-  } else {
-    var text = temps[parag.id];
-  }
+  var text = copies[parag.id];
   for (var i in inputs) {
     var input = inputs[i];
     if (typeof input === "object") {
