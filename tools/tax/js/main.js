@@ -177,30 +177,15 @@ function inputCopyItems(elem) {
 }
 
 function appendInputs(txt) {
-  var matches = txt.match(/\[[\w\s\|]+\]/g);
+  var matches = txt.match(/\[[\w\s]+\]/g);
   if (matches) {
-	for (var ea in matches) {
-	  var match = matches[ea];
-	  var placeholder = match.replace(/[\[\]]*/g, "");
-	  var id = match.match(/\w/g).join("");
-	  if (match.match(/\|/g)) {
-		  var splits = match.replace(/[\[\]]/g,"").split("|");
-		  var html = `<select id="${id}">`;
-		  for (var s in splits) {
-			  var split = splits[s];
-			  var opVal = split.match(/\w/g).join("");
-			  var opPh = split;
-			  var opt = `<option value="${opVal}">${opPh}</option>`;
-			  html += opt;
-		  }
-		  html += "</select>";
-	  } else {
-	  
-	  //var txtId = `text_${id}`;
-	  var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
-}
-	  txt = txt + html;
-	}
+    for (var ea in matches) {
+      var placeholder = matches[ea].replace(/[\[\]]*/g, "");
+      var id = matches[ea].match(/\w/g).join("");
+      //var txtId = `text_${id}`;
+      var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
+      txt = txt + html;
+    }
   }
   return txt;
 }
