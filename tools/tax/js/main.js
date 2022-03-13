@@ -183,7 +183,6 @@ function appendInputs(txt) {
 	  var match = matches[ea];
 	  var placeholder = match.replace(/[\[\]]*/g, "");
 	  var id = match.match(/\w/g).join("");
-	  alert(id);
 	  if (match.match(/\|/g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split("|");
 		  var html = `<select id="${id}">`;
