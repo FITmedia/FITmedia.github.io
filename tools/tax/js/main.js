@@ -288,8 +288,7 @@ function fillTemplateListener() {
         parent = parent.parentElement;
       }
       var parag = parent.getElementsByClassName("copy_text")[0];
-      var inputs = parent.getElementsByTagName('input').concat(parent.getElementsByTagName('select'));
-      fillTemplate(inputs,parag);
+      fillTemplate(parent.getElementsByTagName('input'),parag);
     }
   });
 }
