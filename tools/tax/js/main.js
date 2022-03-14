@@ -32,7 +32,7 @@ var copies = { //Lead
   div4: `Hello [name]! Thank you for your question, I can assist you with that! Give me a moment to review this.`,
   div5: `Hi [agent]! Please check your phone tool. You are showing in After Call Work for [minutes] mins! Please switch back to Available ASAP. :sweat_smile:`,
   div6: `Hey [manager]! I'm seeing [agent] in [status] for [minutes] mins. I did a callout in Support, and DM'd already. No response.`,
-  div7: `in:#nicole15-[room] from:@[agentID] is:thread [keywords]`
+  div7: `in:#nicole15-[room] from:@[agentID] [keywords]`
 };
 
 var copiesPM = {
