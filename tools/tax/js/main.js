@@ -176,7 +176,7 @@ function inputCopyItems(elem) {
   setCopyItems(arr);
 }
 
-function appendInputs(txt) {
+function appendInputs_ok(txt) {
   var matches = txt.match(/\[[\w\s]+\]/g);
   if (matches) {
     for (var ea in matches) {
@@ -186,6 +186,35 @@ function appendInputs(txt) {
       var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
       txt = txt + html;
     }
+  }
+  return txt;
+}
+
+function appendInputs(txt) {
+  var matches = txt.match(/\[[\w\s\|]+\]/g);
+  if (matches) {
+	for (var ea in matches) {
+	  var match = matches[ea];
+	  var placeholder = match.replace(/[\[\]]*/g, "");
+	  var id = match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
+	  if (match.match(/\|/g)) {
+		  var splits = match.replace(/[\[\]]/g,"").split("|");
+		  var html = `<select id="${id}">`;
+		  for (var s in splits) {
+			  var split = splits[s];
+			  var opVal = split.match(/\w/g).join("");
+			  var opPh = split;
+			  var opt = `<option value="${opVal}">${opPh}</option>`;
+			  html += opt;
+		  }
+		  html += "</select>";
+	  } else {
+	  
+	  //var txtId = `text_${id}`;
+	  var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
+}
+	  txt = txt + html;
+	}
   }
   return txt;
 }
@@ -261,27 +290,56 @@ function fillTemplate(inputs,parag) {
   }
   for (var i in inputs) {
     var input = inputs[i];
-    if (typeof input === "object") {
+  //  if (typeof input === "object") {
       var key = input.id;
       var value = input.value;
-      text = text.replace(`[${key}]`,value);
-    }
+      var tag = input.tagName;
+      if (tag === "INPUT") {
+        text = text.replace(`[${key}]`,value);
+      } else if (tag === "SELECT") {
+        key = key.replace(/_/g,"|");
+        text = text.replace(`[${key}]`,value);
+      }
+  //  } 
+    /* var key = i;
+    var value = input;
+    text = text.replace(`[${key}]`,value);*/
   }
   //alert("text at close: "+text);
   parag.innerHTML = text;
 }
 
 function fillTemplateListener() {
-  document.addEventListener("keyup", (e) => {
-    if (e.target.tagName === "INPUT") {
+  var test = (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
       var parent = e.target.parentElement;
       while (!parent.classList.contains("copy_border")) {
         parent = parent.parentElement;
       }
       var parag = parent.getElementsByClassName("copy_text")[0];
-      fillTemplate(parent.getElementsByTagName('input'),parag);
+      var ins = parent.getElementsByTagName('input');
+      var dds = parent.getElementsByTagName('select');
+      var inputs = [];
+      for (var n in ins) {
+        var elem = ins[n];
+        if (elem && elem.id) {
+          inputs.push(elem);
+          console.log(elem.id);
+        }
+      }
+      for (var d in dds) {
+        var elem = dds[d];
+        if (elem && elem.id) {
+          inputs.push(elem);
+          console.log(elem.id);
+        }
+      }
+      console.log("inputs = "+JSON.stringify(inputs));
+      fillTemplate(inputs,parag);
     }
-  });
+  }
+  document.addEventListener("keyup",test);
+  document.addEventListener("change",test);
 }
 
 function fixVTO(elem) {
