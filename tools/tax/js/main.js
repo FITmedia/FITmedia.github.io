@@ -30,10 +30,9 @@ var copies = { //Lead
   div2: `Hello [name]! Thank you for providing the Engagement ID, I can assist you with that! Give me a moment to get this pulled up. Are you out of the engagement?`,
   div3: `Hello [name]! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
   div4: `Hello [name]! Thank you for your question, I can assist you with that! Give me a moment to review this.`,
-  div5: `hasmy::leadpolly: on:[date]`,
-  div6: `Hi [agent]! Please check your phone tool. You are showing in After Call Work for [minutes] mins! Please switch back to Available ASAP. :sweat_smile:`,
-  div7: `Hey [manager]! I'm seeing [agent] in [status] for [minutes] mins. I did a callout in Support, and DM'd already. No response.`,
-  div8: `in:#nicole15-[room] from:@[agentID] [keywords]`
+  div5: `Hi [agent]! Please check your phone tool. You are showing in After Call Work for [minutes] mins! Please switch back to Available ASAP. :sweat_smile:`,
+  div6: `Hey [manager]! I'm seeing [agent] in [status] for [minutes] mins. I did a callout in Support, and DM'd already. No response.`,
+  div7: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
 };
 
 var copiesPM = {
@@ -192,7 +191,7 @@ function appendInputs_ok(txt) {
 }
 
 function appendInputs(txt) {
-  var matches = txt.match(/\[[\w\s\|]+\]/g);
+  var matches = txt.match(/\[[\w\s\|-]+\]/g); // .match(/\[[^\n\r\v]+\]/g);
   if (matches) {
 	for (var ea in matches) {
 	  var match = matches[ea];
@@ -200,10 +199,12 @@ function appendInputs(txt) {
 	  var id = match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
 	  if (match.match(/\|/g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split("|");
+      var label = `[${splits[0]}]`;
+      txt = txt.replace(match, label);
 		  var html = `<select id="${id}">`;
 		  for (var s in splits) {
 			  var split = splits[s];
-			  var opVal = split.match(/\w/g).join("");
+			  var opVal = split;
 			  var opPh = split;
 			  var opt = `<option value="${opVal}">${opPh}</option>`;
 			  html += opt;
@@ -298,7 +299,7 @@ function fillTemplate(inputs,parag) {
       if (tag === "INPUT") {
         text = text.replace(`[${key}]`,value);
       } else if (tag === "SELECT") {
-        key = key.replace(/_/g,"|");
+        key = key.split("_")[0]; //.replace(/_/g,"|");
         text = text.replace(`[${key}]`,value);
       }
   //  } 
