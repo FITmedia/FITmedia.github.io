@@ -346,10 +346,12 @@ function fixVTO(elem) {
   var corpID = str.shift().toLowerCase().replace("@","").trim();
   str = str.join(" ");
   var timeExp = str.match(/[\d:]{1,5}(\s|)(a|p|)(m|)/gi);
-  if (timeExp.length > 1) {
+  if (timeExp && timeExp.length > 1) {
     timeExp = timeExp[timeExp.length - 1];
+  } else if (timeExp && timeExp.length <= 1) {
+    timeExp = timeExp[0];
   } else {
-      timeExp = timeExp[0];
+    return elem.value;
   }
   var timeDigits = timeExp.match(/\d/g);
   var time = parseInt(timeDigits.join(""));
@@ -393,6 +395,63 @@ function fixVTO(elem) {
   return corpID + " " + eos;
 }
 
+function fixQueues(elem) {
+  var fixes = {
+	"cg-us_ta": "AYG. Please be efficient with your calls. Thanks.",
+	"cg-us_er_fs_amend": "FS Amend. Can we get some support to clear the queue? Thanks.",
+	"cg-us_er_fs": "Full Service. Can we get some support to clear the queue? Thanks.",
+	"cg-us_er": "AYG. Please be efficient with your calls. Thanks."
+  };
+  var text = elem.value;
+  var msgs = text.match(/@[^@]+/g);
+  if (!msgs) { return text; }
+  var newTxt = ["@here\n"];
+  for (var m in msgs) {
+  	var msg = msgs[m];
+	if (msg && msg.match(/cg-us_[^\s]+/i)) {
+	  var nums = msg.match(/\d+/g); 
+	  var match = msg.match(/cg-us_[^\s]+/i).toString();
+	  for (var f in fixes) {
+		var find = f;
+		var fix = fixes[f];
+		if (match.match(find)) {
+		  var num = nums[0];
+		  var dur = nums[1];
+		  var ending = fix;
+          var s = "s";
+          if (num == 1) { s = "" }
+		  msg = "We have "+num+" call"+s+" in queue for over "+dur+" minutes in "+ending+"\n";
+		  break;
+        }
+	  }
+	}
+	newTxt.push(msg);
+  }
+  elem.value = newTxt.join("");
+  //demo.innerText = newTxt.join("");
+  return text;
+}
+
+function fixQueues_old(elem) {
+  var fixes = {
+    "cg-us_ta": "AYG",
+    "cg-us_fs": "Full Service"
+  }
+  var text = elem.value;
+  if (text && text.match(/cg-us_[^\s\.]+/i)) {
+    var match = text.match(/cg-us_[^\s\.]+/i);
+    for (var f in fixes) {
+      var find = f;
+      var fix = fixes[f];
+      if (match.match(find)) {
+        text = text.replace(match,fix);
+      }
+    }
+  }
+  elem.value = text;
+  return text;
+}
+
 function setListeners() {
   var elems = document.getElementsByTagName("input");
   var field = document.getElementById("inputCopies");
@@ -412,7 +471,8 @@ function setListeners() {
       e.preventDefault();
       var elem = e.target;
       if (elem.value.match(/^@/)) {
-        fixVTO(elem);
+        try{fixQueues(elem);}catch(err){alert(err.message)}
+       // try{fixVTO(elem);}catch(err){alert(err.message)}
         simpleCopy(elem);
       } else {
         inputCopyItems(elem);
