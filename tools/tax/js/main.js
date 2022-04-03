@@ -405,29 +405,31 @@ function fixQueues(elem) {
   var text = elem.value;
   var msgs = text.match(/@[^@]+/g);
   if (!msgs) { return text; }
-  var newTxt = ["@here\n"];
+  var newTxt = ["@here "];
+  var n = "";
+  if (msgs.length > 1) { n = "\n" }
   for (var m in msgs) {
   	var msg = msgs[m];
-	if (msg && msg.match(/cg-us_[^\s]+/i)) {
-	  var nums = msg.match(/\d+/g); 
-	  var match = msg.match(/cg-us_[^\s]+/i).toString();
-	  for (var f in fixes) {
-		var find = f;
-		var fix = fixes[f];
-		if (match.match(find)) {
-		  var num = nums[0];
-		  var dur = nums[1];
-		  var ending = fix;
+    if (msg && msg.match(/cg-us_[^\s]+/i)) {
+      var nums = msg.match(/\d+/g); 
+      var match = msg.match(/cg-us_[^\s]+/i).toString();
+      for (var f in fixes) {
+        var find = f;
+        var fix = fixes[f];
+        if (match.match(find)) {
+          var num = nums[0];
+          var dur = nums[1];
+          var ending = fix;
           var s = "s";
           if (num == 1) { s = "" }
-		  msg = "We have "+num+" call"+s+" in queue for over "+dur+" minutes in "+ending+"\n";
-		  break;
+          msg = "We have "+num+" call"+s+" in queue for over "+dur+" minutes in "+ending;
+          break;
         }
-	  }
-	}
+      }
+    }
 	newTxt.push(msg);
   }
-  elem.value = newTxt.join("");
+  elem.value = newTxt.join(n);
   //demo.innerText = newTxt.join("");
   return text;
 }
@@ -474,6 +476,7 @@ function setListeners() {
         try{fixQueues(elem);}catch(err){alert(err.message)}
        // try{fixVTO(elem);}catch(err){alert(err.message)}
         simpleCopy(elem);
+
       } else {
         inputCopyItems(elem);
       }
