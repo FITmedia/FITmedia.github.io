@@ -397,7 +397,7 @@ function fixVTO(elem) {
 
 function fixQueues(elem) {
   var fixes = {
-	"cg-us_ta": "AYG. Please be efficient with your calls. Thanks.",
+	"cg-us_t": "AYG. Please be efficient with your calls. Thanks.",
 	"cg-us_er_fs_amend": "FS Amend. Can we get some support to clear the queue? Thanks.",
 	"cg-us_er_fs": "Full Service. Can we get some support to clear the queue? Thanks.",
 	"cg-us_er": "AYG. Please be efficient with your calls. Thanks."
