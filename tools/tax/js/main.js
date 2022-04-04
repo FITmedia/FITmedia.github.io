@@ -476,7 +476,8 @@ function setListeners() {
         try{fixQueues(elem);}catch(err){alert(err.message)}
        // try{fixVTO(elem);}catch(err){alert(err.message)}
         simpleCopy(elem);
-
+        elem.value = "copied!";
+        setTimeout(() => {elem.value = ""},3000);
       } else {
         inputCopyItems(elem);
       }
