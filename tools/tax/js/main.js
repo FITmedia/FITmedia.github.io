@@ -15,6 +15,14 @@ var states = {
   PA:"site:revenue.pa.gov"
 }
 
+var queueFixes = {
+	"cg-us_ta_extendfs": "New FS Extensions. Please be efficient with your calls. Thanks.",
+	"cg-us_t": "AYG. Please be efficient with your calls. Thanks.",
+	"cg-us_er_fs_amend": "FS Amend. Can we get some support to clear the queue? Thanks.",
+	"cg-us_er_fs": "Full Service. Can we get some support to clear the queue? Thanks.",
+	"cg-us_er": "AYG. Please be efficient with your calls. Thanks."
+};
+
 var copiesTA = {
   div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
   div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
@@ -396,12 +404,7 @@ function fixVTO(elem) {
 }
 
 function fixQueues(elem) {
-  var fixes = {
-	"cg-us_t": "AYG. Please be efficient with your calls. Thanks.",
-	"cg-us_er_fs_amend": "FS Amend. Can we get some support to clear the queue? Thanks.",
-	"cg-us_er_fs": "Full Service. Can we get some support to clear the queue? Thanks.",
-	"cg-us_er": "AYG. Please be efficient with your calls. Thanks."
-  };
+  var fixes = queueFixes;
   var text = elem.value;
   var msgs = text.match(/@[^@]+/g);
   if (!msgs) { return text; }
