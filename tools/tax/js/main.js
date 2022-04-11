@@ -5,14 +5,57 @@ var db = {
 };
 
 var states = {
-  AL:"site:revenue.alabama.gov",
-  AZ:"site:azdor.gov",
-  CA:"site:cdtfa.ca.gov",
-  IL:"site:www2.illinois.gov/rev",
-  MD:"site:marylandtaxes.gov",
-  MI:"site:michigan.gov/taxes",
-  NY:"site:tax.ny.gov",
-  PA:"site:revenue.pa.gov"
+  AL:"site:revenue.alabama.gov/",
+  AK:"site:revenue.state.ak.us/",
+  AZ:"site:azdor.gov/",
+  AR:"site:dfa.arkansas.gov/",
+  CA:"site:ftb.ca.gov/",
+  CO:"site:colorado.gov/revenue",
+  CT:"site:ct.gov/drs/site/",
+  DE:"site:revenue.delaware.gov/",
+  FL:"site:dor.myflorida.com/",
+  GA:"site:dor.georgia.gov/",
+  HI:"site:tax.hawaii.gov/",
+  ID:"site:tax.idaho.gov/",
+  IL:"site:.illinois.gov/rev/",
+  IN:"site:in.gov/dor/",
+  IA:"site:tax.iowa.gov/",
+  KS:"site:ksrevenue.org/",
+  KY:"site:revenue.ky.gov/",
+  LA:"site:revenue.louisiana.gov/",
+  ME:"site:maine.gov/revenue/",
+  MD:"site:marylandtaxes.com/",
+  MA:"site:mass.gov/dor/",
+  MI:"site:michigan.gov/treasury",
+  MN:"site:revenue.state.mn.us/",
+  MS:"site:dor.ms.gov/",
+  MO:"site:dor.mo.gov/",
+  MT:"site:revenue.mt.gov/",
+  NE:"site:revenue.nebraska.gov/",
+  NV:"site:tax.nv.gov/",
+  NH:"site:revenue.nh.gov/",
+  NJ:"site:state.nj.us/treasury/taxation/",
+  NM:"site:tax.newmexico.gov/",
+  NY:"site:tax.ny.gov/",
+  NC:"site:dor.state.nc.us/",
+  ND:"site:nd.gov/tax/",
+  OH:"site:tax.ohio.gov/",
+  OK:"site:oklahoma.gov/tax.html",
+  OR:"site:oregon.gov/DOR/",
+  PA:"site:revenue.pa.gov/",
+  RI:"site:tax.ri.gov/",
+  SC:"site:dor.sc.gov/",
+  SD:"site:dor.sd.gov/",
+  TN:"site:tn.gov/revenue",
+  TX:"site:cpa.state.tx.us/",
+  UT:"site:incometax.utah.gov/",
+  VT:"site:tax.vermont.gov/",
+  VA:"site:tax.virginia.gov/",
+  WA:"site:dor.wa.gov/",
+  DC:"site:otr.cfo.dc.gov/",
+  WV:"site:tax.wv.gov/",
+  WI:"site:revenue.wi.gov/",
+  WY:"site:revenue.wyo.gov/"
 }
 
 var queueFixes = {
@@ -36,7 +79,7 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
 var copies = { //Lead
   div1: `Pod15 / [affected] / [responses] / [staffed]`,
   div2: `hasmy::leadpolly: on:today`,
-  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already, but I can't seem to reach them. Would you reach out to make sure everything is okay?`,
+  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. No response.`,
   div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
 };
 
@@ -54,6 +97,9 @@ function srch(elem) {
   var id = elem.id;
   var text = db[id];
   var search = text + elem.value;
+  if (elem.id === "searchIRS" && elem.value.slice(0,3).match(/^[A-Z]{2}\s/)) {
+    search = stateSearch(elem);
+  }
   var encode = encodeURI(search);
   elem.value = "";
   var url = "https://www.google.com/search?q=" + encode;
@@ -454,6 +500,19 @@ function fixQueues_old(elem) {
     }
   }
   elem.value = text;
+  return text;
+}
+
+function stateSearch(elem) {
+  var text = elem.value;
+  var txt = elem.value.slice(0,2);
+  for (var s in states) {
+    var srch = states[s];
+    if (txt == s) {
+      text = text.replace(txt,srch);
+      return text;
+    }
+  }
   return text;
 }
 
