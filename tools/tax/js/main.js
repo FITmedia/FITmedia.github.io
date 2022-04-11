@@ -36,7 +36,7 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
 var copies = { //Lead
   div1: `Pod15 / [affected] / [responses] / [staffed]`,
   div2: `hasmy::leadpolly: on:today`,
-  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. No response.`,
+  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already, but I can't seem to reach them. Would you reach out to make sure everything is okay?`,
   div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
 };
 
