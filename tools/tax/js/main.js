@@ -1,4 +1,4 @@
-var db = {
+const db = {
   searchIRS: "site:irs.gov ",
   searchIntuit: "site:ttlc.intuit.com ",
   searchUScode: "site:law.cornell.edu/uscode/text/26 "
@@ -92,6 +92,13 @@ var copiesPM = {
   div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
 };
 
+const cmds = {
+  mklnk: (arr) => {
+    var url = arr[0];
+    return markdownLink(url,"markdown");
+  }
+};
+
 var temps = {}; // to store altered copy text
 
 function srch(elem) {
@@ -147,7 +154,11 @@ function decorClose(id, text) {
 
 function simpleCopy(elem) {
   var active = document.activeElement;
-  var src = elem.innerHTML || elem.value;
+  if (typeof elem === "string") {
+    var src = elem;
+  } else {
+    var src = elem.innerHTML || elem.value;
+  }
   var text = src.replace(/<br>/gi, "\n").replace(/<[^>]+>/gi, "");
   //hiddenInput.style.display = "block";
   hiddenInput.value = text.trim(); // removed 8.24.20 - .trim();
@@ -517,6 +528,89 @@ function stateSearch(elem) {
   return text;
 }
 
+function titleCase(str) {
+  var except = "in the and with from of is a an or at";
+  str = str.toLowerCase().split(" ");
+  for (var i in str) {
+    if (i === 0) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+    } else {
+      var patt = new RegExp(`(\\s${str[i]}|${str[i]}\\s)`,"g");
+      // http://www.fitmedia.com/2000/20/05/why-i-like-this/
+      if (except.match(patt) == null) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+      }
+    }
+  } // end i loop
+  return str.join(" ");
+}
+
+/***** COMMANDS *****/
+
+function commands(text) {
+  // text format:
+  // ![commandID] remaining string are properties|divided by vertical pipes|true
+  // commandID([prop0,prop1,prop2])
+  var cmdId = text.match(/^![^]+\s/)[0]
+  var props = text.replace(cmdId,"").split(/\|/g);
+  cmdId = cmdId.replace("!","").trim();
+  var cmd = cmds[cmdId];
+  return cmd(props);
+}
+
+function markdownLink(url,type) {
+      if (url.match(/http(s|)\:\/\//) !== null) {
+        if (url.slice(-1) === "/") {
+          // 
+          var factor = 2;
+        } else {
+          var factor = 1;
+        }
+        var array = url.split("/");
+        var exclude = /Amazonaws/gi;
+        var ttlEx = /[\=\?\$\#]/gi;
+        var domain = "";
+        if (array[2].match(exclude)) {
+          domain = array[3]
+            .split(".")
+            .slice(-2,-1)
+            .toString();
+        } else {
+          domain = array[2]
+            .split(".")
+            .slice(-2,-1)
+            .toString();
+        }
+        domain = titleCase(domain);
+        var a = array.length - factor;
+        var title = array[a].replace(/[-_]/g, " ");
+        title = title.replace("+", " ");
+        if (title.match(ttlEx)) {
+          title = "";
+        }
+        url = url.replace("+","");
+        if (title.slice(-5) !== null) {
+          var a = title.slice(0,-5);
+          var b = title.slice(-5).replace(/\.[a-z]{2,4}/g,"");
+          title = a + b;
+        }
+        title = titleCase(title);
+        var temps = {
+          markdown: (dm,ttl) => {
+            return ttl ? `[${dm} | ${ttl}](${url})` : `[${dm}](${url})`;
+          },
+          button: (dm,ttl) => {
+            var sub = ` | ${ttl} ` || "";
+          	return `<div>${dm}${sub}<button onclick='${url}'>go</button></div>`;
+          }
+        };
+        return temps[type](domain,title);
+      }
+      return url;
+    }
+
+/***** LISTENERS *****/
+
 function setListeners() {
   var elems = document.getElementsByTagName("input");
   var field = document.getElementById("inputCopies");
@@ -540,6 +634,11 @@ function setListeners() {
        // try{fixVTO(elem);}catch(err){alert(err.message)}
         simpleCopy(elem);
         elem.value = "copied!";
+        setTimeout(() => {elem.value = ""},3000);
+      } else if (elem.value.match(/^!/)) {
+	    try{var text = commands(elem.value);} catch(err){alert(err.message)}
+        try{simpleCopy(text);} catch(err){alert(err.message)}
+        elem.value = `copied "${text.slice(0,12)}..."!`;
         setTimeout(() => {elem.value = ""},3000);
       } else {
         inputCopyItems(elem);
