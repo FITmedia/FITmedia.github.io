@@ -93,9 +93,20 @@ var copiesPM = {
 };
 
 const cmds = {
-  mklnk: (arr) => {
-    var url = arr[0];
-    return markdownLink(url,"markdown");
+  mklnk: { 
+    func: (arr) => {
+      var url = arr[0];
+      return markdownLink(url,"markdown");
+    },
+    properties: {
+      url: {
+        desc: "URL to encode",
+        type: "input"
+      },
+      title: {
+        desc: "true|false"
+      }
+    }
   }
 };
 
@@ -103,9 +114,10 @@ const cmdMods = {
   h: (cmdId,props,elem) => {
     var text = `!${cmdId} `;
     var arr = [];
+    var props = cmds[cmdId].properties;
     for (var p in props) {
-	var prop = props[p];
-	arr.push(`[${prop}]`);
+	  var prop = props[p].desc || p;
+	  arr.push(`[${prop}]`);
     }
     text += arr.join("|");
     elem.value = text;
@@ -571,7 +583,7 @@ function commands(elem) {
   cmdId = cmdId.replace("!","").trim();
   var cmd = cmds[cmdId];
   if (text.match(/\s-[a-z]{0,3}(\s|$)/g)) {
-    var modCode = text.match(/\s-[a-z]{0,3}(\s|$)/g)[0].trim();
+    var modCode = text.match(/\s-[a-z]{0,3}(\s|$)/g)[0].trim().replace(/-/g,"");
     var mod = cmdMods[modCode](cmdId,props,elem);
   } else { // standard handling
     text = cmd(props);
