@@ -99,6 +99,20 @@ const cmds = {
   }
 };
 
+const cmdMods = {
+  h: (cmdId,props,elem) => {
+    var text = `!${cmdId} `;
+    var arr = [];
+    for (var p in props) {
+	var prop = props[p];
+	arr.push(`[${prop}]`);
+    }
+    text += arr.join("|");
+    elem.value = text;
+    inputCopyItems(elem);
+  }
+}
+
 var temps = {}; // to store altered copy text
 
 function srch(elem) {
@@ -547,15 +561,24 @@ function titleCase(str) {
 
 /***** COMMANDS *****/
 
-function commands(text) {
+function commands(elem) {
   // text format:
   // ![commandID] remaining string are properties|divided by vertical pipes|true
   // commandID([prop0,prop1,prop2])
+  var text = elem.value;
   var cmdId = text.match(/^![^]+\s/)[0]
   var props = text.replace(cmdId,"").split(/\|/g);
   cmdId = cmdId.replace("!","").trim();
   var cmd = cmds[cmdId];
-  return cmd(props);
+  if (text.match(/\s-[a-z]{0,3}(\s|$)/g)) {
+    var modCode = text.match(/\s-[a-z]{0,3}(\s|$)/g)[0].trim();
+    var mod = cmdMods[modCode](cmdId,props,elem);
+  } else { // standard handling
+    text = cmd(props);
+    try{simpleCopy(text);} catch(err){alert(err.message)}
+    elem.value = `copied "${text.slice(0,12)}..."!`;
+    setTimeout(() => {elem.value = ""},3000);	  
+  }  
 }
 
 function markdownLink(url,type) {
@@ -635,11 +658,8 @@ function setListeners() {
         simpleCopy(elem);
         elem.value = "copied!";
         setTimeout(() => {elem.value = ""},3000);
-      } else if (elem.value.match(/^!/)) {
-	    try{var text = commands(elem.value);} catch(err){alert(err.message)}
-        try{simpleCopy(text);} catch(err){alert(err.message)}
-        elem.value = `copied "${text.slice(0,12)}..."!`;
-        setTimeout(() => {elem.value = ""},3000);
+      } else if (elem.value.match(/^!/)) { // commands
+	try{var text = commands(elem);} catch(err){alert(err.message)}
       } else {
         inputCopyItems(elem);
       }
