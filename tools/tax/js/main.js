@@ -77,7 +77,7 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
   div5: `You may <span class="highlight">receive a survey</span> based on my performance, and I'd appreciate your honest feedback. Thanks for choosing TurboTax Live!`
 };
 
-var copies = { //Lead
+var copiesLead = { //
   div1: `Pod15 / [affected] / [responses] / [staffed]`,
   div2: `hasmy::leadpolly: on:today`,
   div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
@@ -92,36 +92,67 @@ var copiesPM = {
   div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
 };
 
+var copies = { // personal
+	div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[-|][amount]`
+};
+
 const cmds = {
   mklnk: { 
-    func: (arr) => {
-      var url = arr[0];
-      return markdownLink(url,"markdown");
-    },
-    properties: {
-      url: {
-        desc: "URL to encode",
-        type: "input"
+	func: (arr) => {
+	  var url = arr[0];
+	  return markdownLink(url,"markdown");
+	},
+	properties: {
+	  url: {
+		desc: "URL to encode",
+		type: "input"
+	  },
+	  title: {
+		desc: "true|false"
+	  }
+	}
+  },
+  chores: {
+      func: (arr) => {
+      // test: !chores killien|7/18/2022|2 drainers|10
+          var kid = arr[0];
+          var date = encodeURIComponent(arr[1]);
+          var desc = encodeURIComponent(arr[2]);
+          var amt = arr[3];
+          var url = `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=${kid}&date=${date}&desc=${desc}&amt=${amt}`;
+		  inputCopies.value = createButton(kid+" Chores",url);
+          inputCopyItems(inputCopies);
+          return url;
       },
-      title: {
-        desc: "true|false"
+      properties: {
+          kid: {
+              desc: "Killien|Miriam"
+          },
+          date: {
+              desc: "date"
+          },
+          desc: {
+              desc: "Dishes (2 drainers)|Meloncube|Discord Nitro|other"
+          },
+          amt: {
+              desc: "amount"
+          }
       }
-    }
   }
 };
 
 const cmdMods = {
   h: (cmdId,props,elem) => {
-    var text = `!${cmdId} `;
-    var arr = [];
-    var props = cmds[cmdId].properties;
-    for (var p in props) {
+	var text = `!${cmdId} `;
+	var arr = [];
+	var props = cmds[cmdId].properties;
+	for (var p in props) {
 	  var prop = props[p].desc || p;
 	  arr.push(`[${prop}]`);
-    }
-    text += arr.join("|");
-    elem.value = text;
-    inputCopyItems(elem);
+	}
+	text += arr.join("|");
+	elem.value = text;
+	inputCopyItems(elem);
   }
 }
 
@@ -132,7 +163,7 @@ function srch(elem) {
   var text = db[id];
   var search = text + elem.value;
   if (elem.id === "searchIRS" && elem.value.slice(0,3).match(/^[A-Z]{2}\s/)) {
-    search = stateSearch(elem);
+	search = stateSearch(elem);
   }
   var encode = encodeURI(search);
   elem.value = "";
@@ -143,7 +174,7 @@ function srch(elem) {
 
 function decorCopy(id, text) {
   if (!text) {
-    text = "copied!";
+	text = "copied!";
   }
   var elem = document.getElementById(id);
   var border = document.getElementById("border_" + id);
@@ -153,20 +184,20 @@ function decorCopy(id, text) {
   btn.classList.add("lite");
   border.classList.add("lite");
   if (text !== "copied!") {
-    deleteCopyItem(border);
+	deleteCopyItem(border);
   } else {
-    simpleCopy(elem);
-    setTimeout(() => {
-      btn.innerHTML = oldTxt;
-      btn.classList.remove("lite");
-      border.classList.remove("lite");
-    }, 2000);
+	simpleCopy(elem);
+	setTimeout(() => {
+	  btn.innerHTML = oldTxt;
+	  btn.classList.remove("lite");
+	  border.classList.remove("lite");
+	}, 2000);
   }
 }
 
 function decorClose(id, text) {
   if (!text) {
-    text = "+";
+	text = "+";
   }
   var border = document.getElementById("border_" + id);
   var btn = document.getElementById("btn_close_" + id);
@@ -174,48 +205,66 @@ function decorClose(id, text) {
   btn.classList.add("lite");
   border.classList.add("lite");
   setTimeout(() => {
-    deleteCopyItem(border);
+	deleteCopyItem(border);
   }, 250);
 }
 
 function simpleCopy(elem) {
+  try {
   var active = document.activeElement;
   if (typeof elem === "string") {
-    var src = elem;
+	var src = elem;
   } else {
-    var src = elem.innerHTML || elem.value;
+	var src = elem.innerHTML || elem.value;
   }
   var text = src.replace(/<br>/gi, "\n").replace(/<[^>]+>/gi, "");
   //hiddenInput.style.display = "block";
   hiddenInput.value = text.trim(); // removed 8.24.20 - .trim();
   hiddenInput.select();
-  console.log(
-    "Copying: " +
-      hiddenInput.value +
-      ", which has " +
-      hiddenInput.value.length +
-      " characters."
-  );
+  /*console.log(
+	"Copying: " +
+	  hiddenInput.value +
+	  ", which has " +
+	  hiddenInput.value.length +
+	  " characters."
+  );*/
   var success = document.execCommand("copy");
   active.focus();
   //hiddenInput.style.display = "none";
-  console.log("Copy successful?: " + success);
+  //console.log("Copy successful?: " + success);
   if (success) {
-    return "successful";
+	return "successful";
   } else {
-    return "failed";
+	return "failed";
   }
+  } catch (err){console.log("ERROR, simpleCopy: "+err.message)}
+}
+
+function copyNotify(copyText,notifyElem,timeOut) {
+    simpleCopy(copyText);
+    var notice = `copied "${copyText.slice(0,25)}..."!`;
+	notifyElem.value = notice;
+    if (!timeOut) {
+        timeOut = 3000; // default
+    }
+    if (!timeOut.toString().match(/^9+$/)) {
+        setTimeout(() => {
+            if (notifyElem.value === notice) {
+                notifyElem.value = "";
+            }
+        }, timeOut);
+    }
 }
 
 function deleteCopyItem(idOrElem) {
   // get div id
   if (typeof idOrElem === "string") {
-    var id = idOrElem;
-    var divId = "border_" + id;
-    var elem = document.getElementById(divId);
+	var id = idOrElem;
+	var divId = "border_" + id;
+	var elem = document.getElementById(divId);
   } else {
-    var elem = idOrElem;
-    var id = elem.id;
+	var elem = idOrElem;
+	var id = elem.id;
   }
   elem.outerHTML = "";
   delete copies[id];
@@ -223,33 +272,33 @@ function deleteCopyItem(idOrElem) {
 
 function setCopyItems(items, clear) {
   if (clear) {
-    document.getElementById("copy-items").innerHTML = "";
-    copies = {};
+	document.getElementById("copy-items").innerHTML = "";
+	copies = {};
   }
   if (Object.keys(copies).length === 0) {
-    var ct = 1;
+	var ct = 1;
   } else {
-    var ct = Object.keys(copies).length + 1;
+	var ct = Object.keys(copies).length + 1;
   }
   for (var i in items) {
-    var text = items[i];
-    var id = `div${ct}`;
-    console.log(id);
-    text = appendInputs(
-      `<div id="${id}" class="copy_text" contenteditable="true">${text}</div>`
-    );
-    var div = `<div id="border_${id}" class="copy_border">
-        <div id="warn_${id}" class="copy_control"><span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span><span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span></div>
-        <p id="text_${id}">${text}</p>
-      </div>`;
-    //var refElem = document.getElementById("copy-items").children[0];
-    //document.getElementById("copy-items").insertBefore(div,refElem);
-    var currText = document.getElementById("copy-items").innerHTML;
-    document.getElementById("copy-items").innerHTML = div + currText; // add new items to top
-    copies[id] = div;
+	var text = items[i];
+	var id = `div${ct}`;
+	//console.log(id);
+	text = appendInputs(
+	  `<div id="${id}" class="copy_text" contenteditable="true">${text}</div>`
+	);
+	var div = `<div id="border_${id}" class="copy_border">
+		<div id="warn_${id}" class="copy_control"><span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span><span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span></div>
+		<p id="text_${id}">${text}</p>
+	  </div>`;
+	//var refElem = document.getElementById("copy-items").children[0];
+	//document.getElementById("copy-items").insertBefore(div,refElem);
+	var currText = document.getElementById("copy-items").innerHTML;
+	document.getElementById("copy-items").innerHTML = div + currText; // add new items to top
+	copies[id] = div;
    // buildObject(text,`text_${id}`);
-    console.log(copies[id]);
-    ct++;
+	//console.log(copies[id]);
+	ct++;
   }
   //console.log(JSON.stringify(copies));
 }
@@ -260,7 +309,7 @@ function inputCopyItems(elem) {
   var items = input.replace(/\n/g, "<br>").split(/--/g);
   var arr = [];
   for (var i in items) {
-    arr.push(items[i]);
+	arr.push(items[i]);
   }
   setCopyItems(arr);
 }
@@ -268,19 +317,19 @@ function inputCopyItems(elem) {
 function appendInputs_ok(txt) {
   var matches = txt.match(/\[[\w\s]+\]/g);
   if (matches) {
-    for (var ea in matches) {
-      var placeholder = matches[ea].replace(/[\[\]]*/g, "");
-      var id = matches[ea].match(/\w/g).join("");
-      //var txtId = `text_${id}`;
-      var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
-      txt = txt + html;
-    }
+	for (var ea in matches) {
+	  var placeholder = matches[ea].replace(/[\[\]]*/g, "");
+	  var id = matches[ea].match(/\w/g).join("");
+	  //var txtId = `text_${id}`;
+	  var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
+	  txt = txt + html;
+	}
   }
   return txt;
 }
 
 function appendInputs(txt) {
-  var matches = txt.match(/\[[\w\s\|-]+\]/g); // .match(/\[[^\n\r\v]+\]/g);
+  var matches = txt.match(/\[[^\n\r\v\]]+\]/g); //.match(/\[[\w\s\d\|-]+\]/g); 
   if (matches) {
 	for (var ea in matches) {
 	  var match = matches[ea];
@@ -288,8 +337,8 @@ function appendInputs(txt) {
 	  var id = match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
 	  if (match.match(/\|/g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split("|");
-      var label = `[${splits[0]}]`;
-      txt = txt.replace(match, label);
+	      var label = splits[0];
+	      txt = txt.replace(match, label);
 		  var html = `<select id="${id}">`;
 		  for (var s in splits) {
 			  var split = splits[s];
@@ -299,7 +348,20 @@ function appendInputs(txt) {
 			  html += opt;
 		  }
 		  html += "</select>";
-	  } else {
+	  } else if (match.match(/\.\s\.\s\./g)) {
+		  var splits = match.replace(/[\[\]]/g,"").split(". . .");
+	      var label = `[${splits[0]}]`;
+	      txt = txt.replace(match, label);
+		  var html = `<select id="${id}">`;
+		  for (var s in splits) {
+			  var split = splits[s];
+			  var opVal = split;
+			  var opPh = split;
+			  var opt = `<option value="${opVal}">${opPh}</option>`;
+			  html += opt;
+		  }
+		  html += "</select>";
+      } else {
 	  
 	  //var txtId = `text_${id}`;
 	  var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
@@ -314,26 +376,26 @@ function altSearch(input) {
   var text = input.value;
   var search = matcher(obj,text);
   if (search) {
-    return search;
+	return search;
   } else {
-    return text;
+	return text;
   }
 }
 
 function matcher(obj,text) {
   for (var i in obj) {
-    var code = i;
-    var search = obj[i];
-    var patt = new RegExp(`(\\s|^)${code}\\s`,"");
-    var result = text.match(patt);
-    if (result) {
-       result = result[0].replace(/\s/g,"");
-       text = text.replace(result+" ","");
-       result = obj[result];
-       return search + " " + text;
-    } else {
-      return text;    
-    }
+	var code = i;
+	var search = obj[i];
+	var patt = new RegExp(`(\\s|^)${code}\\s`,"");
+	var result = text.match(patt);
+	if (result) {
+	   result = result[0].replace(/\s/g,"");
+	   text = text.replace(result+" ","");
+	   result = obj[result];
+	   return search + " " + text;
+	} else {
+	  return text;	
+	}
   }
 }
 
@@ -349,20 +411,20 @@ function buildObject(text,id) {
   obj.vars = {};
   obj.temp = text;
  /* window.database.update = (input,output) => {
-    // input: element were input is located
-    // output: display element
-    var db = window.database;
-    var id = input.id;
-    var outId = output.id;
-    var value = input.value;
-    var vars = db[outId].vars;
-    vars[id] = value;
-    for (var ea in vars) {
-      var k = ea;
-      var v = vars[ea];
-      var txt = obj.temp.replace(`[${k}]`,`${v}`);
-      document.getElementById(outId).innerHTML = txt;
-    }
+	// input: element were input is located
+	// output: display element
+	var db = window.database;
+	var id = input.id;
+	var outId = output.id;
+	var value = input.value;
+	var vars = db[outId].vars;
+	vars[id] = value;
+	for (var ea in vars) {
+	  var k = ea;
+	  var v = vars[ea];
+	  var txt = obj.temp.replace(`[${k}]`,`${v}`);
+	  document.getElementById(outId).innerHTML = txt;
+	}
   };
   var matches = text.match(/\[[\w\s]+\]/g);
   for (var m in matches) {*/
@@ -374,27 +436,27 @@ function buildObject(text,id) {
 function fillTemplate(inputs,parag) {
   if (!temps[parag.id]) {
   	var text = parag.innerHTML;
-    temps[parag.id] = text;
-    parag.contentEditable = false;
+	temps[parag.id] = text;
+	parag.contentEditable = false;
   } else {
-    var text = temps[parag.id];
+	var text = temps[parag.id];
   }
   for (var i in inputs) {
-    var input = inputs[i];
+	var input = inputs[i];
   //  if (typeof input === "object") {
-      var key = input.id;
-      var value = input.value;
-      var tag = input.tagName;
-      if (tag === "INPUT") {
-        text = text.replace(`[${key}]`,value);
-      } else if (tag === "SELECT") {
-        key = key.split("_")[0]; //.replace(/_/g,"|");
-        text = text.replace(`[${key}]`,value);
-      }
+	  var key = input.id;
+	  var value = input.value;
+	  var tag = input.tagName;
+	  if (tag === "INPUT") {
+		text = text.replace(`[${key}]`,value);
+	  } else if (tag === "SELECT") {
+		key = key.split("_")[0]; //.replace(/_/g,"|");
+		text = text.replace(`[${key}]`,value);
+	  }
   //  } 
-    /* var key = i;
-    var value = input;
-    text = text.replace(`[${key}]`,value);*/
+	/* var key = i;
+	var value = input;
+	text = text.replace(`[${key}]`,value);*/
   }
   //alert("text at close: "+text);
   parag.innerHTML = text;
@@ -402,32 +464,32 @@ function fillTemplate(inputs,parag) {
 
 function fillTemplateListener() {
   var test = (e) => {
-    if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
-      var parent = e.target.parentElement;
-      while (!parent.classList.contains("copy_border")) {
-        parent = parent.parentElement;
-      }
-      var parag = parent.getElementsByClassName("copy_text")[0];
-      var ins = parent.getElementsByTagName('input');
-      var dds = parent.getElementsByTagName('select');
-      var inputs = [];
-      for (var n in ins) {
-        var elem = ins[n];
-        if (elem && elem.id) {
-          inputs.push(elem);
-          console.log(elem.id);
-        }
-      }
-      for (var d in dds) {
-        var elem = dds[d];
-        if (elem && elem.id) {
-          inputs.push(elem);
-          console.log(elem.id);
-        }
-      }
-      console.log("inputs = "+JSON.stringify(inputs));
-      fillTemplate(inputs,parag);
-    }
+	if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
+	  var parent = e.target.parentElement;
+	  while (!parent.classList.contains("copy_border")) {
+		parent = parent.parentElement;
+	  }
+	  var parag = parent.getElementsByClassName("copy_text")[0];
+	  var ins = parent.getElementsByTagName('input');
+	  var dds = parent.getElementsByTagName('select');
+	  var inputs = [];
+	  for (var n in ins) {
+		var elem = ins[n];
+		if (elem && elem.id) {
+		  inputs.push(elem);
+		  //console.log(elem.id);
+		}
+	  }
+	  for (var d in dds) {
+		var elem = dds[d];
+		if (elem && elem.id) {
+		  inputs.push(elem);
+		  //console.log(elem.id);
+		}
+	  }
+	  //console.log("inputs = "+JSON.stringify(inputs));
+	  fillTemplate(inputs,parag);
+	}
   }
   document.addEventListener("keyup",test);
   document.addEventListener("change",test);
@@ -439,11 +501,11 @@ function fixVTO(elem) {
   str = str.join(" ");
   var timeExp = str.match(/[\d:]{1,5}(\s|)(a|p|)(m|)/gi);
   if (timeExp && timeExp.length > 1) {
-    timeExp = timeExp[timeExp.length - 1];
+	timeExp = timeExp[timeExp.length - 1];
   } else if (timeExp && timeExp.length <= 1) {
-    timeExp = timeExp[0];
+	timeExp = timeExp[0];
   } else {
-    return elem.value;
+	return elem.value;
   }
   var timeDigits = timeExp.match(/\d/g);
   var time = parseInt(timeDigits.join(""));
@@ -469,10 +531,10 @@ function fixVTO(elem) {
   	time = time - diff; 
   } else if (timeOfDay && timeOfDay[0].match(/p/i)) { //pm
   	if (hourChk === 12) { //3
-      time = time - diff;
-    } else {
+	  time = time - diff;
+	} else {
   	  time = time + 1200 - diff; //300 + 1200 - 300
-    }
+	}
   } else {
 	time -= diff;
   }
@@ -488,6 +550,7 @@ function fixVTO(elem) {
 }
 
 function fixQueues(elem) {
+  try {
   var fixes = queueFixes;
   var text = elem.value;
   var msgs = text.match(/@[^@]+/g);
@@ -497,59 +560,62 @@ function fixQueues(elem) {
   if (msgs.length > 1) { n = "\n" }
   for (var m in msgs) {
   	var msg = msgs[m];
-    if (msg && msg.match(/cg-us_[^\s]+/i)) {
-      var nums = msg.match(/\d+/g); 
-      var match = msg.match(/cg-us_[^\s]+/i).toString();
-      for (var f in fixes) {
-        var find = f;
-        var fix = fixes[f];
-        if (match.match(find)) {
-          var num = nums[0];
-          var dur = nums[1];
-          var ending = fix;
-          var s = "s";
-          if (num == 1) { s = "" }
-          msg = "We have "+num+" call"+s+" in queue for over "+dur+" minutes in "+ending;
-          break;
-        }
-      }
-    }
+	if (msg && msg.match(/cg-us_[^\s]+/i)) {
+	  var nums = msg.match(/\d+/g); 
+	  var match = msg.match(/cg-us_[^\s]+/i).toString();
+	  for (var f in fixes) {
+		var find = f;
+		var fix = fixes[f];
+		if (match.match(find)) {
+		  var num = nums[0];
+		  var dur = nums[1];
+		  var ending = fix;
+		  var s = "s";
+		  if (num == 1) { s = "" }
+		  msg = "We have "+num+" call"+s+" in queue for over "+dur+" minutes in "+ending;
+		  break;
+		}
+	  }
+	}
 	newTxt.push(msg);
   }
   elem.value = newTxt.join(n);
   //demo.innerText = newTxt.join("");
   return text;
+  } catch(err) {console.log("ERROR, fixQueues:"+err.message)}
 }
 
 function fixQueues_old(elem) {
+  try {
   var fixes = {
-    "cg-us_ta": "AYG",
-    "cg-us_fs": "Full Service"
+	"cg-us_ta": "AYG",
+	"cg-us_fs": "Full Service"
   }
   var text = elem.value;
   if (text && text.match(/cg-us_[^\s\.]+/i)) {
-    var match = text.match(/cg-us_[^\s\.]+/i);
-    for (var f in fixes) {
-      var find = f;
-      var fix = fixes[f];
-      if (match.match(find)) {
-        text = text.replace(match,fix);
-      }
-    }
+	var match = text.match(/cg-us_[^\s\.]+/i);
+	for (var f in fixes) {
+	  var find = f;
+	  var fix = fixes[f];
+	  if (match.match(find)) {
+		text = text.replace(match,fix);
+	  }
+	}
   }
   elem.value = text;
   return text;
+  } catch(err) {console.log("ERROR, fixQueues_old:"+err.message)}
 }
 
 function stateSearch(elem) {
   var text = elem.value;
   var txt = elem.value.slice(0,2);
   for (var s in states) {
-    var srch = states[s];
-    if (txt == s) {
-      text = text.replace(txt,srch);
-      return text;
-    }
+	var srch = states[s];
+	if (txt == s) {
+	  text = text.replace(txt,srch);
+	  return text;
+	}
   }
   return text;
 }
@@ -558,15 +624,15 @@ function titleCase(str) {
   var except = "in the and with from of is a an or at";
   str = str.toLowerCase().split(" ");
   for (var i in str) {
-    if (i === 0) {
-      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
-    } else {
-      var patt = new RegExp(`(\\s${str[i]}|${str[i]}\\s)`,"g");
-      // http://www.fitmedia.com/2000/20/05/why-i-like-this/
-      if (except.match(patt) == null) {
-        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-      }
-    }
+	if (i === 0) {
+	  str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+	} else {
+	  var patt = new RegExp(`(\\s${str[i]}|${str[i]}\\s)`,"g");
+	  // http://www.fitmedia.com/2000/20/05/why-i-like-this/
+	  if (except.match(patt) == null) {
+		str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+	  }
+	}
   } // end i loop
   return str.join(" ");
 }
@@ -578,71 +644,76 @@ function commands(elem) {
   // ![commandID] remaining string are properties|divided by vertical pipes|true
   // commandID([prop0,prop1,prop2])
   var text = elem.value;
-  var cmdId = text.match(/^![^]+\s/)[0]
+  var cmdId = text.match(/^![^\s]+\s/)[0];
   var props = text.replace(cmdId,"").split(/\|/g);
   cmdId = cmdId.replace("!","").trim();
-  var cmd = cmds[cmdId];
-  if (text.match(/\s-[a-z]{0,3}(\s|$)/g)) {
-    var modCode = text.match(/\s-[a-z]{0,3}(\s|$)/g)[0].trim().replace(/-/g,"");
-    var mod = cmdMods[modCode](cmdId,props,elem);
+  if (text.match(/\s-[a-z]{0,3}(\s|$)/g)) { // modified handling
+	var modCode = text.match(/\s-[a-z]{0,3}(\s|$)/g)[0].trim().replace(/-/g,"");
+	cmdMods[modCode](cmdId,props,elem);
   } else { // standard handling
-    text = cmd(props);
-    try{simpleCopy(text);} catch(err){alert(err.message)}
-    elem.value = `copied "${text.slice(0,12)}..."!`;
-    setTimeout(() => {elem.value = ""},3000);	  
-  }  
+  try {
+	text = cmds[cmdId].func(props);
+    //copyNotify(text,inputCopies);
+  } catch(err){console.log("ERROR, commands, standard: "+err.message)}	  
+  } 
 }
 
 function markdownLink(url,type) {
-      if (url.match(/http(s|)\:\/\//) !== null) {
-        if (url.slice(-1) === "/") {
-          // 
-          var factor = 2;
-        } else {
-          var factor = 1;
-        }
-        var array = url.split("/");
-        var exclude = /Amazonaws/gi;
-        var ttlEx = /[\=\?\$\#]/gi;
-        var domain = "";
-        if (array[2].match(exclude)) {
-          domain = array[3]
-            .split(".")
-            .slice(-2,-1)
-            .toString();
-        } else {
-          domain = array[2]
-            .split(".")
-            .slice(-2,-1)
-            .toString();
-        }
-        domain = titleCase(domain);
-        var a = array.length - factor;
-        var title = array[a].replace(/[-_]/g, " ");
-        title = title.replace("+", " ");
-        if (title.match(ttlEx)) {
-          title = "";
-        }
-        url = url.replace("+","");
-        if (title.slice(-5) !== null) {
-          var a = title.slice(0,-5);
-          var b = title.slice(-5).replace(/\.[a-z]{2,4}/g,"");
-          title = a + b;
-        }
-        title = titleCase(title);
-        var temps = {
-          markdown: (dm,ttl) => {
-            return ttl ? `[${dm} | ${ttl}](${url})` : `[${dm}](${url})`;
-          },
-          button: (dm,ttl) => {
-            var sub = ` | ${ttl} ` || "";
-          	return `<div>${dm}${sub}<button onclick='${url}'>go</button></div>`;
-          }
-        };
-        return temps[type](domain,title);
-      }
-      return url;
-    }
+	  if (url.match(/http(s|)\:\/\//) !== null) {
+		if (url.slice(-1) === "/") {
+		  // 
+		  var factor = 2;
+		} else {
+		  var factor = 1;
+		}
+		var array = url.split("/");
+		var exclude = /Amazonaws/gi;
+		var ttlEx = /[\=\?\$\#]/gi;
+		var domain = "";
+		if (array[2].match(exclude)) {
+		  domain = array[3]
+			.split(".")
+			.slice(-2,-1)
+			.toString();
+		} else {
+		  domain = array[2]
+			.split(".")
+			.slice(-2,-1)
+			.toString();
+		}
+		domain = titleCase(domain);
+		var a = array.length - factor;
+		var title = array[a].replace(/[-_]/g, " ");
+		title = title.replace("+", " ");
+		if (title.match(ttlEx)) {
+		  title = "";
+		}
+		url = url.replace("+","");
+		if (title.slice(-5) !== null) {
+		  var a = title.slice(0,-5);
+		  var b = title.slice(-5).replace(/\.[a-z]{2,4}/g,"");
+		  title = a + b;
+		}
+		title = titleCase(title);
+		var temps = {
+		  markdown: (dm,ttl) => {
+			return ttl ? `[${dm} | ${ttl}](${url})` : `[${dm}](${url})`;
+		  },
+		  button: (dm,ttl) => {
+			var sub = ` | ${ttl} ` || "";
+		  	return `<div>${dm}${sub}<button onclick='${url}'>go</button></div>`;
+		  }
+		};
+		return temps[type](domain,title);
+	  }
+	  return url;
+	}
+
+function createButton(title,url) {
+    title = titleCase(title);
+    var btn = `<button onclick="window.open('${url}','jk_link')">${title}</button>`;
+    return btn;
+}
 
 /***** LISTENERS *****/
 
@@ -651,39 +722,39 @@ function setListeners() {
   var field = document.getElementById("inputCopies");
   var copyFields = document.getElementsByClassName("copy_text");
   for (var ea in elems) {
-    if (elems[ea].id) {
-      elems[ea].addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          var elem = document.activeElement;
-          srch(elem);
-        }
-      });
-    }
+	if (elems[ea].id) {
+	  elems[ea].addEventListener("keypress", (e) => {
+		if (e.key === "Enter") {
+		  var elem = document.activeElement;
+		  srch(elem);
+		}
+	  });
+	}
   }
   field.addEventListener("keypress", (e) => {
-    if (e.key === "Enter" && e.shiftKey) {
-      e.preventDefault();
-      var elem = e.target;
-      if (elem.value.match(/^@/)) {
-        try{fixQueues(elem);}catch(err){alert(err.message)}
-       // try{fixVTO(elem);}catch(err){alert(err.message)}
-        simpleCopy(elem);
-        elem.value = "copied!";
-        setTimeout(() => {elem.value = ""},3000);
-      } else if (elem.value.match(/^!/)) { // commands
-	try{var text = commands(elem);} catch(err){alert(err.message)}
-      } else {
-        inputCopyItems(elem);
-      }
-    }
+	if (e.key === "Enter" && e.shiftKey) {
+	  e.preventDefault();
+	  var elem = e.target;
+	  if (elem.value.match(/^@/)) {
+		fixQueues(elem);
+	   // try{fixVTO(elem);}catch(err){alert(err.message)}
+		simpleCopy(elem);
+		elem.value = "copied!";
+		setTimeout(() => {elem.value = ""},3000);
+	  } else if (elem.value.match(/^!/)) { // commands
+		commands(elem);
+	  } else {
+		inputCopyItems(elem);
+	  }
+	}
   });
   for (var t in copyFields) {
-    if (copyFields[t].id) {
-      copyFields[t].addEventListener("keyup", (e) => {
-        var elem = e.target;
-        copies[elem.id] = elem.innerHTML;
-      });
-    }
+	if (copyFields[t].id) {
+	  copyFields[t].addEventListener("keyup", (e) => {
+		var elem = e.target;
+		copies[elem.id] = elem.innerHTML;
+	  });
+	}
   }
 }
 
