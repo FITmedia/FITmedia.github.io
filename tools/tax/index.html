@@ -1,5 +1,4 @@
 <html>
-
 <head>
   <title>Common Searches</title>
   <link href="css/main.css" rel="stylesheet">
@@ -8,20 +7,18 @@
 
 <body>
   <div class="wrapper">
-    <div class="flex-container">
-      <input id="searchIRS" placeholder="search IRS.gov...">
-      <input id="searchIntuit" placeholder="search ttlc.intuit.com...">
-      <input id="searchUScode" placeholder="search US Legal Code...">
-      <textarea id="inputCopies"></textarea>
-    </div>
+	<div class="flex-container">
+	  <input id="searchIRS" placeholder="search IRS.gov...">
+	  <input id="searchIntuit" placeholder="search ttlc.intuit.com...">
+	  <input id="searchUScode" placeholder="search US Legal Code...">
+	  <textarea id="inputCopies"></textarea>
+  <div id="mobile-controls">
+      <button onclick="inputCopies.dispatchEvent(new KeyboardEvent('keypress',{shiftKey: true,key: 'Enter'}))">></button>
+  </div>
+	</div>
   </div>
   <div class="wrapper">
-    <div id="copy-items" class="flex-container">
-
-    </div>
+	<div id="copy-items" class="flex-container"></div>
   </div>
   <textarea id="hiddenInput" style="position: absolute; top: -50px"></textarea>
-
-</body>
-
-</html>
+</body></html>
