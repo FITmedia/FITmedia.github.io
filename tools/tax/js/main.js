@@ -1,3 +1,17 @@
+// Created by Tyler Foutch 
+
+// Created by Tyler Foutch 
+
+// Created by Tyler Foutch 
+
+// Created by Tyler Foutch 
+
+// Created by Tyler Foutch 
+
+// Created by Tyler Foutch 
+
+// Created by Tyler Foutch 
+
 const db = {
   searchIRS: "site:irs.gov ",
   searchIntuit: "site:ttlc.intuit.com ",
@@ -93,51 +107,54 @@ var copiesPM = {
 };
 
 var copies = { // personal
-	div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[-|][amount]`
-};
+    div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
+	div2: `<h3>Kids Ledgers</h3><button onclick="window.open(encodeURI('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]'),'jk_link')">Submit</button>`
+ };
 
 const cmds = {
-  mklnk: { 
+  marklink: { 
 	func: (arr) => {
 	  var url = arr[0];
-	  return markdownLink(url,"markdown");
+      var title = arr[1];
+      var markdown = markdownLink(url,"markdown",title);
+      copyNotify(markdown,inputCopies,3000);
+	  return markdown;
 	},
 	properties: {
 	  url: {
-		desc: "URL to encode",
-		type: "input"
+		desc: "URL to encode"
 	  },
 	  title: {
-		desc: "true|false"
+		desc: "Title"
 	  }
 	}
   },
   chores: {
-      func: (arr) => {
-      // test: !chores killien|7/18/2022|2 drainers|10
-          var kid = arr[0];
-          var date = encodeURIComponent(arr[1]);
-          var desc = encodeURIComponent(arr[2]);
-          var amt = arr[3];
-          var url = `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=${kid}&date=${date}&desc=${desc}&amt=${amt}`;
+	  func: (arr) => {
+	  // test: !chores killien|7/18/2022|2 drainers|10
+		  var kid = arr[0];
+		  var date = encodeURIComponent(arr[1]);
+		  var desc = encodeURIComponent(arr[2]);
+		  var amt = arr[3];
+		  var url = `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=${kid}&date=${date}&desc=${desc}&amt=${amt}`;
 		  inputCopies.value = createButton(kid+" Chores",url);
-          inputCopyItems(inputCopies);
-          return url;
-      },
-      properties: {
-          kid: {
-              desc: "Killien|Miriam"
-          },
-          date: {
-              desc: "date"
-          },
-          desc: {
-              desc: "Dishes (2 drainers)|Meloncube|Discord Nitro|other"
-          },
-          amt: {
-              desc: "amount"
-          }
-      }
+		  inputCopyItems(inputCopies);
+		  return url;
+	  },
+	  properties: {
+		  kid: {
+			  desc: "Killien|Miriam"
+		  },
+		  date: {
+			  desc: "date"
+		  },
+		  desc: {
+			  desc: "Dishes (2 drainers)|Meloncube|Discord Nitro|other"
+		  },
+		  amt: {
+			  desc: "amount"
+		  }
+	  }
   }
 };
 
@@ -241,19 +258,16 @@ function simpleCopy(elem) {
 }
 
 function copyNotify(copyText,notifyElem,timeOut) {
-    simpleCopy(copyText);
-    var notice = `copied "${copyText.slice(0,25)}..."!`;
+	simpleCopy(copyText);
+	var notice = `copied "${copyText.slice(0,25)}..."!`;
 	notifyElem.value = notice;
-    if (!timeOut) {
-        timeOut = 3000; // default
-    }
-    if (!timeOut.toString().match(/^9+$/)) {
-        setTimeout(() => {
-            if (notifyElem.value === notice) {
-                notifyElem.value = "";
-            }
-        }, timeOut);
-    }
+	if (timeOut) {
+		setTimeout(() => {
+			if (notifyElem.value === notice) {
+				notifyElem.value = "";
+			}
+		}, timeOut);
+	}
 }
 
 function deleteCopyItem(idOrElem) {
@@ -337,8 +351,8 @@ function appendInputs(txt) {
 	  var id = match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
 	  if (match.match(/\|/g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split("|");
-	      var label = splits[0];
-	      txt = txt.replace(match, label);
+		  var label = splits[0];
+		  txt = txt.replace(match, label);
 		  var html = `<select id="${id}">`;
 		  for (var s in splits) {
 			  var split = splits[s];
@@ -350,8 +364,8 @@ function appendInputs(txt) {
 		  html += "</select>";
 	  } else if (match.match(/\.\s\.\s\./g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split(". . .");
-	      var label = `[${splits[0]}]`;
-	      txt = txt.replace(match, label);
+		  var label = `[${splits[0]}]`;
+		  txt = txt.replace(match, label);
 		  var html = `<select id="${id}">`;
 		  for (var s in splits) {
 			  var split = splits[s];
@@ -361,11 +375,10 @@ function appendInputs(txt) {
 			  html += opt;
 		  }
 		  html += "</select>";
-      } else {
-	  
-	  //var txtId = `text_${id}`;
-	  var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
-}
+	  } else {
+        //var txtId = `text_${id}`;
+        var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
+      }
 	  txt = txt + html;
 	}
   }
@@ -653,13 +666,13 @@ function commands(elem) {
   } else { // standard handling
   try {
 	text = cmds[cmdId].func(props);
-    //copyNotify(text,inputCopies);
+	//copyNotify(text,inputCopies);
   } catch(err){console.log("ERROR, commands, standard: "+err.message)}	  
   } 
 }
 
-function markdownLink(url,type) {
-	  if (url.match(/http(s|)\:\/\//) !== null) {
+function markdownLink(url,type,title) {
+	  if (url.match(/http(s|):\/\//) !== null) {
 		if (url.slice(-1) === "/") {
 		  // 
 		  var factor = 2;
@@ -683,18 +696,22 @@ function markdownLink(url,type) {
 		}
 		domain = titleCase(domain);
 		var a = array.length - factor;
-		var title = array[a].replace(/[-_]/g, " ");
-		title = title.replace("+", " ");
-		if (title.match(ttlEx)) {
-		  title = "";
-		}
+        if (!title) {
+            var title = array[a].replace(/[-_]/g, " ");
+            title = title.replace("+", " ");
+            if (title.match(ttlEx)) {
+                title = "";
+            }
+            if (title.slice(-5) !== null) {
+                var a = title.slice(0,-5);
+                var b = title.slice(-5).replace(/\.[a-z]{2,4}/g,"");
+                title = a + b;
+            }
+            title = titleCase(title);
+        } else if (title.match(/\[domain\]/gi)) {
+            // TODO: incomplete
+        }
 		url = url.replace("+","");
-		if (title.slice(-5) !== null) {
-		  var a = title.slice(0,-5);
-		  var b = title.slice(-5).replace(/\.[a-z]{2,4}/g,"");
-		  title = a + b;
-		}
-		title = titleCase(title);
 		var temps = {
 		  markdown: (dm,ttl) => {
 			return ttl ? `[${dm} | ${ttl}](${url})` : `[${dm}](${url})`;
@@ -710,9 +727,9 @@ function markdownLink(url,type) {
 	}
 
 function createButton(title,url) {
-    title = titleCase(title);
-    var btn = `<button onclick="window.open('${url}','jk_link')">${title}</button>`;
-    return btn;
+	title = titleCase(title);
+	var btn = `<button onclick="window.open('${url}','jk_link')">${title}</button>`;
+	return btn;
 }
 
 /***** LISTENERS *****/
@@ -748,6 +765,21 @@ function setListeners() {
 	  }
 	}
   });
+  /*
+  document.addEventListener("blur", (e) => {
+        alert("blurring "+e.target.id);
+        if (e.target.id === "date") {
+            if (e.target.value === "today") {
+              e.target.value = new Date().toLocaleDateString();
+            } else if (e.target.value === "now") {
+              e.target.value = new Date().toLocaleString();
+            }
+        }
+  });
+  document.addEventListener("focus", (e) => {
+      alert("focus: "+e.target.id);
+      db.currentElem = e.target;
+  });*/
   for (var t in copyFields) {
 	if (copyFields[t].id) {
 	  copyFields[t].addEventListener("keyup", (e) => {
