@@ -1,17 +1,3 @@
-// Created by Tyler Foutch 
-
-// Created by Tyler Foutch 
-
-// Created by Tyler Foutch 
-
-// Created by Tyler Foutch 
-
-// Created by Tyler Foutch 
-
-// Created by Tyler Foutch 
-
-// Created by Tyler Foutch 
-
 const db = {
   searchIRS: "site:irs.gov ",
   searchIntuit: "site:ttlc.intuit.com ",
