@@ -93,7 +93,7 @@ var copiesPM = {
 };
 
 var copies = { // personal
-    div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
+	div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
 	div2: `<h3>Kids Ledgers</h3><button onclick="window.open(encodeURI('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]'),'jk_link')">Submit</button>`
  };
 
@@ -101,9 +101,9 @@ const cmds = {
   marklink: { 
 	func: (arr) => {
 	  var url = arr[0];
-      var title = arr[1];
-      var markdown = markdownLink(url,"markdown",title);
-      copyNotify(markdown,inputCopies,3000);
+	  var title = arr[1];
+	  var markdown = markdownLink(url,"markdown",title);
+	  copyNotify(markdown,inputCopies,3000);
 	  return markdown;
 	},
 	properties: {
@@ -284,9 +284,7 @@ function setCopyItems(items, clear) {
 	var text = items[i];
 	var id = `div${ct}`;
 	//console.log(id);
-	text = appendInputs(
-	  `<div id="${id}" class="copy_text" contenteditable="true">${text}</div>`
-	);
+	text = appendInputs(id,text);
 	var div = `<div id="border_${id}" class="copy_border">
 		<div id="warn_${id}" class="copy_control"><span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span><span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span></div>
 		<p id="text_${id}">${text}</p>
@@ -328,14 +326,22 @@ function appendInputs_ok(txt) {
   return txt;
 }
 
-function appendInputs(txt) {
+function appendInputs(txtId,text) {
+ // if (!temps[txtId]) { 
+	temps[txtId] = {text: text};
+	//parag.contentEditable = false;
+  //} else {
+//	var text = temps[txtId];
+ // }
+  var txt = `<div id="${txtId}" class="copy_text" contenteditable="true">${text}</div>`;
   var matches = txt.match(/\[[^\n\r\v\]]+\]/g); //.match(/\[[\w\s\d\|-]+\]/g); 
   if (matches) {
 	for (var ea in matches) {
 	  var match = matches[ea];
-	  var placeholder = match.replace(/[\[\]]*/g, "");
-	  var id = match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
-	  if (match.match(/\|/g)) {
+	  var placeholder = match.replace(/[\[\]]*/g, ""); // remove [ ]
+	  let id = txtId+"_input"+ea; //match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
+	  temps[txtId][id] = match;
+      if (match.match(/\|/g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split("|");
 		  var label = splits[0];
 		  txt = txt.replace(match, label);
@@ -362,9 +368,9 @@ function appendInputs(txt) {
 		  }
 		  html += "</select>";
 	  } else {
-        //var txtId = `text_${id}`;
-        var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
-      }
+		//var txtId = `text_${id}`;
+		var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
+	  }
 	  txt = txt + html;
 	}
   }
@@ -433,27 +439,31 @@ function buildObject(text,id) {
 }
 
 function fillTemplate(inputs,parag) {
+  /* 7.22.22 - moved to appendInputs()
   if (!temps[parag.id]) {
   	var text = parag.innerHTML;
 	temps[parag.id] = text;
 	parag.contentEditable = false;
   } else {
 	var text = temps[parag.id];
-  }
+  } */
+  var txtId = parag.id;
+  var text = temps[txtId].text;
   for (var i in inputs) {
 	var input = inputs[i];
-  //  if (typeof input === "object") {
+	if (typeof input === "object") {
 	  var key = input.id;
 	  var value = input.value;
 	  var tag = input.tagName;
+      var repl = temps[txtId][key];
 	  if (tag === "INPUT") {
-		text = text.replace(`[${key}]`,value);
+		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
 	  } else if (tag === "SELECT") {
-		key = key.split("_")[0]; //.replace(/_/g,"|");
-		text = text.replace(`[${key}]`,value);
+		//key = key.replace(/_/g,"|"); //.split("_")[0];
+		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
 	  }
-  //  } 
-	/* var key = i;
+	} 
+	/*var key = i;
 	var value = input;
 	text = text.replace(`[${key}]`,value);*/
   }
@@ -465,9 +475,10 @@ function fillTemplateListener() {
   var test = (e) => {
 	if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
 	  var parent = e.target.parentElement;
-	  while (!parent.classList.contains("copy_border")) {
+	  while (parent && !parent.classList.contains("copy_border")) {
 		parent = parent.parentElement;
 	  }
+	  if (!parent) { return }
 	  var parag = parent.getElementsByClassName("copy_text")[0];
 	  var ins = parent.getElementsByTagName('input');
 	  var dds = parent.getElementsByTagName('select');
@@ -682,21 +693,21 @@ function markdownLink(url,type,title) {
 		}
 		domain = titleCase(domain);
 		var a = array.length - factor;
-        if (!title) {
-            var title = array[a].replace(/[-_]/g, " ");
-            title = title.replace("+", " ");
-            if (title.match(ttlEx)) {
-                title = "";
-            }
-            if (title.slice(-5) !== null) {
-                var a = title.slice(0,-5);
-                var b = title.slice(-5).replace(/\.[a-z]{2,4}/g,"");
-                title = a + b;
-            }
-            title = titleCase(title);
-        } else if (title.match(/\[domain\]/gi)) {
-            // TODO: incomplete
-        }
+		if (!title) {
+			var title = array[a].replace(/[-_]/g, " ");
+			title = title.replace("+", " ");
+			if (title.match(ttlEx)) {
+				title = "";
+			}
+			if (title.slice(-5) !== null) {
+				var a = title.slice(0,-5);
+				var b = title.slice(-5).replace(/\.[a-z]{2,4}/g,"");
+				title = a + b;
+			}
+			title = titleCase(title);
+		} else if (title.match(/\[domain\]/gi)) {
+			// TODO: incomplete
+		}
 		url = url.replace("+","");
 		var temps = {
 		  markdown: (dm,ttl) => {
@@ -721,18 +732,23 @@ function createButton(title,url) {
 /***** LISTENERS *****/
 
 function setListeners() {
-  var elems = document.getElementsByTagName("input");
+  //var elems = document.getElementsByTagName("input");
+  var elems = document.getElementsByClassName("search");
   var field = document.getElementById("inputCopies");
   var copyFields = document.getElementsByClassName("copy_text");
   for (var ea in elems) {
-	if (elems[ea].id) {
-	  elems[ea].addEventListener("keypress", (e) => {
-		if (e.key === "Enter") {
-		  var elem = document.activeElement;
-		  srch(elem);
-		}
-	  });
-	}
+   // if (Object.prototype.toString.call(elems[ea]) === "[object HTMLInputElement]") {
+	  if (elems[ea].id) {
+		var elem = elems[ea];
+		//console.log(elem.id);
+		elem.addEventListener("keypress", (e) => {
+		  if (e.key === "Enter") {
+			var elem = document.activeElement;
+			srch(elem);
+		  }
+		});
+	  }
+	//}
   }
   field.addEventListener("keypress", (e) => {
 	if (e.key === "Enter" && e.shiftKey) {
@@ -753,18 +769,18 @@ function setListeners() {
   });
   /*
   document.addEventListener("blur", (e) => {
-        alert("blurring "+e.target.id);
-        if (e.target.id === "date") {
-            if (e.target.value === "today") {
-              e.target.value = new Date().toLocaleDateString();
-            } else if (e.target.value === "now") {
-              e.target.value = new Date().toLocaleString();
-            }
-        }
+		alert("blurring "+e.target.id);
+		if (e.target.id === "date") {
+			if (e.target.value === "today") {
+			  e.target.value = new Date().toLocaleDateString();
+			} else if (e.target.value === "now") {
+			  e.target.value = new Date().toLocaleString();
+			}
+		}
   });
   document.addEventListener("focus", (e) => {
-      alert("focus: "+e.target.id);
-      db.currentElem = e.target;
+	  alert("focus: "+e.target.id);
+	  db.currentElem = e.target;
   });*/
   for (var t in copyFields) {
 	if (copyFields[t].id) {
