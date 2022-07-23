@@ -67,35 +67,35 @@ var queueFixes = {
 	"cg-us_er": "AYG. Please be efficient with your calls. Thanks."
 };
 
-var copiesTA = {
-  div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
-  div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
-  div3: `Thank you, we're now connected. I won't see any private information and can only see what's on your TurboTax Live screen. You might see me outlining something on your screen with a red box, but I cannot make any changes.
+const copies = {
+  currentSet: "household",
+  taxassociate: {
+    div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
+    div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
+    div3: `Thank you, we're now connected. I won't see any private information and can only see what's on your TurboTax Live screen. You might see me outlining something on your screen with a red box, but I cannot make any changes.
 <br>
 If you minimize your TurboTax screen or go to a link, you may lose sight of the chat window. To return, select Live Help on your screen.`,
-  div4: `Have I <span class="highlight">resolved all of your issues</span> today?`,
-  div5: `You may <span class="highlight">receive a survey</span> based on my performance, and I'd appreciate your honest feedback. Thanks for choosing TurboTax Live!`
-};
-
-var copiesLead = { //
-  div1: `Pod15 / [affected] / [responses] / [staffed]`,
-  div2: `hasmy::leadpolly: on:today`,
-  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
-  div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
-};
-
-var copiesPM = {
-  div1: `Hi [name]! I realize that your background is not in finances. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing.<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
-  div2: `Hi [name]! I saw that you have a professional background[ in finances]. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing[ as they get more secure in their careers and income].<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
-  div3: `Hello [name]! Thank you for providing the Engagement ID, I can assist you with that! Give me a moment to look into this.`,
-  div4: `Hello [name]! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
-  div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
-};
-
-var copies = { // personal
+    div4: `Have I <span class="highlight">resolved all of your issues</span> today?`,
+    div5: `You may <span class="highlight">receive a survey</span> based on my performance, and I'd appreciate your honest feedback. Thanks for choosing TurboTax Live!`
+  },
+  lead: { //
+    div1: `Pod15 / [affected] / [responses] / [staffed]`,
+    div2: `hasmy::leadpolly: on:today`,
+    div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
+    div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
+  },
+  finance: {
+    div1: `Hi [name]! I realize that your background is not in finances. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing.<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
+    div2: `Hi [name]! I saw that you have a professional background[ in finances]. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing[ as they get more secure in their careers and income].<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
+    div3: `Hello [name]! Thank you for providing the Engagement ID, I can assist you with that! Give me a moment to look into this.`,
+    div4: `Hello [name]! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
+    div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
+  },
+  household: { // personal
 	div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
 	div2: `<h3>Kids Ledgers</h3><button onclick="window.open(encodeURI('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]'),'jk_link')">Submit</button>`
- };
+  }
+}
 
 const cmds = {
   marklink: { 
@@ -112,6 +112,18 @@ const cmds = {
 	  },
 	  title: {
 		desc: "Title"
+	  }
+	}
+  },
+  copies: { 
+	func: (arr) => {
+	  copies.currentSet = arr[0];
+	  setCopyItems(copies[copies.currentSet],true);
+	  copyNotify(`Switched to ${arr[0]} set`,inputCopies,3000);
+	},
+	properties: {
+	  copyId: {
+		desc: "ID of copy set"
 	  }
 	}
   },
@@ -267,18 +279,19 @@ function deleteCopyItem(idOrElem) {
 	var id = elem.id;
   }
   elem.outerHTML = "";
-  delete copies[id];
+  delete copies[copies.currentSet][id];
 }
 
 function setCopyItems(items, clear) {
+  var cset = copies.currentSet;
   if (clear) {
 	document.getElementById("copy-items").innerHTML = "";
-	copies = {};
+	copies[cset] = {};
   }
-  if (Object.keys(copies).length === 0) {
+  if (Object.keys(copies[cset]).length === 0) {
 	var ct = 1;
   } else {
-	var ct = Object.keys(copies).length + 1;
+	var ct = Object.keys(copies[cset]).length + 1;
   }
   for (var i in items) {
 	var text = items[i];
@@ -293,12 +306,12 @@ function setCopyItems(items, clear) {
 	//document.getElementById("copy-items").insertBefore(div,refElem);
 	var currText = document.getElementById("copy-items").innerHTML;
 	document.getElementById("copy-items").innerHTML = div + currText; // add new items to top
-	copies[id] = div;
+	copies[cset][id] = div;
    // buildObject(text,`text_${id}`);
-	//console.log(copies[id]);
+	//console.log(copies[cset][id]);
 	ct++;
   }
-  //console.log(JSON.stringify(copies));
+  //console.log(JSON.stringify(copies[cset]));
 }
 
 function inputCopyItems(elem) {
@@ -786,7 +799,7 @@ function setListeners() {
 	if (copyFields[t].id) {
 	  copyFields[t].addEventListener("keyup", (e) => {
 		var elem = e.target;
-		copies[elem.id] = elem.innerHTML;
+		copies[copies.currentSet][elem.id] = elem.innerHTML;
 	  });
 	}
   }
@@ -795,6 +808,6 @@ function setListeners() {
 setTimeout(setListeners, 3000);
 
 setTimeout(() => { 
-  setCopyItems(copies, true);
+  setCopyItems(copies[copies.currentSet], true);
   fillTemplateListener(); 
 }, 2000);
