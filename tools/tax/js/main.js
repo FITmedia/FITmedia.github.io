@@ -70,30 +70,31 @@ var queueFixes = {
 const copies = {
   currentSet: "household",
   taxassociate: {
-    div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
-    div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
-    div3: `Thank you, we're now connected. I won't see any private information and can only see what's on your TurboTax Live screen. You might see me outlining something on your screen with a red box, but I cannot make any changes.
+	div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
+	div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
+	div3: `Thank you, we're now connected. I won't see any private information and can only see what's on your TurboTax Live screen. You might see me outlining something on your screen with a red box, but I cannot make any changes.
 <br>
 If you minimize your TurboTax screen or go to a link, you may lose sight of the chat window. To return, select Live Help on your screen.`,
-    div4: `Have I <span class="highlight">resolved all of your issues</span> today?`,
-    div5: `You may <span class="highlight">receive a survey</span> based on my performance, and I'd appreciate your honest feedback. Thanks for choosing TurboTax Live!`
+	div4: `Have I <span class="highlight">resolved all of your issues</span> today?`,
+	div5: `You may <span class="highlight">receive a survey</span> based on my performance, and I'd appreciate your honest feedback. Thanks for choosing TurboTax Live!`
   },
   lead: { //
-    div1: `Pod15 / [affected] / [responses] / [staffed]`,
-    div2: `hasmy::leadpolly: on:today`,
-    div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
-    div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
+	div1: `Pod15 / [affected] / [responses] / [staffed]`,
+	div2: `hasmy::leadpolly: on:today`,
+	div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
+	div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
   },
   finance: {
-    div1: `Hi [name]! I realize that your background is not in finances. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing.<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
-    div2: `Hi [name]! I saw that you have a professional background[ in finances]. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing[ as they get more secure in their careers and income].<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
-    div3: `Hello [name]! Thank you for providing the Engagement ID, I can assist you with that! Give me a moment to look into this.`,
-    div4: `Hello [name]! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
-    div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
+	div1: `Hi [name]! I realize that your background is not in finances. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing.<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
+	div2: `Hi [name]! I saw that you have a professional background[ in finances]. I reached out to you because smart people know other smart people.<br><br>I am a financial advisor looking to get a practice started, and my hope in contacting you is that you might know some people who are thinking about planning for retirement or are generally interested in investing[ as they get more secure in their careers and income].<br><br>In return, I am talking to a lot of different people in numerous fields and I'd be happy to pass along any opportunities or contacts that would be in your field.`,
+	div3: `Hello [name]! Thank you for providing the Engagement ID, I can assist you with that! Give me a moment to look into this.`,
+	div4: `Hello [name]! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
+	div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
   },
   household: { // personal
 	div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
-	div2: `<h3>Kids Ledgers</h3><button onclick="window.open(encodeURI('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]'),'jk_link')">Submit</button>`
+	div2: `<h3>Kids Ledgers</h3><button onclick="window.open(encodeURI('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]'),'jk_link')">Submit</button>`,
+    div2: `!chores -h`
   }
 }
 
@@ -118,7 +119,11 @@ const cmds = {
   copies: { 
 	func: (arr) => {
 	  copies.currentSet = arr[0];
-	  setCopyItems(copies[copies.currentSet],true);
+	  /*var cset = copies.currentSet;
+	  var save = JSON.stringify({[cset]:copies[cset]});
+	  localStorage.setItem("wb_copies_currentSet",save);*/
+	  setCopyItems(copies[arr[0]],true);
+	  saveCopies();
 	  copyNotify(`Switched to ${arr[0]} set`,inputCopies,3000);
 	},
 	properties: {
@@ -134,9 +139,9 @@ const cmds = {
 		  var date = encodeURIComponent(arr[1]);
 		  var desc = encodeURIComponent(arr[2]);
 		  var amt = arr[3];
-		  var url = `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=${kid}&date=${date}&desc=${desc}&amt=${amt}`;
-		  inputCopies.value = createButton(kid+" Chores",url);
-		  inputCopyItems(inputCopies);
+		  var url = `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores\&kid=${kid}\&date=${date}\&desc=${desc}\&amt=${amt}`;
+		  inputCopies.value = url; //createButton(kid+" Chores",url);
+		  inputCopyItem(inputCopies);
 		  return url;
 	  },
 	  properties: {
@@ -153,6 +158,13 @@ const cmds = {
 			  desc: "amount"
 		  }
 	  }
+  },
+  extract: {
+      func: (arr) => {
+          var text = arr[0];
+          inputCopies.value = extractor_WIP(text);
+		  inputCopyItem(inputCopies);
+      }
   }
 };
 
@@ -167,7 +179,7 @@ const cmdMods = {
 	}
 	text += arr.join("|");
 	elem.value = text;
-	inputCopyItems(elem);
+	inputCopyItem(elem);
   }
 }
 
@@ -187,6 +199,8 @@ function srch(elem) {
   //location = url;
 }
 
+/***** COPY ITEMS *****/
+
 function decorCopy(id, text) {
   if (!text) {
 	text = "copied!";
@@ -202,6 +216,45 @@ function decorCopy(id, text) {
 	deleteCopyItem(border);
   } else {
 	simpleCopy(elem);
+	setTimeout(() => {
+	  btn.innerHTML = oldTxt;
+	  btn.classList.remove("lite");
+	  border.classList.remove("lite");
+	}, 2000);
+  }
+}
+
+function decorClear(id, text) {
+  if (!text) {
+	text = "cleared!";
+  }
+  var elem = document.getElementById(id);
+  var border = document.getElementById("border_" + id);
+  var btn = document.getElementById("btn_clear_" + id);
+  var oldTxt = btn.innerHTML;
+  btn.innerHTML = text;
+  btn.classList.add("lite");
+  border.classList.add("lite");
+  if (text !== "cleared!") {
+	deleteCopyItem(border);
+  } else {
+	var ins = border.getElementsByTagName("input");
+    var dds = border.getElementsByTagName("select");
+    for (var i in ins) {
+        if (ins[i].tagName === "INPUT") {
+            if (ins[i].getAttribute("type") === "checkbox") {
+                ins[i].checked = false;
+            } else {
+                ins[i].value = "";
+            }
+        }
+    }
+    for (var d in dds) {
+        if (dds[d].tagName === "SELECT") {
+            var opt = dds[d].getElementsByTagName("option")[0];
+            dds[d].value = opt.value || "";
+        }
+    }
 	setTimeout(() => {
 	  btn.innerHTML = oldTxt;
 	  btn.classList.remove("lite");
@@ -236,17 +289,8 @@ function simpleCopy(elem) {
   //hiddenInput.style.display = "block";
   hiddenInput.value = text.trim(); // removed 8.24.20 - .trim();
   hiddenInput.select();
-  /*console.log(
-	"Copying: " +
-	  hiddenInput.value +
-	  ", which has " +
-	  hiddenInput.value.length +
-	  " characters."
-  );*/
   var success = document.execCommand("copy");
   active.focus();
-  //hiddenInput.style.display = "none";
-  //console.log("Copy successful?: " + success);
   if (success) {
 	return "successful";
   } else {
@@ -280,9 +324,10 @@ function deleteCopyItem(idOrElem) {
   }
   elem.outerHTML = "";
   delete copies[copies.currentSet][id];
+  saveCopies();
 }
 
-function setCopyItems(items, clear) {
+function setCopyItems(items, clear, options) {
   var cset = copies.currentSet;
   if (clear) {
 	document.getElementById("copy-items").innerHTML = "";
@@ -295,26 +340,38 @@ function setCopyItems(items, clear) {
   }
   for (var i in items) {
 	var text = items[i];
+    if (text.match(/^!/)) {
+        inputCopies.value = text;
+        commands(inputCopies);
+        inputCopies.value = "";
+    }
 	var id = `div${ct}`;
 	//console.log(id);
 	text = appendInputs(id,text);
+    //TODO: allow options to determine what copy buttons are provided
 	var div = `<div id="border_${id}" class="copy_border">
-		<div id="warn_${id}" class="copy_control"><span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span><span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span></div>
+		<div id="warn_${id}" class="copy_control">
+          <span id="btn_clear_${id}" class="copy_btn warn" onclick="decorClear('${id}')">clear</span>
+          <span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span>
+          <span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span>
+        </div>
 		<p id="text_${id}">${text}</p>
 	  </div>`;
-	//var refElem = document.getElementById("copy-items").children[0];
-	//document.getElementById("copy-items").insertBefore(div,refElem);
 	var currText = document.getElementById("copy-items").innerHTML;
 	document.getElementById("copy-items").innerHTML = div + currText; // add new items to top
-	copies[cset][id] = div;
-   // buildObject(text,`text_${id}`);
-	//console.log(copies[cset][id]);
+	copies[cset][id] = items[i];
 	ct++;
+    setTimeout(
+        addTargetedListener(`border_${id}`,"click",(e) => {
+        document.getElementById(`btn_copy_${id}`).dispatchEvent(new Event("click"));
+        }), 
+        500
+    );
   }
-  //console.log(JSON.stringify(copies[cset]));
+  saveCopies();
 }
 
-function inputCopyItems(elem) {
+function inputCopyItem(elem) {
   var input = elem.value;
   elem.value = "";
   var items = input.replace(/\n/g, "<br>").split(/--/g);
@@ -340,12 +397,7 @@ function appendInputs_ok(txt) {
 }
 
 function appendInputs(txtId,text) {
- // if (!temps[txtId]) { 
-	temps[txtId] = {text: text};
-	//parag.contentEditable = false;
-  //} else {
-//	var text = temps[txtId];
- // }
+  temps[txtId] = {text: text};
   var txt = `<div id="${txtId}" class="copy_text" contenteditable="true">${text}</div>`;
   var matches = txt.match(/\[[^\n\r\v\]]+\]/g); //.match(/\[[\w\s\d\|-]+\]/g); 
   if (matches) {
@@ -354,7 +406,7 @@ function appendInputs(txtId,text) {
 	  var placeholder = match.replace(/[\[\]]*/g, ""); // remove [ ]
 	  let id = txtId+"_input"+ea; //match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
 	  temps[txtId][id] = match;
-      if (match.match(/\|/g)) {
+	  if (match.match(/\|/g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split("|");
 		  var label = splits[0];
 		  txt = txt.replace(match, label);
@@ -369,17 +421,20 @@ function appendInputs(txtId,text) {
 		  html += "</select>";
 	  } else if (match.match(/\.\s\.\s\./g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split(". . .");
-		  var label = `[${splits[0]}]`;
-		  txt = txt.replace(match, label);
-		  var html = `<select id="${id}">`;
+		  var title = splits.shift();
+		  var label = ""; // `[${title}]`; --7.28.22 removed so checklists won't affect text
+          temps[txtId].text = temps[txtId].text.replace(match, label); // remove from original
+          txt = txt.replace(match, label);
+		  var html = `<div id="${id}"><h3>${title}</h3><div class="chkbx-form">`;
 		  for (var s in splits) {
 			  var split = splits[s];
 			  var opVal = split;
 			  var opPh = split;
-			  var opt = `<option value="${opVal}">${opPh}</option>`;
+              var opt = `<div class="chkbx-unit"><input id="${txtId}_chbx${s}" type="checkbox"><label for=""${txtId}_chbx${s}">${opPh}</label></div>`;
+			  //var opt = `<label class="checkbox"><input type="checkbox">${opPh}</label>`;
 			  html += opt;
 		  }
-		  html += "</select>";
+		  html += "</div></div>";
 	  } else {
 		//var txtId = `text_${id}`;
 		var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
@@ -388,6 +443,124 @@ function appendInputs(txtId,text) {
 	}
   }
   return txt;
+}
+
+/****** FILL TEMPLATE ******/
+
+function fillTemplate(inputs,parag) {
+  var txtId = parag.id;
+  var text = temps[txtId].text;
+  for (var i in inputs) {
+	var input = inputs[i];
+	if (typeof input === "object") {
+	  var key = input.id;
+	  var value = input.value.replace(/\\n/g,"<br>");
+	  var tag = input.tagName;
+	  var repl = temps[txtId][key];
+	  if (tag === "INPUT") {
+		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
+	  } else if (tag === "SELECT") {
+		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
+	  }
+	}
+  }
+  parag.innerHTML = text;
+}
+
+function fillTemplateListener() {
+  var test = (e) => {
+	if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
+	  var parent = e.target.parentElement;
+	  while (parent && !parent.classList.contains("copy_border")) {
+		parent = parent.parentElement;
+	  }
+	  if (!parent) { return }
+      keySwitcher(e,"Enter","\\n");
+	  var parag = parent.getElementsByClassName("copy_text")[0];
+	  var ins = parent.getElementsByTagName('input');
+	  var dds = parent.getElementsByTagName('select');
+	  parag.contentEditable = false;
+	  var inputs = [];
+	  for (var n in ins) {
+		var elem = ins[n];
+		if (elem && elem.id) {
+		  inputs.push(elem);
+		  //console.log(elem.id);
+		}
+	  }
+	  for (var d in dds) {
+		var elem = dds[d];
+		if (elem && elem.id) {
+		  inputs.push(elem);
+		  //console.log(elem.id);
+		}
+	  }
+	  //console.log("inputs = "+JSON.stringify(inputs));
+	  fillTemplate(inputs,parag);
+	}
+  }
+  document.addEventListener("keyup",test);
+  document.addEventListener("change",test);
+}
+
+function addTargetedListener(target,type,func) {
+  if (typeof target === "string") {
+    target = document.getElementById(target);
+  }
+  target.addEventListener(type,(e) => {
+    // run anything here when click is inside target
+    if (e.target === target) {
+      // only run this if target received the click
+      func(e);
+    }
+  });
+}
+
+function keySwitcher(e,keyName,repl) {
+  if (e.key === keyName) {
+    e.preventDefault();
+    var pos = e.target.selectionStart;
+    var text = e.target.value;
+    var t1 = text.slice(0,pos);
+    var t2 = text.slice(pos);
+    e.target.value = t1+repl+t2;
+  }
+}
+
+/***********/
+
+function saveCopies() {
+	if (!Window.localStorage) {
+		return;
+	}
+	var cset = copies.currentSet;
+	var save = {};
+	save[cset] = copies[cset];
+	var len = Object.keys(save[cset]).length;
+	save = JSON.stringify(save);
+	localStorage.setItem("wb_copies_currentSet",save);
+	console.log(`Saving \"${cset}\"...\n${len} items`);
+	return save;
+}
+
+function loadCopies() {
+	if (!Window.localStorage) {
+		return;
+	}
+	var load = localStorage.getItem("wb_copies_currentSet");
+	if (!load) {
+	  console.log("\"wb_copies_currentSet\" was not found...\nCreating...");
+	  var cset = copies.currentSet;
+	  saveCopies(cset);
+	} else {
+	  load = JSON.parse(load);
+	  var cset = Object.keys(load)[0];
+	  copies.currentSet = cset;
+	  copies[cset] = load[cset];
+	  var len = Object.keys(load[cset]).length;
+	  console.log(`Loading \"${cset}\"...\n${len} items`);
+	}
+	return load[cset];
 }
 
 function altSearch(input) {
@@ -415,107 +588,6 @@ function matcher(obj,text) {
 	  return text;	
 	}
   }
-}
-
-function buildObject(text,id) {
-  // create template object to use whenever text is changed
-  // text: string template text
-  // id: string id of display element
-  window.database = {};
-  window.database[id] = {};
-  var obj = window.database[id];
-  obj.temp = "";
-  obj.filled = "";
-  obj.vars = {};
-  obj.temp = text;
- /* window.database.update = (input,output) => {
-	// input: element were input is located
-	// output: display element
-	var db = window.database;
-	var id = input.id;
-	var outId = output.id;
-	var value = input.value;
-	var vars = db[outId].vars;
-	vars[id] = value;
-	for (var ea in vars) {
-	  var k = ea;
-	  var v = vars[ea];
-	  var txt = obj.temp.replace(`[${k}]`,`${v}`);
-	  document.getElementById(outId).innerHTML = txt;
-	}
-  };
-  var matches = text.match(/\[[\w\s]+\]/g);
-  for (var m in matches) {*/
-  //  obj[m.replace(/[\[\]]*/g,"")] = "";
-  //}
-  return obj;
-}
-
-function fillTemplate(inputs,parag) {
-  /* 7.22.22 - moved to appendInputs()
-  if (!temps[parag.id]) {
-  	var text = parag.innerHTML;
-	temps[parag.id] = text;
-	parag.contentEditable = false;
-  } else {
-	var text = temps[parag.id];
-  } */
-  var txtId = parag.id;
-  var text = temps[txtId].text;
-  for (var i in inputs) {
-	var input = inputs[i];
-	if (typeof input === "object") {
-	  var key = input.id;
-	  var value = input.value;
-	  var tag = input.tagName;
-      var repl = temps[txtId][key];
-	  if (tag === "INPUT") {
-		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
-	  } else if (tag === "SELECT") {
-		//key = key.replace(/_/g,"|"); //.split("_")[0];
-		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
-	  }
-	} 
-	/*var key = i;
-	var value = input;
-	text = text.replace(`[${key}]`,value);*/
-  }
-  //alert("text at close: "+text);
-  parag.innerHTML = text;
-}
-
-function fillTemplateListener() {
-  var test = (e) => {
-	if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
-	  var parent = e.target.parentElement;
-	  while (parent && !parent.classList.contains("copy_border")) {
-		parent = parent.parentElement;
-	  }
-	  if (!parent) { return }
-	  var parag = parent.getElementsByClassName("copy_text")[0];
-	  var ins = parent.getElementsByTagName('input');
-	  var dds = parent.getElementsByTagName('select');
-	  var inputs = [];
-	  for (var n in ins) {
-		var elem = ins[n];
-		if (elem && elem.id) {
-		  inputs.push(elem);
-		  //console.log(elem.id);
-		}
-	  }
-	  for (var d in dds) {
-		var elem = dds[d];
-		if (elem && elem.id) {
-		  inputs.push(elem);
-		  //console.log(elem.id);
-		}
-	  }
-	  //console.log("inputs = "+JSON.stringify(inputs));
-	  fillTemplate(inputs,parag);
-	}
-  }
-  document.addEventListener("keyup",test);
-  document.addEventListener("change",test);
 }
 
 function fixVTO(elem) {
@@ -742,6 +814,87 @@ function createButton(title,url) {
 	return btn;
 }
 
+function extractor_WIP(text) {
+  //var text = inputCopies.value;
+  //var lines = text.split(/\n/g);
+  var patts_old = {
+    requestId: {m1: /\d{8}(?=[^]*?Wire Types:)/g},
+    articles: {m1: /\d{4}[A-Z]{2,3}/g},
+    titles: {m1: /Lookup\t*[^]*?(?=Wire Type:)/g, ex: /Lookup/g}, // has junk to be removed
+    lineCosts: {m1: /Approved By:[^]*?Cost:[^]*?[\d,\.]+/g, ex: /(Approved By.*:\t*|,)/g},
+    requestCost: {m1: /Request Cost:[^]*?[\d,\.]+/g, ex: /(Request Cost:\t*|,)/g}
+  };
+  var patts = {
+    lineItems: {
+        m1: /\d{4}[A-Z]{2,3}[^]*?Approved By:[^]*?Cost:[^]*?[\d,\.]+/g, 
+        ex: /(Lookup|Wire Type:[^]*?(?=((\n|\t)Footage:|Depth:|Qty\/Ftg:))|Approved By:|Amount:)/g,
+        adj: (m1) => {
+            m1 = m1.replace(/\t+/g," ... ");//.replace(/\t+(?=\t)/g,"")
+            return run(m1,m2);
+        },
+        m2: [
+                [/Footage:[^]*?[\d\.,]+/, (s) => s.replace(/Footage:[^]*?/,"")],
+                [/Depth:[^]*?[\d\.,]+/, (s) => s.replace(/Depth:[^]*?/,"")],
+                [/Qty\/Ftg:[^]*?[\d\.,]+/, (s) => s.replace(/Qty\/Ftg:[^]*?/,"")]
+            ]
+        }
+  };
+  var run = (text,patts) => {
+    var matches = [];
+    for (var p in patts) {
+      var mm = text.match(patts[p].m1);
+      for (var m in mm) {
+        var m1 = mm[m];
+        if (patts[p].ex) {
+          var ex = patts[p].ex; 
+          // apply exclusion match...
+          m1 = m1.replace(ex,"");
+        }
+        if (patts[p].adj) {
+          m1 = patts[p].adj(m1); 
+        }
+        if (patts[p].m2) {
+          var pm2 = patts[p].m2;
+          for (var i in pm2) {
+              let a = m1.match(pm2[i][0]);
+              let b = pm2[i][1](a)
+              m1 = m1.replace(a,b);
+          }
+        }
+        matches.push(m1);
+      }
+    }
+    return matches;
+  };
+/*  var temp = `Work order requires cost approval please.<br><br>`;
+  var itemLine = `${titles[i]} ... ${articles[i]} ... ${details[i]}${lineCosts[i]}`;
+  temp += itemLine[s];*/
+  return run(text,patts).join("<br><br>");
+}
+
+ 
+  
+function lookBack(inText,lookFor,patt,isPresent) {
+  // inText - text to match in
+  // lookFor - string to find before match
+  // patt - pattern to match
+  // isPresent - true to see if it is there, false if not there
+  var rev1 = [...inText].reverse().join("");
+  var rev2 = [...lookFor].reverse().join("");
+  var sym = isPresent ? "=" : "!";
+  alert(rev1);
+  var regex = new RegExp(`${patt}(?${sym}${rev2})`,"g");
+  var result = rev1.match(/[\d\.,]+(?=\s+:tsoC)/g);
+  alert(regex);
+  var arr = [];
+  for (var i in result) {
+    arr.push([...result[i]].reverse().join(""));
+  }
+}
+
+//var text = "Request Cost: 602.00 Cost: 62.91";
+//lookBack(text,"Cost:+s\\","[\\d\\.,]+",true);
+
 /***** LISTENERS *****/
 
 function setListeners() {
@@ -776,7 +929,7 @@ function setListeners() {
 	  } else if (elem.value.match(/^!/)) { // commands
 		commands(elem);
 	  } else {
-		inputCopyItems(elem);
+		inputCopyItem(elem);
 	  }
 	}
   });
@@ -808,6 +961,7 @@ function setListeners() {
 setTimeout(setListeners, 3000);
 
 setTimeout(() => { 
+  try { loadCopies() } catch (err) {console.log("ERROR, loadCopies: "+err.message)}
   setCopyItems(copies[copies.currentSet], true);
   fillTemplateListener(); 
 }, 2000);
