@@ -8,8 +8,40 @@ body {
 input {
   margin: 10px;
   padding: 10px;
-  border-radius: 25px;
+  border-radius: 25px; 
   width: 250px;
+}
+
+/*
+label.checkbox > input {
+	width: 30px;
+}
+
+label.checkbox {
+	display: block;
+	width: 100%;
+	max-width: 95vw;
+}
+*/
+
+.chkbx-form {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.chkbx-unit {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  margin: 5px;
+  width: 100%;
+}
+
+input[type="checkbox"]
+{
+  margin: 5px 10px;
+  width: 13px;
+  height: 13px;
 }
 
 .mobile-controls>button {
@@ -34,7 +66,6 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
 }
 
 .flex-container {
@@ -108,13 +139,14 @@ mark {
 
 @media only screen and (max-width: 375px) {
 	body {
-		width: 100vw;
+	    width: 95vw;
+	    overflow-x: hidden;
 	}
 
 	.mobile-controls {
-        position: relative;
-        margin: 0;
-        padding: 0;
+		position: relative;
+		margin: 0;
+		padding: 0;
 		/*display: flex;
 		justify-content: right;
 		align-items: center;
@@ -125,32 +157,32 @@ mark {
 	}
 
 	.mobile-controls button {
-        position: absolute;
+		position: absolute;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		background-color: lightgrey;
-        border-style: none;
+		border-style: none;
 		color: white;
 		font-family: monospace;
 		height: 65px;
 		width: 65px;
-        right: 20px;
-        top: 20px;
+		right: 20px;
+		top: 20px;
 		border-radius: 10px;
 		font-size: 2rem;
-        z-index: 3;
+		z-index: 3;
 	}
 
-    .mobile-controls>textarea {
-        padding-right: 100px;
-    }
+	.mobile-controls textarea {
+		font-size: 1rem;
+	}
 
 	#inputCopies {
 		margin: 10px;
-		padding: 10px;
+		padding: 10px 70px 10px 10px;
 		border-radius: 10px;
-		width: 95vw;
+		max-width: 95vw;
 		min-height: 80px;
 	}
 
