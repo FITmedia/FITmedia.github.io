@@ -470,6 +470,7 @@ function fillTemplate(inputs,parag) {
 	var input = inputs[i];
 	if (typeof input === "object") {
 	  var key = input.id;
+      alert("key = "+key+"\n-- expecting format [txtId]_input[num]");
 	  var value = input.value.replace(/\\n/g,"<br>");
 	  var tag = input.tagName;
 	  var repl = temps[txtId][key].replace(/[\.\+\*\?\^\$\(\)\[\]\{\}\|\\]/g,"\\$&");
@@ -500,6 +501,7 @@ function fillTemplateListener() {
 	  var inputs = [];
 	  for (var n in ins) {
 		var elem = ins[n];
+        if (elem.type === "checkbox") { continue; }
 		if (elem && elem.id) {
 		  inputs.push(elem);
 		  //console.log(elem.id);
