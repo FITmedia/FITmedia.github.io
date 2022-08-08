@@ -92,9 +92,9 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
 	div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
   },
   household: { // personal
-	div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
-	div2: `<h3>Kids Ledgers</h3><button onclick="window.open(encodeURI('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]'),'jk_link')">Submit</button>`,
-    div2: `!chores -h`
+	//div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
+	div2: `<h3>Kids Ledgers</h3><p>kid: [Killien|Miriam]</p><p>date: [date]</p><p>desc: [Dishes (2 drainers)|Meloncube|Discord Nitro|Robux]</p><p>amt: [amount]</p><button onclick="handleURL('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro|Robux]&amt=[amount]')">Submit</button>`,
+	//div3: `!chores -h`
   }
 }
 
@@ -160,11 +160,11 @@ const cmds = {
 	  }
   },
   extract: {
-      func: (arr) => {
-          var text = arr[0];
-          inputCopies.value = extractor_WIP(text);
+	  func: (arr) => {
+		  var text = arr[0];
+		  inputCopies.value = extractor(text);
 		  inputCopyItem(inputCopies);
-      }
+	  }
   }
 };
 
@@ -202,9 +202,7 @@ function srch(elem) {
 /***** COPY ITEMS *****/
 
 function decorCopy(id, text) {
-  if (!text) {
-	text = "copied!";
-  }
+  text = text || "copied!";
   var elem = document.getElementById(id);
   var border = document.getElementById("border_" + id);
   var btn = document.getElementById("btn_copy_" + id);
@@ -238,23 +236,24 @@ function decorClear(id, text) {
   if (text !== "cleared!") {
 	deleteCopyItem(border);
   } else {
+    elem.innerHTML = temps[id].text;
 	var ins = border.getElementsByTagName("input");
-    var dds = border.getElementsByTagName("select");
-    for (var i in ins) {
-        if (ins[i].tagName === "INPUT") {
-            if (ins[i].getAttribute("type") === "checkbox") {
-                ins[i].checked = false;
-            } else {
-                ins[i].value = "";
-            }
-        }
-    }
-    for (var d in dds) {
-        if (dds[d].tagName === "SELECT") {
-            var opt = dds[d].getElementsByTagName("option")[0];
-            dds[d].value = opt.value || "";
-        }
-    }
+	var dds = border.getElementsByTagName("select");
+	for (var i in ins) {
+		if (ins[i].tagName === "INPUT") {
+			if (ins[i].getAttribute("type") === "checkbox") {
+				ins[i].checked = false;
+			} else {
+				ins[i].value = "";
+			}
+		}
+	}
+	for (var d in dds) {
+		if (dds[d].tagName === "SELECT") {
+			var opt = dds[d].getElementsByTagName("option")[0];
+			dds[d].value = opt.value || "";
+		}
+	}
 	setTimeout(() => {
 	  btn.innerHTML = oldTxt;
 	  btn.classList.remove("lite");
@@ -340,33 +339,34 @@ function setCopyItems(items, clear, options) {
   }
   for (var i in items) {
 	var text = items[i];
-    if (text.match(/^!/)) {
-        inputCopies.value = text;
-        commands(inputCopies);
-        inputCopies.value = "";
-    }
+	if (text.match(/^!/)) { 
+		hiddenInput.value = text;
+		commands(hiddenInput);
+		inputCopies.value = "";
+		continue;
+	}
 	var id = `div${ct}`;
 	//console.log(id);
 	text = appendInputs(id,text);
-    //TODO: allow options to determine what copy buttons are provided
+	//TODO: allow options to determine what copy buttons are provided
 	var div = `<div id="border_${id}" class="copy_border">
 		<div id="warn_${id}" class="copy_control">
-          <span id="btn_clear_${id}" class="copy_btn warn" onclick="decorClear('${id}')">clear</span>
-          <span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span>
-          <span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span>
-        </div>
+		  <span id="btn_clear_${id}" class="copy_btn warn" onclick="decorClear('${id}')">clear</span>
+		  <span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span>
+		  <span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span>
+		</div>
 		<p id="text_${id}">${text}</p>
 	  </div>`;
 	var currText = document.getElementById("copy-items").innerHTML;
 	document.getElementById("copy-items").innerHTML = div + currText; // add new items to top
 	copies[cset][id] = items[i];
 	ct++;
-    setTimeout(
-        addTargetedListener(`border_${id}`,"click",(e) => {
-        document.getElementById(`btn_copy_${id}`).dispatchEvent(new Event("click"));
-        }), 
-        500
-    );
+	setTimeout(
+		addTargetedListener(`border_${id}`,"click",(e) => {
+		document.getElementById(`btn_copy_${id}`).dispatchEvent(new Event("click"));
+		}), 
+		500
+	);
   }
   saveCopies();
 }
@@ -400,9 +400,11 @@ function appendInputs(txtId,text) {
   temps[txtId] = {text: text};
   var txt = `<div id="${txtId}" class="copy_text" contenteditable="true">${text}</div>`;
   var matches = txt.match(/\[[^\n\r\v\]]+\]/g); //.match(/\[[\w\s\d\|-]+\]/g); 
+  var used = [];
   if (matches) {
 	for (var ea in matches) {
 	  var match = matches[ea];
+	  if (used.includes(match)) { continue; } else { used.push(match); }
 	  var placeholder = match.replace(/[\[\]]*/g, ""); // remove [ ]
 	  let id = txtId+"_input"+ea; //match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
 	  temps[txtId][id] = match;
@@ -423,14 +425,14 @@ function appendInputs(txtId,text) {
 		  var splits = match.replace(/[\[\]]/g,"").split(". . .");
 		  var title = splits.shift();
 		  var label = ""; // `[${title}]`; --7.28.22 removed so checklists won't affect text
-          temps[txtId].text = temps[txtId].text.replace(match, label); // remove from original
-          txt = txt.replace(match, label);
+		  temps[txtId].text = temps[txtId].text.replace(match, label); // remove from original
+		  txt = txt.replace(match, label);
 		  var html = `<div id="${id}"><h3>${title}</h3><div class="chkbx-form">`;
 		  for (var s in splits) {
 			  var split = splits[s];
 			  var opVal = split;
 			  var opPh = split;
-              var opt = `<div class="chkbx-unit"><input id="${txtId}_chbx${s}" type="checkbox"><label for=""${txtId}_chbx${s}">${opPh}</label></div>`;
+			  var opt = `<div class="chkbx-unit"><input id="${txtId}_chbx${s}" type="checkbox"><label for=""${txtId}_chbx${s}">${opPh}</label></div>`;
 			  //var opt = `<label class="checkbox"><input type="checkbox">${opPh}</label>`;
 			  html += opt;
 		  }
@@ -445,6 +447,20 @@ function appendInputs(txtId,text) {
   return txt;
 }
 
+function handleURL(url) {
+    inputCopies.value = encodeURI(url);
+    simpleCopy(inputCopies);
+    inputCopies.value = "Copied link successfully!";
+    setTimeout(() => {
+        inputCopies.value = "";
+    }, 3000)
+	try {
+		window.open(encodeURI(url),"jk_link");
+	} catch (err) {
+        console.log("ERROR, handleURL: "+err.message);
+	}
+}
+
 /****** FILL TEMPLATE ******/
 
 function fillTemplate(inputs,parag) {
@@ -456,7 +472,8 @@ function fillTemplate(inputs,parag) {
 	  var key = input.id;
 	  var value = input.value.replace(/\\n/g,"<br>");
 	  var tag = input.tagName;
-	  var repl = temps[txtId][key];
+	  var repl = temps[txtId][key].replace(/[\.\+\*\?\^\$\(\)\[\]\{\}\|\\]/g,"\\$&");
+	  repl = new RegExp(repl,"g");
 	  if (tag === "INPUT") {
 		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
 	  } else if (tag === "SELECT") {
@@ -475,7 +492,7 @@ function fillTemplateListener() {
 		parent = parent.parentElement;
 	  }
 	  if (!parent) { return }
-      keySwitcher(e,"Enter","\\n");
+	  keySwitcher(e,"Enter","\\n");
 	  var parag = parent.getElementsByClassName("copy_text")[0];
 	  var ins = parent.getElementsByTagName('input');
 	  var dds = parent.getElementsByTagName('select');
@@ -505,25 +522,28 @@ function fillTemplateListener() {
 
 function addTargetedListener(target,type,func) {
   if (typeof target === "string") {
-    target = document.getElementById(target);
+	target = document.getElementById(target);
   }
   target.addEventListener(type,(e) => {
-    // run anything here when click is inside target
-    if (e.target === target) {
-      // only run this if target received the click
-      func(e);
-    }
+	// run anything here when click is inside target
+	if (e.target === target) {
+	  // only run this if target received the click
+	  func(e);
+	}
   });
 }
 
 function keySwitcher(e,keyName,repl) {
   if (e.key === keyName) {
-    e.preventDefault();
-    var pos = e.target.selectionStart;
-    var text = e.target.value;
-    var t1 = text.slice(0,pos);
-    var t2 = text.slice(pos);
-    e.target.value = t1+repl+t2;
+	e.preventDefault();
+	var pos1 = e.target.selectionStart;
+	var pos2 = e.target.selectionEnd;
+	var text = e.target.value;
+	var t1 = text.slice(0,pos1);
+	var t2 = text.slice(pos2);
+	e.target.value = t1+repl+t2;
+	var pos3 = parseInt(pos1) + parseInt(repl.length);
+	e.target.setSelectionRange(pos3,pos3);
   }
 }
 
@@ -739,9 +759,19 @@ function commands(elem) {
   // ![commandID] remaining string are properties|divided by vertical pipes|true
   // commandID([prop0,prop1,prop2])
   var text = elem.value;
-  var cmdId = text.match(/^![^\s]+\s/)[0];
-  var props = text.replace(cmdId,"").split(/\|/g);
+  var props = [];
+  var cmdId = text.match(/^![^\s]+\s/);
+  if (cmdId) {
+	cmdId = cmdId[0];
+	props = text.replace(cmdId,"").split(/\|/g);
+  } else {
+	cmdId = text;
+  }
   cmdId = cmdId.replace("!","").trim();
+  if (!cmds[cmdId]) {
+	  console.log("Entry \"!"+cmdId+"\" is not a command.");
+	  return;
+  }
   if (text.match(/\s-[a-z]{0,3}(\s|$)/g)) { // modified handling
 	var modCode = text.match(/\s-[a-z]{0,3}(\s|$)/g)[0].trim().replace(/-/g,"");
 	cmdMods[modCode](cmdId,props,elem);
@@ -814,57 +844,74 @@ function createButton(title,url) {
 	return btn;
 }
 
+function extractor(text) {
+  //var text = inputCopies.value;
+  //var lines = text.split(/\n/g);
+  var patts = {
+	p0: [/\b([A-Z ]+)[\s"\/\\\?<]+(\d+)[ "\/\\\?<]+([A-Z ]+)\n/g, "$1LT $2 $3 "],
+	p1: [/(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d\s"\/\\\?<]+)\n[^]*?(?:(?:Footage:\s)|(?:Qty\/Ftg:\s)|(?:Amount:\s))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$1 ... $2 ... $3 ... $4]"],
+	p2: [/\[.+?\]/g]
+  };
+  var run = (text,patts) => {
+   // var m0 = text.replace(patts.p0[0],patts.p0[1]);
+	var m1 = text.replace(patts.p1[0],patts.p1[1]);
+	var m2 = m1.match(patts.p2[0]);
+	return m2;
+  };
+  return run(text,patts).join("<br><br>").replace(/[\[\]]/g,"");
+}
+
 function extractor_WIP(text) {
   //var text = inputCopies.value;
   //var lines = text.split(/\n/g);
   var patts_old = {
-    requestId: {m1: /\d{8}(?=[^]*?Wire Types:)/g},
-    articles: {m1: /\d{4}[A-Z]{2,3}/g},
-    titles: {m1: /Lookup\t*[^]*?(?=Wire Type:)/g, ex: /Lookup/g}, // has junk to be removed
-    lineCosts: {m1: /Approved By:[^]*?Cost:[^]*?[\d,\.]+/g, ex: /(Approved By.*:\t*|,)/g},
-    requestCost: {m1: /Request Cost:[^]*?[\d,\.]+/g, ex: /(Request Cost:\t*|,)/g}
+	requestId: {m1: /\d{8}(?=[^]*?Wire Types:)/g},
+	articles: {m1: /\d{4}[A-Z]{2,3}/g},
+	titles: {m1: /Lookup\t*[^]*?(?=Wire Type:)/g, ex: /Lookup/g}, // has junk to be removed
+	lineCosts: {m1: /Approved By:[^]*?Cost:[^]*?[\d,\.]+/g, ex: /(Approved By.*:\t*|,)/g},
+	requestCost: {m1: /Request Cost:[^]*?[\d,\.]+/g, ex: /(Request Cost:\t*|,)/g}
   };
   var patts = {
-    lineItems: {
-        m1: /\d{4}[A-Z]{2,3}[^]*?Approved By:[^]*?Cost:[^]*?[\d,\.]+/g, 
-        ex: /(Lookup|Wire Type:[^]*?(?=((\n|\t)Footage:|Depth:|Qty\/Ftg:))|Approved By:|Amount:)/g,
-        adj: (m1) => {
-            m1 = m1.replace(/\t+/g," ... ");//.replace(/\t+(?=\t)/g,"")
-            return run(m1,m2);
-        },
-        m2: [
-                [/Footage:[^]*?[\d\.,]+/, (s) => s.replace(/Footage:[^]*?/,"")],
-                [/Depth:[^]*?[\d\.,]+/, (s) => s.replace(/Depth:[^]*?/,"")],
-                [/Qty\/Ftg:[^]*?[\d\.,]+/, (s) => s.replace(/Qty\/Ftg:[^]*?/,"")]
-            ]
-        }
+	lineItems: {
+		m1: /\d{4}[A-Z]{2,3}[^]*?Approved By:[^]*?Cost:[^]*?[\d,\.]+/g, 
+		ex: /(Lookup|Wire Type:[^]*?(?=((\n|\t)Footage:|Depth:|Qty\/Ftg:))|Approved By:|Amount:)/g,
+		adj: (m1) => {
+			m1 = m1.replace(/\t+/g," ... ");//.replace(/\t+(?=\t)/g,"")
+			return run(m1,m2);
+		},
+		m2: [
+				[/Footage:[^]*?[\d\.,]+/, (s) => s.replace(/Footage:[^]*?/,"")],
+				[/Depth:[^]*?[\d\.,]+/, (s) => s.replace(/Depth:[^]*?/,"")],
+				[/Qty\/Ftg:[^]*?[\d\.,]+/, (s) => s.replace(/Qty\/Ftg:[^]*?/,"")]
+			]
+		}
   };
   var run = (text,patts) => {
-    var matches = [];
-    for (var p in patts) {
-      var mm = text.match(patts[p].m1);
-      for (var m in mm) {
-        var m1 = mm[m];
-        if (patts[p].ex) {
-          var ex = patts[p].ex; 
-          // apply exclusion match...
-          m1 = m1.replace(ex,"");
-        }
-        if (patts[p].adj) {
-          m1 = patts[p].adj(m1); 
-        }
-        if (patts[p].m2) {
-          var pm2 = patts[p].m2;
-          for (var i in pm2) {
-              let a = m1.match(pm2[i][0]);
-              let b = pm2[i][1](a)
-              m1 = m1.replace(a,b);
-          }
-        }
-        matches.push(m1);
-      }
-    }
-    return matches;
+	var matches = [];
+	for (var p in patts) {
+	  var mm = text.match(patts[p].m1);
+	  for (var m in mm) {
+		var m1 = mm[m];
+		if (patts[p].ex) {
+		  var ex = patts[p].ex; 
+		  // apply exclusion match...
+		  m1 = m1.replace(ex,"");
+		}
+		if (patts[p].adj) {
+		  m1 = patts[p].adj(m1); 
+		}
+		if (patts[p].m2) {
+		  var pm2 = patts[p].m2;
+		  for (var i in pm2) {
+			  let a = m1.match(pm2[i][0]);
+			  let b = pm2[i][1](a)
+			  m1 = m1.replace(a,b);
+		  }
+		}
+		matches.push(m1);
+	  }
+	}
+	return matches;
   };
 /*  var temp = `Work order requires cost approval please.<br><br>`;
   var itemLine = `${titles[i]} ... ${articles[i]} ... ${details[i]}${lineCosts[i]}`;
@@ -888,7 +935,7 @@ function lookBack(inText,lookFor,patt,isPresent) {
   alert(regex);
   var arr = [];
   for (var i in result) {
-    arr.push([...result[i]].reverse().join(""));
+	arr.push([...result[i]].reverse().join(""));
   }
 }
 
