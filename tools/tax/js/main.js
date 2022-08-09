@@ -1,7 +1,10 @@
 const db = {
-  searchIRS: "site:irs.gov ",
-  searchIntuit: "site:ttlc.intuit.com ",
-  searchUScode: "site:law.cornell.edu/uscode/text/26 "
+  localSave: true,
+  searches: {
+    searchIRS: "site:irs.gov ",
+    searchIntuit: "site:ttlc.intuit.com ",
+    searchUScode: "site:law.cornell.edu/uscode/text/26 "
+  }
 };
 
 var states = {
@@ -187,7 +190,7 @@ var temps = {}; // to store altered copy text
 
 function srch(elem) {
   var id = elem.id;
-  var text = db[id];
+  var text = db.searches[id];
   var search = text + elem.value;
   if (elem.id === "searchIRS" && elem.value.slice(0,3).match(/^[A-Z]{2}\s/)) {
 	search = stateSearch(elem);
@@ -551,9 +554,15 @@ function keySwitcher(e,keyName,repl) {
 /***********/
 
 function saveCopies() {
-	if (!Window.localStorage) {
-		return;
-	}
+  if (db.localSave) {
+    try { var localStorage = window.localStorage } catch (err) {
+      console.log("ERROR, saveCopies: "+err.message);
+      db.localSave = false;
+      return;
+    }
+	//if (!window.localStorage) {
+	//	return;
+	//}
 	var cset = copies.currentSet;
 	var save = {};
 	save[cset] = copies[cset];
@@ -562,12 +571,19 @@ function saveCopies() {
 	localStorage.setItem("wb_copies_currentSet",save);
 	console.log(`Saving \"${cset}\"...\n${len} items`);
 	return save;
+  }
 }
 
 function loadCopies() {
-	if (!Window.localStorage) {
-		return;
-	}
+  if (db.localSave) {
+    try { var localStorage = window.localStorage } catch (err) {
+      console.log("ERROR, loadCopies: "+err.message);
+      db.localSave = false;
+      return;
+    }
+	//if (!window.localStorage) {
+	//	return;
+	//}
 	var load = localStorage.getItem("wb_copies_currentSet");
 	if (!load) {
 	  console.log("\"wb_copies_currentSet\" was not found...\nCreating...");
@@ -582,6 +598,7 @@ function loadCopies() {
 	  console.log(`Loading \"${cset}\"...\n${len} items`);
 	}
 	return load[cset];
+  }
 }
 
 function altSearch(input) {
@@ -1009,7 +1026,14 @@ function setListeners() {
 setTimeout(setListeners, 3000);
 
 setTimeout(() => { 
-  try { loadCopies() } catch (err) {console.log("ERROR, loadCopies: "+err.message)}
+ // if (db.localSave) {
+  //  try { 
+        loadCopies() 
+  //      } catch (err) {
+  //    console.log("ERROR, loadCopies: "+err.message);
+  //    db.localSave = false;
+  //  }
+ // }
   setCopyItems(copies[copies.currentSet], true);
   fillTemplateListener(); 
 }, 2000);
