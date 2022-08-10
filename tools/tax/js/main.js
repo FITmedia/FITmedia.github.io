@@ -1,9 +1,9 @@
 const db = {
   localSave: true,
   searches: {
-    searchIRS: "site:irs.gov ",
-    searchIntuit: "site:ttlc.intuit.com ",
-    searchUScode: "site:law.cornell.edu/uscode/text/26 "
+	searchIRS: "site:irs.gov ",
+	searchIntuit: "site:ttlc.intuit.com ",
+	searchUScode: "site:law.cornell.edu/uscode/text/26 "
   }
 };
 
@@ -126,7 +126,7 @@ const cmds = {
 	  var save = JSON.stringify({[cset]:copies[cset]});
 	  localStorage.setItem("wb_copies_currentSet",save);*/
 	  setCopyItems(copies[arr[0]],true);
-	  saveCopies();
+	  //saveCopies();
 	  copyNotify(`Switched to ${arr[0]} set`,inputCopies,3000);
 	},
 	properties: {
@@ -164,8 +164,9 @@ const cmds = {
   },
   extract: {
 	  func: (arr) => {
-		  var text = arr[0];
-		  inputCopies.value = extractor(text);
+          var pattSet = arr[0];
+		  var text = arr[1];
+		  inputCopies.value = extractor(pattSet,text);
 		  inputCopyItem(inputCopies);
 	  }
   }
@@ -239,7 +240,7 @@ function decorClear(id, text) {
   if (text !== "cleared!") {
 	deleteCopyItem(border);
   } else {
-    elem.innerHTML = temps[id].text;
+	elem.innerHTML = temps[id].text;
 	var ins = border.getElementsByTagName("input");
 	var dds = border.getElementsByTagName("select");
 	for (var i in ins) {
@@ -326,7 +327,7 @@ function deleteCopyItem(idOrElem) {
   }
   elem.outerHTML = "";
   delete copies[copies.currentSet][id];
-  saveCopies();
+  //saveCopies();
 }
 
 function setCopyItems(items, clear, options) {
@@ -365,13 +366,20 @@ function setCopyItems(items, clear, options) {
 	copies[cset][id] = items[i];
 	ct++;
 	setTimeout(
-		addTargetedListener(`border_${id}`,"click",(e) => {
-		document.getElementById(`btn_copy_${id}`).dispatchEvent(new Event("click"));
-		}), 
+        () => {
+        var items = document.getElementsByClassName("copy_border");
+        for (let i in items) {
+            let border = items[i];
+            // var btnId = `btn_copy_${id}`;
+            addTargetedListener(border.id,"click",(e) => {
+                let btnId = e.target.id.replace(/^[^]+_([^]+)/g,"btn_copy_$1");
+                document.getElementById(btnId).dispatchEvent(new Event("click"));
+            })
+        }}, 
 		500
 	);
   }
-  saveCopies();
+  //saveCopies();
 }
 
 function inputCopyItem(elem) {
@@ -451,16 +459,16 @@ function appendInputs(txtId,text) {
 }
 
 function handleURL(url) {
-    inputCopies.value = encodeURI(url);
-    simpleCopy(inputCopies);
-    inputCopies.value = "Copied link successfully!";
-    setTimeout(() => {
-        inputCopies.value = "";
-    }, 3000)
+	inputCopies.value = encodeURI(url);
+	simpleCopy(inputCopies);
+	inputCopies.value = "Copied link successfully!";
+	setTimeout(() => {
+		inputCopies.value = "";
+	}, 3000)
 	try {
 		window.open(encodeURI(url),"jk_link");
 	} catch (err) {
-        console.log("ERROR, handleURL: "+err.message);
+		console.log("ERROR, handleURL: "+err.message);
 	}
 }
 
@@ -503,7 +511,7 @@ function fillTemplateListener() {
 	  var inputs = [];
 	  for (var n in ins) {
 		var elem = ins[n];
-        if (elem.type === "checkbox") { continue; }
+		if (elem.type === "checkbox") { continue; }
 		if (elem && elem.id) {
 		  inputs.push(elem);
 		  //console.log(elem.id);
@@ -527,7 +535,10 @@ function fillTemplateListener() {
 function addTargetedListener(target,type,func) {
   if (typeof target === "string") {
 	target = document.getElementById(target);
+  } else if (!target) {
+      return;
   }
+  try {
   target.addEventListener(type,(e) => {
 	// run anything here when click is inside target
 	if (e.target === target) {
@@ -535,6 +546,7 @@ function addTargetedListener(target,type,func) {
 	  func(e);
 	}
   });
+  } catch (err) {console.log("ERROR, addTargetedListener: target.id = "+target.id+"\n"+err.message)}
 }
 
 function keySwitcher(e,keyName,repl) {
@@ -555,11 +567,11 @@ function keySwitcher(e,keyName,repl) {
 
 function saveCopies() {
   if (db.localSave) {
-    try { var localStorage = window.localStorage } catch (err) {
-      console.log("ERROR, saveCopies: "+err.message);
-      db.localSave = false;
-      return;
-    }
+	try { var localStorage = window.localStorage } catch (err) {
+	  console.log("ERROR, saveCopies: "+err.message);
+	  db.localSave = false;
+	  return;
+	}
 	//if (!window.localStorage) {
 	//	return;
 	//}
@@ -576,19 +588,19 @@ function saveCopies() {
 
 function loadCopies() {
   if (db.localSave) {
-    try { var localStorage = window.localStorage } catch (err) {
-      console.log("ERROR, loadCopies: "+err.message);
-      db.localSave = false;
-      return;
-    }
+	try { var localStorage = window.localStorage } catch (err) {
+	  console.log("ERROR, loadCopies: "+err.message);
+	  db.localSave = false;
+	  return;
+	}
 	//if (!window.localStorage) {
 	//	return;
 	//}
 	var load = localStorage.getItem("wb_copies_currentSet");
 	if (!load) {
 	  console.log("\"wb_copies_currentSet\" was not found...\nCreating...");
-	  var cset = copies.currentSet;
-	  saveCopies(cset);
+      var cset = copies.currentSet;
+	  saveCopies();
 	} else {
 	  load = JSON.parse(load);
 	  var cset = Object.keys(load)[0];
@@ -862,104 +874,28 @@ function createButton(title,url) {
 	return btn;
 }
 
-function extractor(text) {
+function extractor(pattSet,text) {
   //var text = inputCopies.value;
   //var lines = text.split(/\n/g);
-  var patts = {
-	p0: [/\b([A-Z ]+)[\s"\/\\\?<]+(\d+)[ "\/\\\?<]+([A-Z ]+)\n/g, "$1LT $2 $3 "],
-	p1: [/(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d\s"\/\\\?<]+)\n[^]*?(?:(?:Footage:\s)|(?:Qty\/Ftg:\s)|(?:Amount:\s))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$1 ... $2 ... $3 ... $4]"],
-	p2: [/\[.+?\]/g]
+  var patterns = {
+      articles: [
+	    [/(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\/\\\?<]+)\n[^]*?(?:(?:\nFootage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$1 ... $2 ... $3 ... $4]"],
+	    [/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
+        [/"/g,""],
+        [/([\\\/\<\?]+|&lt;)/g,"LT"]
+      ]
   };
+  var patts = patterns[pattSet];
   var run = (text,patts) => {
-   // var m0 = text.replace(patts.p0[0],patts.p0[1]);
-	var m1 = text.replace(patts.p1[0],patts.p1[1]);
-	var m2 = m1.match(patts.p2[0]);
-	return m2;
+    for (var p in patts) {
+        let patt = patts[p];
+        text = text.replace(patt[0],patt[1]);
+    }
+    return text;
   };
-  return run(text,patts).join("<br><br>").replace(/[\[\]]/g,"");
+  return run(text,patts);
 }
-
-function extractor_WIP(text) {
-  //var text = inputCopies.value;
-  //var lines = text.split(/\n/g);
-  var patts_old = {
-	requestId: {m1: /\d{8}(?=[^]*?Wire Types:)/g},
-	articles: {m1: /\d{4}[A-Z]{2,3}/g},
-	titles: {m1: /Lookup\t*[^]*?(?=Wire Type:)/g, ex: /Lookup/g}, // has junk to be removed
-	lineCosts: {m1: /Approved By:[^]*?Cost:[^]*?[\d,\.]+/g, ex: /(Approved By.*:\t*|,)/g},
-	requestCost: {m1: /Request Cost:[^]*?[\d,\.]+/g, ex: /(Request Cost:\t*|,)/g}
-  };
-  var patts = {
-	lineItems: {
-		m1: /\d{4}[A-Z]{2,3}[^]*?Approved By:[^]*?Cost:[^]*?[\d,\.]+/g, 
-		ex: /(Lookup|Wire Type:[^]*?(?=((\n|\t)Footage:|Depth:|Qty\/Ftg:))|Approved By:|Amount:)/g,
-		adj: (m1) => {
-			m1 = m1.replace(/\t+/g," ... ");//.replace(/\t+(?=\t)/g,"")
-			return run(m1,m2);
-		},
-		m2: [
-				[/Footage:[^]*?[\d\.,]+/, (s) => s.replace(/Footage:[^]*?/,"")],
-				[/Depth:[^]*?[\d\.,]+/, (s) => s.replace(/Depth:[^]*?/,"")],
-				[/Qty\/Ftg:[^]*?[\d\.,]+/, (s) => s.replace(/Qty\/Ftg:[^]*?/,"")]
-			]
-		}
-  };
-  var run = (text,patts) => {
-	var matches = [];
-	for (var p in patts) {
-	  var mm = text.match(patts[p].m1);
-	  for (var m in mm) {
-		var m1 = mm[m];
-		if (patts[p].ex) {
-		  var ex = patts[p].ex; 
-		  // apply exclusion match...
-		  m1 = m1.replace(ex,"");
-		}
-		if (patts[p].adj) {
-		  m1 = patts[p].adj(m1); 
-		}
-		if (patts[p].m2) {
-		  var pm2 = patts[p].m2;
-		  for (var i in pm2) {
-			  let a = m1.match(pm2[i][0]);
-			  let b = pm2[i][1](a)
-			  m1 = m1.replace(a,b);
-		  }
-		}
-		matches.push(m1);
-	  }
-	}
-	return matches;
-  };
-/*  var temp = `Work order requires cost approval please.<br><br>`;
-  var itemLine = `${titles[i]} ... ${articles[i]} ... ${details[i]}${lineCosts[i]}`;
-  temp += itemLine[s];*/
-  return run(text,patts).join("<br><br>");
-}
-
- 
   
-function lookBack(inText,lookFor,patt,isPresent) {
-  // inText - text to match in
-  // lookFor - string to find before match
-  // patt - pattern to match
-  // isPresent - true to see if it is there, false if not there
-  var rev1 = [...inText].reverse().join("");
-  var rev2 = [...lookFor].reverse().join("");
-  var sym = isPresent ? "=" : "!";
-  alert(rev1);
-  var regex = new RegExp(`${patt}(?${sym}${rev2})`,"g");
-  var result = rev1.match(/[\d\.,]+(?=\s+:tsoC)/g);
-  alert(regex);
-  var arr = [];
-  for (var i in result) {
-	arr.push([...result[i]].reverse().join(""));
-  }
-}
-
-//var text = "Request Cost: 602.00 Cost: 62.91";
-//lookBack(text,"Cost:+s\\","[\\d\\.,]+",true);
-
 /***** LISTENERS *****/
 
 function setListeners() {
@@ -1028,10 +964,10 @@ setTimeout(setListeners, 3000);
 setTimeout(() => { 
  // if (db.localSave) {
   //  try { 
-        loadCopies() 
-  //      } catch (err) {
-  //    console.log("ERROR, loadCopies: "+err.message);
-  //    db.localSave = false;
+	//	loadCopies() 
+  //	  } catch (err) {
+  //	console.log("ERROR, loadCopies: "+err.message);
+  //	db.localSave = false;
   //  }
  // }
   setCopyItems(copies[copies.currentSet], true);
