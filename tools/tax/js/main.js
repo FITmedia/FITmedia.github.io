@@ -879,10 +879,10 @@ function extractor(pattSet,text) {
   //var lines = text.split(/\n/g);
   var patterns = {
       articles: [
-	    [/(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\/\\\?<]+)\n[^]*?(?:(?:\nFootage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$1 ... $2 ... $3 ... $4]"],
+	    [/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
 	    [/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
-        [/"/g,""],
-        [/([\\\/\<\?]+|&lt;)/g,"LT"]
+        [/("|\-|\\*\? )/g,""],
+        [/(\\<*|&lt;)/g,"LT"]
       ]
   };
   var patts = patterns[pattSet];
