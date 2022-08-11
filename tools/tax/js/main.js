@@ -917,7 +917,15 @@ function setListeners() {
 	  }
 	//}
   }
+  field.addEventListener("keyup", (e) => {
+    var len = e.target.value.length;
+    if (len === 0) {
+      len = "";
+    }
+    counter.innerText = len;
+  });
   field.addEventListener("keypress", (e) => {
+    counter.innerText = e.target.value.length;
 	if (e.key === "Enter" && e.shiftKey) {
 	  e.preventDefault();
 	  var elem = e.target;
