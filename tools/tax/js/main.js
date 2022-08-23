@@ -878,12 +878,14 @@ function extractor(pattSet,text) {
   //var text = inputCopies.value;
   //var lines = text.split(/\n/g);
   var patterns = {
-      articles: [
-	    [/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
-	    [/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
-        [/("|\-|\\*\? )/g,""],
-        [/(\\<*|&lt;)/g,"LT"]
-      ]
+    articles: [
+	[/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
+	[/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
+	[/("|\-|\\*\? )/g,""],
+	[/(\\<*|&lt;)/g,"LT"],
+        [/(0040CE ... .+? ... .+?)( ... .+)/g, "$1 CU FT $2"],
+        [/([0-9]{4}(?:P[^E]|W[^L]|BO) ... .+? ... .+?) (... .+)/g, "$1 FT $2"],
+    ]
   };
   var patts = patterns[pattSet];
   var run = (text,patts) => {
