@@ -96,8 +96,13 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
   },
   household: { // personal
 	//div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
-	div2: `<h3>Kids Ledgers</h3><p>kid: [Killien|Miriam]</p><p>date: [date]</p><p>desc: [Dishes (2 drainers)|Meloncube|Discord Nitro|Robux]</p><p>amt: [amount]</p><button onclick="handleURL('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro|Robux]&amt=[amount]')">Submit</button>`,
+	div2: `<h3>Kids Ledgers</h3><p>kid: [Killien|Miriam]</p><p>date: [date]</p><p>desc: [Dishes (2 drainers)|Meloncube|Discord Nitro|Robux|Other]</p><p>amt: [amount]</p><button onclick="handleURL('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro|Robux]&amt=[amount]')">Submit</button>`,
 	//div3: `!chores -h`
+  },
+  qualtek: {
+      div2: `Please correct billing: [total]ft being billed as [PDA (1ft - 25ft)|PDB (26ft - 150ft)|PDC (151ft - 250ft)|PDE (&gt; 250ft)]. Should be billed as PD[A (1ft - 25ft)|B (26ft - 150ft)|C (151ft - 250ft)|D or PDE (&gt; 250ft)].`,
+      div3: `[Verify Pricing. . .Trench footage matches article range (ex: 80ft is 26ft - 150ft). . .Trench depth entered correctly (ex: 0000 vs 0001). . .Bore depth entered correctly (ex: BOB = 6). . .Correct cutover article billed for wire type (CO vs COF). . .All articles entered with correct quantities (ex: 0039PE qty 1 vs 2). . .20-50% higher in ABWS? Add Jump Rate in Vision. . .20-50% lower in ABWS? Remove Jump Rate in Vision]`,
+      div4: `All cutovers must be completed by the subcontractor, unless ATT indicated Held Order. Please contact Carl for approval. [Verify before rejecting. . ."Cutover required" marked "Yes" with no CO billing item?. . .Is bid area AS or ST?. . .Comments do not mention Carl's approval. . ."Held order" marked "F"?. . .CO Reason cannot be verified and no clarification in Comments. . .OGComments do not indicate held order or DO specify a reconnect]`,
   }
 }
 
@@ -164,11 +169,19 @@ const cmds = {
   },
   extract: {
 	  func: (arr) => {
-          var pattSet = arr[0];
+		  var pattSet = arr[0];
 		  var text = arr[1];
 		  inputCopies.value = extractor(pattSet,text);
 		  inputCopyItem(inputCopies);
-	  }
+	  },
+      properties: {
+          pattset: {
+              desc: "pattset"
+          },
+          text: {
+              desc: "text"
+          }
+      }
   }
 };
 
@@ -186,6 +199,41 @@ const cmdMods = {
 	inputCopyItem(elem);
   }
 }
+
+const patterns = {
+    articles: [
+        [/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
+        [/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
+        [/("|\-|\\*\? )/g,""],
+        [/(\\<*|&lt;)/g,"LT"],
+        [/(0040CE ... .+? ... .+?)( ... .+)/g, "$1 CU FT $2"],
+        [/([0-9]{4}(?:P[^E]|W[^L]|BO) ... .+? ... .+?) (... .+)/g, "$1 FT $2"],
+    ],
+    articlesToJSON: [
+        [/("|\-|\\*\? )/g,""],
+        [/(\\<*|&lt;)/g,"LT"],
+        //[/(Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?((?:\s+Footage:|Qty\/Ftg:|Amount:)\s+?[\d,\.]+[^]*?)Cost:[^]*?([\d,\.]+)/g, "$1: { article: \"$2\", name: \"$3\", $4, cost: \"$5\" }\n"],
+    // match all [title][:][value] => [["title": "value"]]
+        [/([a-zA-Z/ ]+):\s+([^\s]+)[\t\n](?=\b[a-zA-Z/ ]+?|\}\})/g,"[[\"$1\": \"$2\"]]"],
+    // match all article names
+        [/Lookup\s\s\s([A-Z][^\n]+)/g,"[[name: \"$1\"]]"],
+    // match all sections
+        [/(Trenching|Conduit|Bores|Miscellaneous)([^]+?)(?=Trenching|Conduit|Bores|Miscellaneous|$)/g, "{\"$1\": { $2 }}"],
+        [/\}[^\}\{]*\{/g, ", "],
+    // match everything else
+        [/\]\][^\[\}\{]*\[\[/g,", "],
+        [/Amount:\s*Approved By:\s*/g,", "],
+        [/(\s+Add\sRemove\s\[\[|]] *)/g, ""]
+        //[/\b([a-zA-Z\/]+:)\s+(\d+)/g,"$1 $2"],
+        //[/\[(.+?)\]([^\[]*)/g, "$1\n\n"]
+    ],
+    specChars: [
+        [/([0-9]+) *- *([0-9]+)/g,"$1 to $2"],
+        [/([0-9]+)['\u2018\u2019\u201B]/g, "$1 ft"],
+        [/([0-9]+)["\u201C\u201D\u201F]/g, "$1 inches"],
+        [/['\u2018\u2019\u201B"\u201C\u201D\u201F\u0026]/g,""]
+    ]
+};
 
 var temps = {}; // to store altered copy text
 
@@ -366,16 +414,16 @@ function setCopyItems(items, clear, options) {
 	copies[cset][id] = items[i];
 	ct++;
 	setTimeout(
-        () => {
-        var items = document.getElementsByClassName("copy_border");
-        for (let i in items) {
-            let border = items[i];
-            // var btnId = `btn_copy_${id}`;
-            addTargetedListener(border.id,"click",(e) => {
-                let btnId = e.target.id.replace(/^[^]+_([^]+)/g,"btn_copy_$1");
-                document.getElementById(btnId).dispatchEvent(new Event("click"));
-            })
-        }}, 
+		() => {
+		var items = document.getElementsByClassName("copy_border");
+		for (let i in items) {
+			let border = items[i];
+			// var btnId = `btn_copy_${id}`;
+			addTargetedListener(border.id,"click",(e) => {
+				let btnId = e.target.id.replace(/^[^]+_([^]+)/g,"btn_copy_$1");
+				document.getElementById(btnId).dispatchEvent(new Event("click"));
+			})
+		}}, 
 		500
 	);
   }
@@ -536,7 +584,7 @@ function addTargetedListener(target,type,func) {
   if (typeof target === "string") {
 	target = document.getElementById(target);
   } else if (!target) {
-      return;
+	  return;
   }
   try {
   target.addEventListener(type,(e) => {
@@ -599,7 +647,7 @@ function loadCopies() {
 	var load = localStorage.getItem("wb_copies_currentSet");
 	if (!load) {
 	  console.log("\"wb_copies_currentSet\" was not found...\nCreating...");
-      var cset = copies.currentSet;
+	  var cset = copies.currentSet;
 	  saveCopies();
 	} else {
 	  load = JSON.parse(load);
@@ -877,23 +925,13 @@ function createButton(title,url) {
 function extractor(pattSet,text) {
   //var text = inputCopies.value;
   //var lines = text.split(/\n/g);
-  var patterns = {
-    articles: [
-	[/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
-	[/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
-	[/("|\-|\\*\? )/g,""],
-	[/(\\<*|&lt;)/g,"LT"],
-        [/(0040CE ... .+? ... .+?)( ... .+)/g, "$1 CU FT $2"],
-        [/([0-9]{4}(?:P[^E]|W[^L]|BO) ... .+? ... .+?) (... .+)/g, "$1 FT $2"],
-    ]
-  };
   var patts = patterns[pattSet];
   var run = (text,patts) => {
-    for (var p in patts) {
-        let patt = patts[p];
-        text = text.replace(patt[0],patt[1]);
-    }
-    return text;
+	for (var p in patts) {
+		let patt = patts[p];
+		text = text.replace(patt[0],patt[1]);
+	}
+	return text;
   };
   return run(text,patts);
 }
@@ -920,14 +958,14 @@ function setListeners() {
 	//}
   }
   field.addEventListener("keyup", (e) => {
-    var len = e.target.value.length;
-    if (len === 0) {
-      len = "";
-    }
-    counter.innerText = len;
+	var len = e.target.value.length;
+	if (len === 0) {
+	  len = "";
+	}
+	counter.innerText = len;
   });
   field.addEventListener("keypress", (e) => {
-    counter.innerText = e.target.value.length;
+	counter.innerText = e.target.value.length;
 	if (e.key === "Enter" && e.shiftKey) {
 	  e.preventDefault();
 	  var elem = e.target;
