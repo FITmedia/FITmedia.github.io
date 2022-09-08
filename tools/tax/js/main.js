@@ -59,7 +59,7 @@ var states = {
   WV:"site:tax.wv.gov/",
   WI:"site:revenue.wi.gov/",
   WY:"site:revenue.wyo.gov/"
-}
+} 
 
 var queueFixes = {
 	"cg-us_ta_extendfs": "New FS Extensions. Please be efficient with your calls. Thanks.",
@@ -207,7 +207,7 @@ const patterns = {
         [/("|\-|\\*\? )/g,""],
         [/(\\<*|&lt;)/g,"LT"],
         [/(0040CE ... .+? ... .+?)( ... .+)/g, "$1 CU FT $2"],
-        [/([0-9]{4}(?:P[^E]|W[^L]|BO) ... .+? ... .+?) (... .+)/g, "$1 FT $2"],
+        [/([0-9]{4}(?:P[^E]|W[^L]|BO|PC) ... .+? ... .+?) (... .+)/g, "$1 FT $2"],
     ],
     articlesToJSON: [
         [/("|\-|\\*\? )/g,""],
@@ -229,7 +229,7 @@ const patterns = {
     ],
     specChars: [
         [/([0-9]+) *- *([0-9]+)/g,"$1 to $2"],
-        [/([0-9]+)['\u2018\u2019\u201B]/g, "$1 ft"],
+        [/([0-9]+)(['\u2018\u2019\u201B]|-FOOT)/g, "$1 ft"],
         [/([0-9]+)["\u201C\u201D\u201F]/g, "$1 inches"],
         [/['\u2018\u2019\u201B"\u201C\u201D\u201F\u0026]/g,""]
     ]
