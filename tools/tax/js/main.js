@@ -100,9 +100,9 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
 	//div3: `!chores -h`
   },
   qualtek: {
-      div2: `Please correct billing: [total]ft being billed as [PDA (1ft - 25ft)|PDB (26ft - 150ft)|PDC (151ft - 250ft)|PDE (&gt; 250ft)]. Should be billed as PD[A (1ft - 25ft)|B (26ft - 150ft)|C (151ft - 250ft)|D or PDE (&gt; 250ft)].`,
-      div3: `[Verify Pricing. . .Trench footage matches article range (ex: 80ft is 26ft - 150ft). . .Trench depth entered correctly (ex: 0000 vs 0001). . .Bore depth entered correctly (ex: BOB = 6). . .Correct cutover article billed for wire type (CO vs COF). . .All articles entered with correct quantities (ex: 0039PE qty 1 vs 2). . .20-50% higher in ABWS? Add Jump Rate in Vision. . .20-50% lower in ABWS? Remove Jump Rate in Vision]`,
-      div4: `All cutovers must be completed by the subcontractor, unless ATT indicated Held Order. Please contact Carl for approval. [Verify before rejecting. . ."Cutover required" marked "Yes" with no CO billing item?. . .Is bid area AS or ST?. . .Comments do not mention Carl's approval. . ."Held order" marked "F"?. . .CO Reason cannot be verified and no clarification in Comments. . .OGComments do not indicate held order or DO specify a reconnect]`,
+	  div2: `Please correct billing: [total]ft being billed as [PDA (1ft - 25ft)|PDB (26ft - 150ft)|PDC (151ft - 250ft)|PDE (&gt; 250ft)]. Should be billed as PD[A (1ft - 25ft)|B (26ft - 150ft)|C (151ft - 250ft)|D or PDE (&gt; 250ft)].`,
+	  div3: `[Verify Pricing. . .Trench footage matches article range (ex: 80ft is 26ft - 150ft). . .Trench depth entered correctly (ex: 0000 vs 0001). . .Bore depth entered correctly (ex: BOB = 6). . .Correct cutover article billed for wire type (CO vs COF). . .All articles entered with correct quantities (ex: 0039PE qty 1 vs 2). . .20-50% higher in ABWS? Add Jump Rate in Vision. . .20-50% lower in ABWS? Remove Jump Rate in Vision]`,
+	  div4: `All cutovers must be completed by the subcontractor, unless ATT indicated Held Order. Please contact Carl for approval. [Verify before rejecting. . ."Cutover required" marked "Yes" with no CO billing item?. . .Is bid area AS or ST?. . .Comments do not mention Carl's approval. . ."Held order" marked "F"?. . .CO Reason cannot be verified and no clarification in Comments. . .OGComments do not indicate held order or DO specify a reconnect]`,
   }
 }
 
@@ -174,14 +174,14 @@ const cmds = {
 		  inputCopies.value = extractor(pattSet,text);
 		  inputCopyItem(inputCopies);
 	  },
-      properties: {
-          pattset: {
-              desc: "pattset"
-          },
-          text: {
-              desc: "text"
-          }
-      }
+	  properties: {
+		  pattset: {
+			  desc: "pattset"
+		  },
+		  text: {
+			  desc: "text"
+		  }
+	  }
   }
 };
 
@@ -201,38 +201,38 @@ const cmdMods = {
 }
 
 const patterns = {
-    articles: [
-        [/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
-        [/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
-        [/("|\-|\\*\? )/g,""],
-        [/(\\<*|&lt;)/g,"LT"],
-        [/(0040CE ... .+? ... .+?)( ... .+)/g, "$1 CU FT $2"],
-        [/([0-9]{4}(?:P[^E]|W[^L]|BO|PC) ... .+? ... .+?) (... .+)/g, "$1 FT $2"],
-    ],
-    articlesToJSON: [
-        [/("|\-|\\*\? )/g,""],
-        [/(\\<*|&lt;)/g,"LT"],
-        //[/(Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?((?:\s+Footage:|Qty\/Ftg:|Amount:)\s+?[\d,\.]+[^]*?)Cost:[^]*?([\d,\.]+)/g, "$1: { article: \"$2\", name: \"$3\", $4, cost: \"$5\" }\n"],
-    // match all [title][:][value] => [["title": "value"]]
-        [/([a-zA-Z/ ]+):\s+([^\s]+)[\t\n](?=\b[a-zA-Z/ ]+?|\}\})/g,"[[\"$1\": \"$2\"]]"],
-    // match all article names
-        [/Lookup\s\s\s([A-Z][^\n]+)/g,"[[name: \"$1\"]]"],
-    // match all sections
-        [/(Trenching|Conduit|Bores|Miscellaneous)([^]+?)(?=Trenching|Conduit|Bores|Miscellaneous|$)/g, "{\"$1\": { $2 }}"],
-        [/\}[^\}\{]*\{/g, ", "],
-    // match everything else
-        [/\]\][^\[\}\{]*\[\[/g,", "],
-        [/Amount:\s*Approved By:\s*/g,", "],
-        [/(\s+Add\sRemove\s\[\[|]] *)/g, ""]
-        //[/\b([a-zA-Z\/]+:)\s+(\d+)/g,"$1 $2"],
-        //[/\[(.+?)\]([^\[]*)/g, "$1\n\n"]
-    ],
-    specChars: [
-        [/([0-9]+) *- *([0-9]+)/g,"$1 to $2"],
-        [/([0-9]+)(['\u2018\u2019\u201B]|-FOOT)/gi, "$1 ft"],
-        [/([0-9]+)["\u201C\u201D\u201F]/g, "$1 inches"],
-        [/['\u2018\u2019\u201B"\u201C\u201D\u201F\u0026]/g,""]
-    ]
+	articles: [
+		[/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
+		[/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
+		[/("|\-|\\*\? )/g,""],
+		[/(\\<*|&lt;)/g,"LT"],
+		[/(0040CE ... .+? ... .+?)( ... .+)/g, "$1 CU FT $2"],
+		[/([0-9]{4}(?:P[^E]|W[^L]|BO|PC) ... .+? ... .+?) (... .+)/g, "$1 FT $2"],
+	],
+	articlesToJSON: [
+		[/("|\-|\\*\? )/g,""],
+		[/(\\<*|&lt;)/g,"LT"],
+		//[/(Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?((?:\s+Footage:|Qty\/Ftg:|Amount:)\s+?[\d,\.]+[^]*?)Cost:[^]*?([\d,\.]+)/g, "$1: { article: \"$2\", name: \"$3\", $4, cost: \"$5\" }\n"],
+	// match all [title][:][value] => [["title": "value"]]
+		[/([a-zA-Z/ ]+):\s+([^\s]+)[\t\n](?=\b[a-zA-Z/ ]+?|\}\})/g,"[[\"$1\": \"$2\"]]"],
+	// match all article names
+		[/Lookup\s\s\s([A-Z][^\n]+)/g,"[[name: \"$1\"]]"],
+	// match all sections
+		[/(Trenching|Conduit|Bores|Miscellaneous)([^]+?)(?=Trenching|Conduit|Bores|Miscellaneous|$)/g, "{\"$1\": { $2 }}"],
+		[/\}[^\}\{]*\{/g, ", "],
+	// match everything else
+		[/\]\][^\[\}\{]*\[\[/g,", "],
+		[/Amount:\s*Approved By:\s*/g,", "],
+		[/(\s+Add\sRemove\s\[\[|]] *)/g, ""]
+		//[/\b([a-zA-Z\/]+:)\s+(\d+)/g,"$1 $2"],
+		//[/\[(.+?)\]([^\[]*)/g, "$1\n\n"]
+	],
+	specChars: [
+		[/([0-9]+) *- *([0-9]+)/g,"$1 to $2"],
+		[/([0-9]+)(['\u2018\u2019\u201B]|-FOOT)/gi, "$1 ft"],
+		[/([0-9]+)["\u201C\u201D\u201F]/g, "$1 inches"],
+		[/['\u2018\u2019\u201B"\u201C\u201D\u201F\u0026]/g,""]
+	]
 };
 
 var temps = {}; // to store altered copy text
@@ -416,6 +416,7 @@ function setCopyItems(items, clear, options) {
 	setTimeout(
 		() => {
 		var items = document.getElementsByClassName("copy_border");
+        var chks = document.getElementsByClassName("chkbx-unit");
 		for (let i in items) {
 			let border = items[i];
 			// var btnId = `btn_copy_${id}`;
@@ -491,7 +492,7 @@ function appendInputs(txtId,text) {
 			  var split = splits[s];
 			  var opVal = split;
 			  var opPh = split;
-			  var opt = `<div class="chkbx-unit"><input id="${txtId}_chbx${s}" type="checkbox"><label for=""${txtId}_chbx${s}">${opPh}</label></div>`;
+			  var opt = `<div class="chkbx-unit"><input id="${txtId}_chbx${s}" type="checkbox"><label for=""${txtId}_chbx${s}" onclick="toggleChkBox(this)">${opPh}</label></div>`;
 			  //var opt = `<label class="checkbox"><input type="checkbox">${opPh}</label>`;
 			  html += opt;
 		  }
@@ -518,6 +519,15 @@ function handleURL(url) {
 	} catch (err) {
 		console.log("ERROR, handleURL: "+err.message);
 	}
+}
+
+function toggleChkBox(elem) {
+  var sib = elem.parentNode.firstChild;
+  if (!sib.checked) {
+    sib.checked = true;
+  } else {
+    sib.checked = false;
+  }
 }
 
 /****** FILL TEMPLATE ******/
@@ -982,6 +992,15 @@ function setListeners() {
 	  }
 	}
   });
+  document.addEventListener("click", (e) => {
+    if (e.ctrlKey || e.metaKey) { 
+        var p = e.target.parentNode;
+        while (!p.classList.contains("chkbx-unit")) {
+            p = p.parentNode;
+        }
+        p.remove();
+    }
+  });
   /*
   document.addEventListener("blur", (e) => {
 		alert("blurring "+e.target.id);
@@ -1019,5 +1038,5 @@ setTimeout(() => {
   //  }
  // }
   setCopyItems(copies[copies.currentSet], true);
-  fillTemplateListener(); 
+  fillTemplateListener();
 }, 2000);
