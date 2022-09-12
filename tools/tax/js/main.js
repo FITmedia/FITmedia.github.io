@@ -96,7 +96,7 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
   },
   household: { // personal
 	//div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
-	div2: `<h3>Kids Ledgers</h3><p>kid: [Killien|Miriam]</p><p>date: [date]</p><p>desc: [Dishes (2 drainers)|Meloncube|Discord Nitro|Robux|Other]</p><p>amt: [amount]</p><button onclick="handleURL('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro|Robux]&amt=[amount]')">Submit</button>`,
+	div2: `<h3>Kids Ledgers</h3><p>kid: [Killien|Miriam]</p><p>date: [date]</p><p>desc: [Dishes (2 drainers)|Meloncube|Discord Nitro|Robux|Other]</p><p>amt: [amount]</p><button onclick="handleURL('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro|Robux|Other]&amt=[amount]')">Submit</button>`,
 	//div3: `!chores -h`
   },
   qualtek: {
