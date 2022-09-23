@@ -97,12 +97,13 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
   household: { // personal
 	//div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
 	div2: `<h3>Kids Ledgers</h3><p>kid: [Killien|Miriam]</p><p>date: [date]</p><p>desc: [Dishes (2 drainers)|Meloncube|Discord Nitro|Robux|Other]</p><p>amt: [amount]</p><button onclick="handleURL('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro|Robux|Other]&amt=[amount]')">Submit</button>`,
-	//div3: `!chores -h`
+	//div3: `<h3>Create Markdown Link</h3><p>[URL]</p><button onclick="cmds.marklink.func(new Array().push('[URL]'))">Submit</button>`
   },
   qualtek: {
 	  div2: `Please correct billing: [total]ft being billed as [PDA (1ft - 25ft)|PDB (26ft - 150ft)|PDC (151ft - 250ft)|PDE (&gt; 250ft)]. Should be billed as PD[A (1ft - 25ft)|B (26ft - 150ft)|C (151ft - 250ft)|D or PDE (&gt; 250ft)].`,
 	  div3: `[Verify Pricing. . .Trench footage matches article range (ex: 80ft is 26ft - 150ft). . .Trench depth entered correctly (ex: 0000 vs 0001). . .Bore depth entered correctly (ex: BOB = 6). . .Correct cutover article billed for wire type (CO vs COF). . .All articles entered with correct quantities (ex: 0039PE qty 1 vs 2). . .20-50% higher in ABWS? Add Jump Rate in Vision. . .20-50% lower in ABWS? Remove Jump Rate in Vision]`,
 	  div4: `All cutovers must be completed by the subcontractor, unless ATT indicated Held Order. Please contact Carl for approval. [Verify before rejecting. . ."Cutover required" marked "Yes" with no CO billing item?. . .Is bid area AS or ST?. . .Comments do not mention Carl's approval. . ."Held order" marked "F"?. . .CO Reason cannot be verified and no clarification in Comments. . .OGComments do not indicate held order or DO specify a reconnect]`,
+      div5: `[Manager Assist Request. . .Work Requests Complaint. . .Enter V / MA. . .Enter notes describing what is needed. . .Look up Request ID in Operations main search. . .Enter notes into + QualTek Notification. . .Enter "No" for ECD]`,
   }
 }
 
@@ -228,10 +229,12 @@ const patterns = {
 		//[/\[(.+?)\]([^\[]*)/g, "$1\n\n"]
 	],
 	specChars: [
+        [/(ATT |)[0-9]*[-+][0-9]+=[0-9]+( *ft,*|)/g,""],
 		[/([0-9]+) *- *([0-9]+)/g,"$1 to $2"],
 		[/([0-9]+)(['\u2018\u2019\u201B]|-FOOT)/gi, "$1 ft"],
 		[/([0-9]+)["\u201C\u201D\u201F]/g, "$1 inches"],
-		[/['\u2018\u2019\u201B"\u201C\u201D\u201F\u0026]/g,""]
+		[/['\u2018\u2019\u201B"\u201C\u201D\u201F\u0026]/g,""],
+        [/(,)(?=[^\s])/g,"$1 "]
 	]
 };
 
