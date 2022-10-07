@@ -106,7 +106,7 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
 	  div4: `New ECD set for work order on [7 days from today].
 
 [ECD New WOs. . .Operations > Work Orders > WOs Added Today. . .Filter out CA. . .Export to XLS. . .<b>FOR EACH</b> in Work Requests Complaint. . .__Change dropdown to "closed". . .__Set Complaint Type to "I" (Informational). . .__Paste the above message into Remarks. . .__(Verify that month is correct)]`,
-	  div5: `[ECD Emails. . .Search in Work Requests Complaint. . .IF today or past date. . .__IF locate number is present. . .__Set Complaint Type to "8" (Locate Ticket). . .__Enter just locate number text in Remarks. . .ELSE IF future date. . .__Set Complaint Type to "I" (Informational). . .__Enter ECD text and locate number text or other note]`,
+	  div5: `[ECD Emails. . .Search in Work Requests Complaint Report. . .<b>IF</b> not yet entered, enter New in Work Requests Complaint. . .<b>IF</b> today or past date. . .__<b>IF</b> locate number is present. . .__Set Complaint Type to "8" (Locate Ticket). . .__Enter just locate number text in Remarks. . .<b>ELSE IF</b> future date. . .__Change Complaint Status to "Closed". . .__Set Complaint Type to "I" (Informational). . .__Enter ECD text and locate number text or other note]`,
 	  div6: `All cutovers must be completed by the subcontractor, unless ATT indicated Held Order. Please contact Carl for approval.
 [Verify before rejecting. . ."Cutover required" marked "Yes" with no CO billing item?. . .Is bid area AS or ST?. . .Comments do not mention Carl's approval. . ."Held order" marked "F"?. . .CO Reason cannot be verified and no clarification in Comments. . .OGComments do not indicate held order or DO specify a reconnect. . .<= 10 days on ground OR > 10 days on ground and 0 rejects for CO approval?]`,
   }
@@ -208,6 +208,7 @@ const cmdMods = {
 
 const patterns = {
 	articles: [
+        [/^[^]*?(Trenching[^]*?)(\s*Cutover Req[^]*|$)/g,"$1"],
 		[/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
 		[/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
 		[/("|\-|\\*\? )/g,""],
@@ -234,12 +235,42 @@ const patterns = {
 		//[/\[(.+?)\]([^\[]*)/g, "$1\n\n"]
 	],
 	specChars: [
-        [/(ATT |)[0-9]*[-+][0-9]+=[0-9]+( *ft,*|)/g,""],
+		[/(ATT |)[0-9]*[-+][0-9]+=[0-9]+( *ft,*|)/g,""],
 		[/([0-9]+) *- *([0-9]+)/g,"$1 to $2"],
 		[/([0-9]+)(['\u2018\u2019\u201B]|-FOOT)/gi, "$1 ft"],
 		[/([0-9]+)["\u201C\u201D\u201F]/g, "$1 inches"],
 		[/['\u2018\u2019\u201B"\u201C\u201D\u201F\u0026]/g,""],
-        [/(,)(?=[^\s])/g,"$1 "]
+		[/(,)(?=[^\s])/g,"$1 "]
+	],
+	costDisputes: [
+		//[/\n/g,""], // remove new lines
+        [/\s\s+/g,"\n"],
+        [/\s*(:)\s*/g,"$1"],
+		//[/(?:  +|\t)(\b[^:]+:(?:  |\t).*?)(?=  +|\t+|\n|$)/g,"$1\n"], // match all
+		//[/([^:]+:(?:  |\t)[^]+?)(?=\n[^:]+:|$)/g,"$1"],
+		//[/([^:]+?)\s\s+/g,"$1 "],
+		//[/(?:Work Request:|Address:|Bid Area:|Remarks:)(?:  |\t)([^\s].*?)(?=\n|$)/g,"$1"],
+		//[/([^\n]+:(?:  |\t).*?)(\n|$)/g,""] // exclude
+		
+        //[/(  +|\t+)/g,""], // remove excess white space
+		//[/\n\n+/g,"\n"] // remove excess new lines
+    ],
+	costDisputes_backup: [
+		[/\n/g,""], // remove new lines
+        [/(:)(?!(  |\t))/g,"$1  "],
+		//[/(?:  +|\t)(\b[^:]+:(?:  |\t).*?)(?=  +|\t+|\n|$)/g,"$1\n"], // match all
+		//[/([^:]+:(?:  |\t)[^]+?)(?=\n[^:]+:|$)/g,"$1"],
+		//[/([^:]+?)\s\s+/g,"$1 "],
+		//[/(?:Work Request:|Address:|Bid Area:|Remarks:)(?:  |\t)([^\s].*?)(?=\n|$)/g,"$1"],
+		//[/([^\n]+:(?:  |\t).*?)(\n|$)/g,""] // exclude
+		
+        //[/(  +|\t+)/g,""], // remove excess white space
+		//[/\n\n+/g,"\n"] // remove excess new lines
+    ],
+	fixList: [
+		[/[A-Z0-9 &]+\n/g,""],
+		[/• /g,""],
+		[/\n\n+/g,"\n"]
 	]
 };
 
@@ -424,7 +455,7 @@ function setCopyItems(items, clear, options) {
 	setTimeout(
 		() => {
 		var items = document.getElementsByClassName("copy_border");
-        var chks = document.getElementsByClassName("chkbx-unit");
+		var chks = document.getElementsByClassName("chkbx-unit");
 		for (let i in items) {
 			let border = items[i];
 			// var btnId = `btn_copy_${id}`;
@@ -532,9 +563,9 @@ function handleURL(url) {
 function toggleChkBox(elem) {
   var sib = elem.parentNode.firstChild;
   if (!sib.checked) {
-    sib.checked = true;
+	sib.checked = true;
   } else {
-    sib.checked = false;
+	sib.checked = false;
   }
 }
 
@@ -856,7 +887,7 @@ function commands(elem) {
   // commandID([prop0,prop1,prop2])
   var text = elem.value;
   var props = [];
-  var cmdId = text.match(/^![^\s]+\s/);
+  var cmdId = text.match(/^![^\s]+?\s/);
   if (cmdId) {
 	cmdId = cmdId[0];
 	props = text.replace(cmdId,"").split(/\|/g);
@@ -867,9 +898,13 @@ function commands(elem) {
   if (!cmds[cmdId]) {
 	  console.log("Entry \"!"+cmdId+"\" is not a command.");
 	  return;
-  }
-  if (text.match(/\s-[a-z]{0,3}(\s|$)/g)) { // modified handling
-	var modCode = text.match(/\s-[a-z]{0,3}(\s|$)/g)[0].trim().replace(/-/g,"");
+  } 
+  if (text.match(/\s-[a-z]{1,3}(\s|$)/g)) { // modified handling
+	var modCode = text.match(/\s-[a-z]{1,3}(\s|$)/g)[0].trim().replace(/-/g,"");
+    if (!cmds[cmdId][modCode]) { 
+        console.log("ERROR, cmdMods['"+modCode+"'] is not a function.");
+        return;
+    }
 	cmdMods[modCode](cmdId,props,elem);
   } else { // standard handling
   try {
@@ -1001,13 +1036,13 @@ function setListeners() {
 	}
   });
   document.addEventListener("click", (e) => {
-    if (e.ctrlKey || e.metaKey) { 
-        var p = e.target.parentNode;
-        while (!p.classList.contains("chkbx-unit")) {
-            p = p.parentNode;
-        }
-        p.remove();
-    }
+	if (e.ctrlKey || e.metaKey) { 
+		var p = e.target.parentNode;
+		while (!p.classList.contains("chkbx-unit")) {
+			p = p.parentNode;
+		}
+		p.remove();
+	}
   });
   /*
   document.addEventListener("blur", (e) => {
