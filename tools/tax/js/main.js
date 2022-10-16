@@ -59,37 +59,23 @@ var states = {
   WV:"site:tax.wv.gov/",
   WI:"site:revenue.wi.gov/",
   WY:"site:revenue.wyo.gov/"
-<<<<<<< HEAD
 }
-=======
-} 
->>>>>>> origin/master
 
 var queueFixes = {
 	"cg-us_ta_extendfs": "New FS Extensions. Please be efficient with your calls. Thanks.",
 	"cg-us_t": "AYG. Please be efficient with your calls. Thanks.",
-<<<<<<< HEAD
-=======
 	"cg-us_er_fullservice": "Full Service. Can we get some support to clear the queue? Thanks.",
->>>>>>> origin/master
-	"cg-us_er_fs_amend": "FS Amend. Can we get some support to clear the queue? Thanks.",
+	"cg-us_er„_fs_amend": "FS Amend. Can we get some support to clear the queue? Thanks.",
 	"cg-us_er_fs": "Full Service. Can we get some support to clear the queue? Thanks.",
 	"cg-us_er": "AYG. Please be efficient with your calls. Thanks."
 };
 
-<<<<<<< HEAD
-var copiesTA = {
-  div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
-  div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
-  div3: `Thank you, we're now connected. I won't see any private information and can only see what's on your TurboTax Live screen. You might see me outlining something on your screen with a red box, but I cannot make any changes.
-=======
 const copies = {
   currentSet: "household",
   taxassociate: {
 	div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
 	div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
 	div3: `Thank you, we're now connected. I won't see any private information and can only see what's on your TurboTax Live screen. You might see me outlining something on your screen with a red box, but I cannot make any changes.
->>>>>>> origin/master
 <br>
 If you minimize your TurboTax screen or go to a link, you may lose sight of the chat window. To return, select Live Help on your screen.`,
 	div4: `Have I <span class="highlight">resolved all of your issues</span> today?`,
@@ -119,13 +105,12 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
           div3: `[Manager Assist Request. . .Work Requests Complaint. . .Enter V / MA. . .Enter notes describing what is needed. . .Look up Request ID in Operations main search. . .Enter notes into + QualTek Notification. . .Enter "No" for ECD]`,
 	  div4: `New ECD set for work order on [7 days from today].
 
-<<<<<<< HEAD
-var copies = { //Lead
-  div1: `Pod15 / [affected] / [responses] / [staffed]`,
-  div2: `hasmy::leadpolly: on:today`,
-  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
-  div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
-=======
+// var copies = { //Lead
+//  div1: `Pod15 / [affected] / [responses] / [staffed]`,
+//  div2: `hasmy::leadpolly: on:today`,
+//  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
+//  div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
+
 [ECD New WOs. . .Operations > Work Orders > WOs Added Today. . .Filter out CA. . .Export to XLS. . .<b>FOR EACH</b> in Work Requests Complaint. . .__Change dropdown to "closed". . .__Set Complaint Type to "I" (Informational). . .__Paste the above message into Remarks. . .__(Verify that month is correct)]`,
 	  div5: `[ECD Emails. . .Search in Work Requests Complaint Report. . .<b>IF</b> not yet entered, enter New in Work Requests Complaint. . .<b>IF</b> today or past date. . .__<b>IF</b> locate number is present. . .__Set Complaint Type to "8" (Locate Ticket). . .__Enter just locate number text in Remarks. . .<b>ELSE IF</b> future date. . .__Change Complaint Status to "Closed". . .__Set Complaint Type to "I" (Informational). . .__Enter ECD text and locate number text or other note]`,
 	  div6: `All cutovers must be completed by the subcontractor, unless ATT indicated Held Order. Please contact Carl for approval.
@@ -210,7 +195,6 @@ const cmds = {
 		  }
 	  }
   }
->>>>>>> origin/master
 };
 
 const cmdMods = {
@@ -305,11 +289,7 @@ function srch(elem) {
   var text = db.searches[id];
   var search = text + elem.value;
   if (elem.id === "searchIRS" && elem.value.slice(0,3).match(/^[A-Z]{2}\s/)) {
-<<<<<<< HEAD
-    search = stateSearch(elem);
-=======
 	search = stateSearch(elem);
->>>>>>> origin/master
   }
   var encode = encodeURI(search);
   elem.value = "";
@@ -457,31 +437,6 @@ function setCopyItems(items, clear, options) {
 	var ct = Object.keys(copies[cset]).length + 1;
   }
   for (var i in items) {
-<<<<<<< HEAD
-    var text = items[i];
-    var id = `div${ct}`;
-    console.log(id);
-    text = appendInputs(
-      `<div id="${id}" class="copy_text" contenteditable="true">${text}</div>`
-    );
-    var div = `<div id="border_${id}" class="copy_border">
-        <div id="warn_${id}" class="copy_control"><span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span><span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span></div>
-        <p id="text_${id}">${text}</p>
-      </div>`;
-    //var refElem = document.getElementById("copy-items").children[0];
-    //document.getElementById("copy-items").insertBefore(div,refElem);
-    var currText = document.getElementById("copy-items").innerHTML;
-    document.getElementById("copy-items").innerHTML = div + currText; // add new items to top
-    copies[id] = div;
-   // buildObject(text,`text_${id}`);
-    console.log(copies[id]);
-    ct++;
-  }
-  //console.log(JSON.stringify(copies));
-}
-
-function inputCopyItems(elem) {
-=======
 	var text = items[i];
 	if (text.match(/^!/)) { 
 		hiddenInput.value = text;
@@ -524,7 +479,6 @@ function inputCopyItems(elem) {
 }
 
 function inputCopyItem(elem) {
->>>>>>> origin/master
   var input = elem.value;
   elem.value = "";
   var items = input.replace(/\n/g, "<br>").split(/--/g);
@@ -538,15 +492,6 @@ function inputCopyItem(elem) {
 function appendInputs_ok(txt) {
   var matches = txt.match(/\[[\w\s]+\]/g);
   if (matches) {
-<<<<<<< HEAD
-    for (var ea in matches) {
-      var placeholder = matches[ea].replace(/[\[\]]*/g, "");
-      var id = matches[ea].match(/\w/g).join("");
-      //var txtId = `text_${id}`;
-      var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
-      txt = txt + html;
-    }
-=======
 	for (var ea in matches) {
 	  var placeholder = matches[ea].replace(/[\[\]]*/g, "");
 	  var id = matches[ea].match(/\w/g).join("");
@@ -554,24 +499,10 @@ function appendInputs_ok(txt) {
 	  var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
 	  txt = txt + html;
 	}
->>>>>>> origin/master
   }
   return txt;
 }
 
-<<<<<<< HEAD
-function appendInputs(txt) {
-  var matches = txt.match(/\[[\w\s\|-]+\]/g); // .match(/\[[^\n\r\v]+\]/g);
-  if (matches) {
-	for (var ea in matches) {
-	  var match = matches[ea];
-	  var placeholder = match.replace(/[\[\]]*/g, "");
-	  var id = match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
-	  if (match.match(/\|/g)) {
-		  var splits = match.replace(/[\[\]]/g,"").split("|");
-      var label = `[${splits[0]}]`;
-      txt = txt.replace(match, label);
-=======
 function appendInputs(txtId,text) {
   temps[txtId] = {text: text};
   var txt = `<div id="${txtId}" class="copy_text" contenteditable="true">${text}</div>`;
@@ -588,7 +519,6 @@ function appendInputs(txtId,text) {
 		  var splits = match.replace(/[\[\]]/g,"").split("|");
 		  var label = splits[0];
 		  txt = txt.replace(match, label);
->>>>>>> origin/master
 		  var html = `<select id="${id}">`;
 		  for (var s in splits) {
 			  var split = splits[s];
@@ -598,13 +528,6 @@ function appendInputs(txtId,text) {
 			  html += opt;
 		  }
 		  html += "</select>";
-<<<<<<< HEAD
-	  } else {
-	  
-	  //var txtId = `text_${id}`;
-	  var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
-}
-=======
 	  } else if (match.match(/\.\s\.\s\./g)) {
 		  var splits = match.replace(/[\[\]]/g,"").split(". . .");
 		  var title = splits.shift();
@@ -625,136 +548,12 @@ function appendInputs(txtId,text) {
 		//var txtId = `text_${id}`;
 		var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
 	  }
->>>>>>> origin/master
 	  txt = txt + html;
 	}
   }
   return txt;
 }
 
-<<<<<<< HEAD
-function altSearch(input) {
-  var text = input.value;
-  var search = matcher(obj,text);
-  if (search) {
-    return search;
-  } else {
-    return text;
-  }
-}
-
-function matcher(obj,text) {
-  for (var i in obj) {
-    var code = i;
-    var search = obj[i];
-    var patt = new RegExp(`(\\s|^)${code}\\s`,"");
-    var result = text.match(patt);
-    if (result) {
-       result = result[0].replace(/\s/g,"");
-       text = text.replace(result+" ","");
-       result = obj[result];
-       return search + " " + text;
-    } else {
-      return text;    
-    }
-  }
-}
-
-function buildObject(text,id) {
-  // create template object to use whenever text is changed
-  // text: string template text
-  // id: string id of display element
-  window.database = {};
-  window.database[id] = {};
-  var obj = window.database[id];
-  obj.temp = "";
-  obj.filled = "";
-  obj.vars = {};
-  obj.temp = text;
- /* window.database.update = (input,output) => {
-    // input: element were input is located
-    // output: display element
-    var db = window.database;
-    var id = input.id;
-    var outId = output.id;
-    var value = input.value;
-    var vars = db[outId].vars;
-    vars[id] = value;
-    for (var ea in vars) {
-      var k = ea;
-      var v = vars[ea];
-      var txt = obj.temp.replace(`[${k}]`,`${v}`);
-      document.getElementById(outId).innerHTML = txt;
-    }
-  };
-  var matches = text.match(/\[[\w\s]+\]/g);
-  for (var m in matches) {*/
-  //  obj[m.replace(/[\[\]]*/g,"")] = "";
-  //}
-  return obj;
-}
-
-function fillTemplate(inputs,parag) {
-  if (!temps[parag.id]) {
-  	var text = parag.innerHTML;
-    temps[parag.id] = text;
-    parag.contentEditable = false;
-  } else {
-    var text = temps[parag.id];
-  }
-  for (var i in inputs) {
-    var input = inputs[i];
-  //  if (typeof input === "object") {
-      var key = input.id;
-      var value = input.value;
-      var tag = input.tagName;
-      if (tag === "INPUT") {
-        text = text.replace(`[${key}]`,value);
-      } else if (tag === "SELECT") {
-        key = key.split("_")[0]; //.replace(/_/g,"|");
-        text = text.replace(`[${key}]`,value);
-      }
-  //  } 
-    /* var key = i;
-    var value = input;
-    text = text.replace(`[${key}]`,value);*/
-  }
-  //alert("text at close: "+text);
-  parag.innerHTML = text;
-}
-
-function fillTemplateListener() {
-  var test = (e) => {
-    if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
-      var parent = e.target.parentElement;
-      while (!parent.classList.contains("copy_border")) {
-        parent = parent.parentElement;
-      }
-      var parag = parent.getElementsByClassName("copy_text")[0];
-      var ins = parent.getElementsByTagName('input');
-      var dds = parent.getElementsByTagName('select');
-      var inputs = [];
-      for (var n in ins) {
-        var elem = ins[n];
-        if (elem && elem.id) {
-          inputs.push(elem);
-          console.log(elem.id);
-        }
-      }
-      for (var d in dds) {
-        var elem = dds[d];
-        if (elem && elem.id) {
-          inputs.push(elem);
-          console.log(elem.id);
-        }
-      }
-      console.log("inputs = "+JSON.stringify(inputs));
-      fillTemplate(inputs,parag);
-    }
-  }
-  document.addEventListener("keyup",test);
-  document.addEventListener("change",test);
-=======
 function handleURL(url) {
 	inputCopies.value = encodeURI(url);
 	simpleCopy(inputCopies);
@@ -944,7 +743,6 @@ function matcher(obj,text) {
 	  return text;	
 	}
   }
->>>>>>> origin/master
 }
 
 function fixVTO(elem) {
@@ -953,19 +751,11 @@ function fixVTO(elem) {
   str = str.join(" ");
   var timeExp = str.match(/[\d:]{1,5}(\s|)(a|p|)(m|)/gi);
   if (timeExp && timeExp.length > 1) {
-<<<<<<< HEAD
-    timeExp = timeExp[timeExp.length - 1];
-  } else if (timeExp && timeExp.length <= 1) {
-    timeExp = timeExp[0];
-  } else {
-    return elem.value;
-=======
 	timeExp = timeExp[timeExp.length - 1];
   } else if (timeExp && timeExp.length <= 1) {
 	timeExp = timeExp[0];
   } else {
 	return elem.value;
->>>>>>> origin/master
   }
   var timeDigits = timeExp.match(/\d/g);
   var time = parseInt(timeDigits.join(""));
@@ -1010,10 +800,7 @@ function fixVTO(elem) {
 }
 
 function fixQueues(elem) {
-<<<<<<< HEAD
-=======
   try {
->>>>>>> origin/master
   var fixes = queueFixes;
   var text = elem.value;
   var msgs = text.match(/@[^@]+/g);
@@ -1023,25 +810,6 @@ function fixQueues(elem) {
   if (msgs.length > 1) { n = "\n" }
   for (var m in msgs) {
   	var msg = msgs[m];
-<<<<<<< HEAD
-    if (msg && msg.match(/cg-us_[^\s]+/i)) {
-      var nums = msg.match(/\d+/g); 
-      var match = msg.match(/cg-us_[^\s]+/i).toString();
-      for (var f in fixes) {
-        var find = f;
-        var fix = fixes[f];
-        if (match.match(find)) {
-          var num = nums[0];
-          var dur = nums[1];
-          var ending = fix;
-          var s = "s";
-          if (num == 1) { s = "" }
-          msg = "We have "+num+" call"+s+" in queue for over "+dur+" minutes in "+ending;
-          break;
-        }
-      }
-    }
-=======
 	if (msg && msg.match(/cg-us_[^\s]+/i)) {
 	  var nums = msg.match(/\d+/g); 
 	  var match = msg.match(/cg-us_[^\s]+/i).toString();
@@ -1059,34 +827,11 @@ function fixQueues(elem) {
 		}
 	  }
 	}
->>>>>>> origin/master
 	newTxt.push(msg);
   }
   elem.value = newTxt.join(n);
   //demo.innerText = newTxt.join("");
   return text;
-<<<<<<< HEAD
-}
-
-function fixQueues_old(elem) {
-  var fixes = {
-    "cg-us_ta": "AYG",
-    "cg-us_fs": "Full Service"
-  }
-  var text = elem.value;
-  if (text && text.match(/cg-us_[^\s\.]+/i)) {
-    var match = text.match(/cg-us_[^\s\.]+/i);
-    for (var f in fixes) {
-      var find = f;
-      var fix = fixes[f];
-      if (match.match(find)) {
-        text = text.replace(match,fix);
-      }
-    }
-  }
-  elem.value = text;
-  return text;
-=======
   } catch(err) {console.log("ERROR, fixQueues:"+err.message)}
 }
 
@@ -1110,32 +855,21 @@ function fixQueues_old(elem) {
   elem.value = text;
   return text;
   } catch(err) {console.log("ERROR, fixQueues_old:"+err.message)}
->>>>>>> origin/master
 }
 
 function stateSearch(elem) {
   var text = elem.value;
   var txt = elem.value.slice(0,2);
   for (var s in states) {
-<<<<<<< HEAD
-    var srch = states[s];
-    if (txt == s) {
-      text = text.replace(txt,srch);
-      return text;
-    }
-=======
 	var srch = states[s];
 	if (txt == s) {
 	  text = text.replace(txt,srch);
 	  return text;
 	}
->>>>>>> origin/master
   }
   return text;
 }
 
-<<<<<<< HEAD
-=======
 function titleCase(str) {
   var except = "in the and with from of is a an or at";
   str = str.toLowerCase().split(" ");
@@ -1265,7 +999,6 @@ function extractor(pattSet,text) {
   
 /***** LISTENERS *****/
 
->>>>>>> origin/master
 function setListeners() {
   //var elems = document.getElementsByTagName("input");
   var elems = document.getElementsByClassName("search");
@@ -1293,21 +1026,6 @@ function setListeners() {
 	counter.innerText = len;
   });
   field.addEventListener("keypress", (e) => {
-<<<<<<< HEAD
-    if (e.key === "Enter" && e.shiftKey) {
-      e.preventDefault();
-      var elem = e.target;
-      if (elem.value.match(/^@/)) {
-        try{fixQueues(elem);}catch(err){alert(err.message)}
-       // try{fixVTO(elem);}catch(err){alert(err.message)}
-        simpleCopy(elem);
-        elem.value = "copied!";
-        setTimeout(() => {elem.value = ""},3000);
-      } else {
-        inputCopyItems(elem);
-      }
-    }
-=======
 	counter.innerText = e.target.value.length;
 	if (e.key === "Enter" && e.shiftKey) {
 	  e.preventDefault();
@@ -1344,39 +1062,24 @@ function setListeners() {
 			  e.target.value = new Date().toLocaleString();
 			}
 		}
->>>>>>> origin/master
   });
   document.addEventListener("focus", (e) => {
 	  alert("focus: "+e.target.id);
 	  db.currentElem = e.target;
   });*/
   for (var t in copyFields) {
-<<<<<<< HEAD
-    if (copyFields[t].id) {
-      copyFields[t].addEventListener("keyup", (e) => {
-        var elem = e.target;
-        copies[elem.id] = elem.innerHTML;
-      });
-    }
-=======
 	if (copyFields[t].id) {
 	  copyFields[t].addEventListener("keyup", (e) => {
 		var elem = e.target;
 		copies[copies.currentSet][elem.id] = elem.innerHTML;
 	  });
 	}
->>>>>>> origin/master
   }
 }
 
 setTimeout(setListeners, 3000);
 
 setTimeout(() => { 
-<<<<<<< HEAD
-  setCopyItems(copies, true);
-  fillTemplateListener(); 
-}, 2000);
-=======
  // if (db.localSave) {
   //  try { 
 	//	loadCopies() 
@@ -1388,4 +1091,3 @@ setTimeout(() => {
   setCopyItems(copies[copies.currentSet], true);
   fillTemplateListener();
 }, 2000);
->>>>>>> origin/master
