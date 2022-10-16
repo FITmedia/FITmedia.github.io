@@ -4,6 +4,68 @@ var db = {
   searchUScode: "site:law.cornell.edu/uscode/text/26 "
 };
 
+var states = {
+  AL:"site:revenue.alabama.gov/",
+  AK:"site:revenue.state.ak.us/",
+  AZ:"site:azdor.gov/",
+  AR:"site:dfa.arkansas.gov/",
+  CA:"site:ftb.ca.gov/",
+  CO:"site:colorado.gov/revenue",
+  CT:"site:ct.gov/drs/site/",
+  DE:"site:revenue.delaware.gov/",
+  FL:"site:dor.myflorida.com/",
+  GA:"site:dor.georgia.gov/",
+  HI:"site:tax.hawaii.gov/",
+  ID:"site:tax.idaho.gov/",
+  IL:"site:.illinois.gov/rev/",
+  IN:"site:in.gov/dor/",
+  IA:"site:tax.iowa.gov/",
+  KS:"site:ksrevenue.org/",
+  KY:"site:revenue.ky.gov/",
+  LA:"site:revenue.louisiana.gov/",
+  ME:"site:maine.gov/revenue/",
+  MD:"site:marylandtaxes.com/",
+  MA:"site:mass.gov/dor/",
+  MI:"site:michigan.gov/treasury",
+  MN:"site:revenue.state.mn.us/",
+  MS:"site:dor.ms.gov/",
+  MO:"site:dor.mo.gov/",
+  MT:"site:revenue.mt.gov/",
+  NE:"site:revenue.nebraska.gov/",
+  NV:"site:tax.nv.gov/",
+  NH:"site:revenue.nh.gov/",
+  NJ:"site:state.nj.us/treasury/taxation/",
+  NM:"site:tax.newmexico.gov/",
+  NY:"site:tax.ny.gov/",
+  NC:"site:dor.state.nc.us/",
+  ND:"site:nd.gov/tax/",
+  OH:"site:tax.ohio.gov/",
+  OK:"site:oklahoma.gov/tax.html",
+  OR:"site:oregon.gov/DOR/",
+  PA:"site:revenue.pa.gov/",
+  RI:"site:tax.ri.gov/",
+  SC:"site:dor.sc.gov/",
+  SD:"site:dor.sd.gov/",
+  TN:"site:tn.gov/revenue",
+  TX:"site:cpa.state.tx.us/",
+  UT:"site:incometax.utah.gov/",
+  VT:"site:tax.vermont.gov/",
+  VA:"site:tax.virginia.gov/",
+  WA:"site:dor.wa.gov/",
+  DC:"site:otr.cfo.dc.gov/",
+  WV:"site:tax.wv.gov/",
+  WI:"site:revenue.wi.gov/",
+  WY:"site:revenue.wyo.gov/"
+}
+
+var queueFixes = {
+	"cg-us_ta_extendfs": "New FS Extensions. Please be efficient with your calls. Thanks.",
+	"cg-us_t": "AYG. Please be efficient with your calls. Thanks.",
+	"cg-us_er_fs_amend": "FS Amend. Can we get some support to clear the queue? Thanks.",
+	"cg-us_er_fs": "Full Service. Can we get some support to clear the queue? Thanks.",
+	"cg-us_er": "AYG. Please be efficient with your calls. Thanks."
+};
+
 var copiesTA = {
   div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
   div2: `The best way for me to help you is to <span class="highlight">share your TurboTax Live Screen</span>. You should see a pop-up that says: See your expert and share your screen. Please click Accept.`,
@@ -15,10 +77,10 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
 };
 
 var copies = { //Lead
-  div1: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`,
-  div2: `Hello __! Thank you for providing the Engagement ID, I can assist you with that! Give me a moment to get this pulled up. Are you out of the engagement?`,
-  div3: `Hello __! Thank you for providing the case number, I can assist you with that! Give me a moment to look into this.`,
-  div4: `Hello __! Thank you for your question, I can assist you with that! Give me a moment to review this.`
+  div1: `Pod15 / [affected] / [responses] / [staffed]`,
+  div2: `hasmy::leadpolly: on:today`,
+  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
+  div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
 };
 
 var copiesPM = {
@@ -29,12 +91,15 @@ var copiesPM = {
   div5: `:happy_oddish: Thank you for letting me answer your question! Can you please put a Green Check Mark next to the eyes underneath your original question :eyes: :white_check_mark: I will then add a :leadpolly: next to your checkmark for a survey! "Your feedback is how I grow and get better. Please take a minute to complete this short survey." You will find the survey at the bottom of your Slack panel. Thank you so much!`
 };
 
-var temp = {}; // to store altered copy text
+var temps = {}; // to store altered copy text
 
 function srch(elem) {
   var id = elem.id;
   var text = db[id];
   var search = text + elem.value;
+  if (elem.id === "searchIRS" && elem.value.slice(0,3).match(/^[A-Z]{2}\s/)) {
+    search = stateSearch(elem);
+  }
   var encode = encodeURI(search);
   elem.value = "";
   var url = "https://www.google.com/search?q=" + encode;
@@ -139,9 +204,12 @@ function setCopyItems(items, clear) {
         <div id="warn_${id}" class="copy_control"><span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span><span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span></div>
         <p id="text_${id}">${text}</p>
       </div>`;
-    document.getElementById("copy-items").innerHTML += div;
+    //var refElem = document.getElementById("copy-items").children[0];
+    //document.getElementById("copy-items").insertBefore(div,refElem);
+    var currText = document.getElementById("copy-items").innerHTML;
+    document.getElementById("copy-items").innerHTML = div + currText; // add new items to top
     copies[id] = div;
-    buildObject(text,`text_${id}`);
+   // buildObject(text,`text_${id}`);
     console.log(copies[id]);
     ct++;
   }
@@ -159,18 +227,76 @@ function inputCopyItems(elem) {
   setCopyItems(arr);
 }
 
-function appendInputs(txt) {
+function appendInputs_ok(txt) {
   var matches = txt.match(/\[[\w\s]+\]/g);
   if (matches) {
     for (var ea in matches) {
       var placeholder = matches[ea].replace(/[\[\]]*/g, "");
       var id = matches[ea].match(/\w/g).join("");
-      var txtId = `text_${id}`;
-      var html = `<input id="${id}" onkeyup="window.database.update(this,${txtId})" placeholder="${placeholder}">`; // removed - onblur="inputVar(this)"
+      //var txtId = `text_${id}`;
+      var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
       txt = txt + html;
     }
   }
   return txt;
+}
+
+function appendInputs(txt) {
+  var matches = txt.match(/\[[\w\s\|-]+\]/g); // .match(/\[[^\n\r\v]+\]/g);
+  if (matches) {
+	for (var ea in matches) {
+	  var match = matches[ea];
+	  var placeholder = match.replace(/[\[\]]*/g, "");
+	  var id = match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
+	  if (match.match(/\|/g)) {
+		  var splits = match.replace(/[\[\]]/g,"").split("|");
+      var label = `[${splits[0]}]`;
+      txt = txt.replace(match, label);
+		  var html = `<select id="${id}">`;
+		  for (var s in splits) {
+			  var split = splits[s];
+			  var opVal = split;
+			  var opPh = split;
+			  var opt = `<option value="${opVal}">${opPh}</option>`;
+			  html += opt;
+		  }
+		  html += "</select>";
+	  } else {
+	  
+	  //var txtId = `text_${id}`;
+	  var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
+}
+	  txt = txt + html;
+	}
+  }
+  return txt;
+}
+
+function altSearch(input) {
+  var text = input.value;
+  var search = matcher(obj,text);
+  if (search) {
+    return search;
+  } else {
+    return text;
+  }
+}
+
+function matcher(obj,text) {
+  for (var i in obj) {
+    var code = i;
+    var search = obj[i];
+    var patt = new RegExp(`(\\s|^)${code}\\s`,"");
+    var result = text.match(patt);
+    if (result) {
+       result = result[0].replace(/\s/g,"");
+       text = text.replace(result+" ","");
+       result = obj[result];
+       return search + " " + text;
+    } else {
+      return text;    
+    }
+  }
 }
 
 function buildObject(text,id) {
@@ -184,42 +310,89 @@ function buildObject(text,id) {
   obj.filled = "";
   obj.vars = {};
   obj.temp = text;
-  window.database.update = (input,output) => {
+ /* window.database.update = (input,output) => {
     // input: element were input is located
-    // output: string id of display element
+    // output: display element
     var db = window.database;
     var id = input.id;
+    var outId = output.id;
     var value = input.value;
-    var vars = db[output].vars;
+    var vars = db[outId].vars;
     vars[id] = value;
     for (var ea in vars) {
       var k = ea;
       var v = vars[ea];
       var txt = obj.temp.replace(`[${k}]`,`${v}`);
-      document.getElementById(output).innerHTML = txt;
+      document.getElementById(outId).innerHTML = txt;
     }
   };
   var matches = text.match(/\[[\w\s]+\]/g);
-  for (var m in matches) {
-    obj[m.replace(/[\[\]]*/g,"")] = "";
-  }
+  for (var m in matches) {*/
+  //  obj[m.replace(/[\[\]]*/g,"")] = "";
+  //}
   return obj;
 }
 
-function inputVar(elem) {
-  var txtName = elem.placeholder;
-  var divName = elem.parentNode.id.replace("border_", "");
-  var div = document.getElementById(divName);
-  var text = div.innerHTML;
-  var input = elem.value;
-  if (input === "") {
-    text = `[${txtName}]`;
+function fillTemplate(inputs,parag) {
+  if (!temps[parag.id]) {
+  	var text = parag.innerHTML;
+    temps[parag.id] = text;
+    parag.contentEditable = false;
   } else {
-  // elem.outerHTML = "";
-    text = text.replace(`[${txtName}]`, input);
+    var text = temps[parag.id];
   }
-  div.innerHTML = text;
-  //copies[divName] = text;
+  for (var i in inputs) {
+    var input = inputs[i];
+  //  if (typeof input === "object") {
+      var key = input.id;
+      var value = input.value;
+      var tag = input.tagName;
+      if (tag === "INPUT") {
+        text = text.replace(`[${key}]`,value);
+      } else if (tag === "SELECT") {
+        key = key.split("_")[0]; //.replace(/_/g,"|");
+        text = text.replace(`[${key}]`,value);
+      }
+  //  } 
+    /* var key = i;
+    var value = input;
+    text = text.replace(`[${key}]`,value);*/
+  }
+  //alert("text at close: "+text);
+  parag.innerHTML = text;
+}
+
+function fillTemplateListener() {
+  var test = (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
+      var parent = e.target.parentElement;
+      while (!parent.classList.contains("copy_border")) {
+        parent = parent.parentElement;
+      }
+      var parag = parent.getElementsByClassName("copy_text")[0];
+      var ins = parent.getElementsByTagName('input');
+      var dds = parent.getElementsByTagName('select');
+      var inputs = [];
+      for (var n in ins) {
+        var elem = ins[n];
+        if (elem && elem.id) {
+          inputs.push(elem);
+          console.log(elem.id);
+        }
+      }
+      for (var d in dds) {
+        var elem = dds[d];
+        if (elem && elem.id) {
+          inputs.push(elem);
+          console.log(elem.id);
+        }
+      }
+      console.log("inputs = "+JSON.stringify(inputs));
+      fillTemplate(inputs,parag);
+    }
+  }
+  document.addEventListener("keyup",test);
+  document.addEventListener("change",test);
 }
 
 function fixVTO(elem) {
@@ -227,10 +400,12 @@ function fixVTO(elem) {
   var corpID = str.shift().toLowerCase().replace("@","").trim();
   str = str.join(" ");
   var timeExp = str.match(/[\d:]{1,5}(\s|)(a|p|)(m|)/gi);
-  if (timeExp.length > 1) {
+  if (timeExp && timeExp.length > 1) {
     timeExp = timeExp[timeExp.length - 1];
+  } else if (timeExp && timeExp.length <= 1) {
+    timeExp = timeExp[0];
   } else {
-      timeExp = timeExp[0];
+    return elem.value;
   }
   var timeDigits = timeExp.match(/\d/g);
   var time = parseInt(timeDigits.join(""));
@@ -274,6 +449,73 @@ function fixVTO(elem) {
   return corpID + " " + eos;
 }
 
+function fixQueues(elem) {
+  var fixes = queueFixes;
+  var text = elem.value;
+  var msgs = text.match(/@[^@]+/g);
+  if (!msgs) { return text; }
+  var newTxt = ["@here "];
+  var n = "";
+  if (msgs.length > 1) { n = "\n" }
+  for (var m in msgs) {
+  	var msg = msgs[m];
+    if (msg && msg.match(/cg-us_[^\s]+/i)) {
+      var nums = msg.match(/\d+/g); 
+      var match = msg.match(/cg-us_[^\s]+/i).toString();
+      for (var f in fixes) {
+        var find = f;
+        var fix = fixes[f];
+        if (match.match(find)) {
+          var num = nums[0];
+          var dur = nums[1];
+          var ending = fix;
+          var s = "s";
+          if (num == 1) { s = "" }
+          msg = "We have "+num+" call"+s+" in queue for over "+dur+" minutes in "+ending;
+          break;
+        }
+      }
+    }
+	newTxt.push(msg);
+  }
+  elem.value = newTxt.join(n);
+  //demo.innerText = newTxt.join("");
+  return text;
+}
+
+function fixQueues_old(elem) {
+  var fixes = {
+    "cg-us_ta": "AYG",
+    "cg-us_fs": "Full Service"
+  }
+  var text = elem.value;
+  if (text && text.match(/cg-us_[^\s\.]+/i)) {
+    var match = text.match(/cg-us_[^\s\.]+/i);
+    for (var f in fixes) {
+      var find = f;
+      var fix = fixes[f];
+      if (match.match(find)) {
+        text = text.replace(match,fix);
+      }
+    }
+  }
+  elem.value = text;
+  return text;
+}
+
+function stateSearch(elem) {
+  var text = elem.value;
+  var txt = elem.value.slice(0,2);
+  for (var s in states) {
+    var srch = states[s];
+    if (txt == s) {
+      text = text.replace(txt,srch);
+      return text;
+    }
+  }
+  return text;
+}
+
 function setListeners() {
   var elems = document.getElementsByTagName("input");
   var field = document.getElementById("inputCopies");
@@ -293,8 +535,11 @@ function setListeners() {
       e.preventDefault();
       var elem = e.target;
       if (elem.value.match(/^@/)) {
-        fixVTO(elem);
+        try{fixQueues(elem);}catch(err){alert(err.message)}
+       // try{fixVTO(elem);}catch(err){alert(err.message)}
         simpleCopy(elem);
+        elem.value = "copied!";
+        setTimeout(() => {elem.value = ""},3000);
       } else {
         inputCopyItems(elem);
       }
@@ -312,4 +557,7 @@ function setListeners() {
 
 setTimeout(setListeners, 3000);
 
-setTimeout(() => { setCopyItems(copies, true) }, 2000);
+setTimeout(() => { 
+  setCopyItems(copies, true);
+  fillTemplateListener(); 
+}, 2000);
