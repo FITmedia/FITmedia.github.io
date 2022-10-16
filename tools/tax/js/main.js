@@ -104,13 +104,6 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
 	  div2: `[Verify Pricing. . .Trench footage matches article range (ex: 80ft is 26ft - 150ft). . .Trench depth entered correctly (ex: 0000 vs 0001). . .Bore depth entered correctly (ex: BOB = 6). . .Correct cutover article billed for wire type (CO vs COF). . .All articles entered with correct quantities (ex: 0039PE qty 1 vs 2). . .20-50% higher in ABWS? Add Jump Rate in Vision. . .20-50% lower in ABWS? Remove Jump Rate in Vision]`,
           div3: `[Manager Assist Request. . .Work Requests Complaint. . .Enter V / MA. . .Enter notes describing what is needed. . .Look up Request ID in Operations main search. . .Enter notes into + QualTek Notification. . .Enter "No" for ECD]`,
 	  div4: `New ECD set for work order on [7 days from today].
-
-// var copies = { //Lead
-//  div1: `Pod15 / [affected] / [responses] / [staffed]`,
-//  div2: `hasmy::leadpolly: on:today`,
-//  div3: `Hey [manager]! I'm seeing [agent] in [status|ACW|Break status|Lunch status|ANA|System Issues|Hold status] for [minutes] mins. I did a callout in Support, and DM'd already. Would you reach out to make sure everything is okay?`,
-//  div4: `in:#[room|nicole15-watercooler|nicole15-nesting|nicole15-support|ttlive-pro-services] from:@[agentID] [keywords]`
-
 [ECD New WOs. . .Operations > Work Orders > WOs Added Today. . .Filter out CA. . .Export to XLS. . .<b>FOR EACH</b> in Work Requests Complaint. . .__Change dropdown to "closed". . .__Set Complaint Type to "I" (Informational). . .__Paste the above message into Remarks. . .__(Verify that month is correct)]`,
 	  div5: `[ECD Emails. . .Search in Work Requests Complaint Report. . .<b>IF</b> not yet entered, enter New in Work Requests Complaint. . .<b>IF</b> today or past date. . .__<b>IF</b> locate number is present. . .__Set Complaint Type to "8" (Locate Ticket). . .__Enter just locate number text in Remarks. . .<b>ELSE IF</b> future date. . .__Change Complaint Status to "Closed". . .__Set Complaint Type to "I" (Informational). . .__Enter ECD text and locate number text or other note]`,
 	  div6: `All cutovers must be completed by the subcontractor, unless ATT indicated Held Order. Please contact Carl for approval.
