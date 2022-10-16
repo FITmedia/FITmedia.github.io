@@ -1,6 +1,7 @@
 <html>
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Common Searches</title>
   <link href="css/main.css" rel="stylesheet">
   <script src="js/main.js"></script>
@@ -8,20 +9,19 @@
 
 <body>
   <div class="wrapper">
-    <div class="flex-container">
-      <input id="searchIRS" placeholder="search IRS.gov...">
-      <input id="searchIntuit" placeholder="search ttlc.intuit.com...">
-      <input id="searchUScode" placeholder="search US Legal Code...">
-      <textarea id="inputCopies"></textarea>
-    </div>
+	<div class="flex-container">
+	  <input id="searchIRS" class="search" placeholder="search IRS.gov...">
+	  <input id="searchIntuit" class="search" placeholder="search ttlc.intuit.com...">
+	  <input id="searchUScode" class="search" placeholder="search US Legal Code...">
+  <div class="mobile-controls">
+      <span id="counter" class="counter"></span>
+	  <textarea id="inputCopies"></textarea>
+	  <button onclick="inputCopies.dispatchEvent(new KeyboardEvent('keypress',{shiftKey: true,key: 'Enter'}))">></button>
+  </div>
+	</div>
   </div>
   <div class="wrapper">
-    <div id="copy-items" class="flex-container">
-
-    </div>
+	<div id="copy-items" class="flex-container"></div>
   </div>
   <textarea id="hiddenInput" style="position: absolute; top: -50px"></textarea>
-
-</body>
-
-</html>
+</body></html>
