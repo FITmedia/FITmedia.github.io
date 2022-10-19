@@ -512,7 +512,7 @@ function appendInputs(txtId,text) {
 		  var splits = match.replace(/[\[\]]/g,"").split("|");
 		  var label = splits[0];
 		  txt = txt.replace(match, label);
-		  var html = `<select id="${id}">`;
+		  var html = `<select id="${id}" onchange="chkValue(this)">`;
 		  for (var s in splits) {
 			  var split = splits[s];
 			  var opVal = split;
