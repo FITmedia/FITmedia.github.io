@@ -96,7 +96,7 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
   },
   household: { // personal
 	//div1: `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro]&amt=[amount]`,
-	div2: `<h3>Kids Ledgers</h3><p>kid: [Killien|Miriam]</p><p>date: [date]</p><p>desc: [Dishes (2 drainers)|Meloncube|Discord Nitro|Robux|Other]</p><p>amt: [amount]</p><button onclick="handleURL('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Meloncube|Discord Nitro|Robux|Other]&amt=[amount]')">Submit</button>`,
+	div2: `<h3>Kids Ledgers</h3><p>kid: [Killien|Miriam]</p><p>date: [date]</p><p>desc: [Dishes (2 drainers)|Dishes (1 drainer)|Meloncube|Discord Nitro|Robux|Toca Life|Other]</p><p>amt: [amount]</p><button onclick="handleURL('https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores&kid=[Killien|Miriam]&date=[date]&desc=[Dishes (2 drainers)|Dishes (1 drainer)|Meloncube|Discord Nitro|Robux|Toca Life|Other]&amt=[amount]')">Submit</button>`,
 	//div3: `<h3>Create Markdown Link</h3><p>[URL]</p><button onclick="cmds.marklink.func(new Array().push('[URL]'))">Submit</button>`
   },
   qualtek: {
@@ -165,7 +165,7 @@ const cmds = {
 			  desc: "date"
 		  },
 		  desc: {
-			  desc: "Dishes (2 drainers)|Meloncube|Discord Nitro|other"
+			  desc: "Dishes (2 drainers)|Dishes (1 drainer)|Meloncube|Discord Nitro|Robux|Toca Life|Other"
 		  },
 		  amt: {
 			  desc: "amount"
@@ -568,6 +568,16 @@ function toggleChkBox(elem) {
   } else {
 	sib.checked = false;
   }
+}
+
+function chkValue(elem) {
+    if (elem?.value.match(/Other/gi)) {
+        var id = elem.id;
+        let inp = document.createElement("input");
+        inp.id = id;
+        inp.placeholder = "other";
+        elem.outerHTML = inp.outerHTML;
+    }
 }
 
 /****** FILL TEMPLATE ******/
