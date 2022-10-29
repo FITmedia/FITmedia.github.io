@@ -102,7 +102,7 @@ If you minimize your TurboTax screen or go to a link, you may lose sight of the 
   qualtek: {
 	  div1: `Please correct billing: [total]ft being billed as [PDA (1ft - 25ft)|PDB (26ft - 150ft)|PDC (151ft - 250ft)|PDE (&gt; 250ft)]. Should be billed as PD[A (1ft - 25ft)|B (26ft - 150ft)|C (151ft - 250ft)|D or PDE (&gt; 250ft)].`,
 	  div2: `[Verify Pricing. . .Trench footage matches article range (ex: 80ft is 26ft - 150ft). . .Trench depth entered correctly (ex: 0000 vs 0001). . .Bore depth entered correctly (ex: BOB = 6). . .Correct cutover article billed for wire type (CO vs COF). . .All articles entered with correct quantities (ex: 0039PE qty 1 vs 2). . .20-50% higher in ABWS? Add Jump Rate in Vision. . .20-50% lower in ABWS? Remove Jump Rate in Vision]`,
-          div3: `[Manager Assist Request. . .Work Requests Complaint. . .Enter V / MA. . .Enter notes describing what is needed. . .Look up Request ID in Operations main search. . .Enter notes into + QualTek Notification. . .Enter "No" for ECD]`,
+		  div3: `[Manager Assist Request. . .Work Requests Complaint. . .Enter V / MA. . .Enter notes describing what is needed. . .Look up Request ID in Operations main search. . .Enter notes into + QualTek Notification. . .Enter "No" for ECD]`,
 	  div4: `New ECD set for work order on [7 days from today].
 [ECD New WOs. . .Operations > Work Orders > WOs Added Today. . .Filter out CA. . .Export to XLS. . .<b>FOR EACH</b> in Work Requests Complaint. . .__Change dropdown to "closed". . .__Set Complaint Type to "I" (Informational). . .__Paste the above message into Remarks. . .__(Verify that month is correct)]`,
 	  div5: `[ECD Emails. . .Search in Work Requests Complaint Report. . .<b>IF</b> not yet entered, enter New in Work Requests Complaint. . .<b>IF</b> today or past date. . .__<b>IF</b> locate number is present. . .__Set Complaint Type to "8" (Locate Ticket). . .__Enter just locate number text in Remarks. . .<b>ELSE IF</b> future date. . .__Change Complaint Status to "Closed". . .__Set Complaint Type to "I" (Informational). . .__Enter ECD text and locate number text or other note]`,
@@ -154,7 +154,7 @@ const cmds = {
 		  var amt = arr[3];
 		  var url = `https://script.google.com/a/macros/thefitmedia.com/s/AKfycbwaXpoVbWj6DEsQodhuhLcPqDB4Ht0-5fIdJ6zw83c/dev?cmd=chores\&kid=${kid}\&date=${date}\&desc=${desc}\&amt=${amt}`;
 		  inputCopies.value = url; //createButton(kid+" Chores",url);
-		  inputCopyItem(inputCopies);
+		  inputCopyItems(inputCopies);
 		  return url;
 	  },
 	  properties: {
@@ -176,8 +176,9 @@ const cmds = {
 	  func: (arr) => {
 		  var pattSet = arr[0];
 		  var text = arr[1];
+          console.log("pattSet = "+arr[0]+"\ntext = "+arr[1])
 		  inputCopies.value = extractor(pattSet,text);
-		  inputCopyItem(inputCopies);
+		  inputCopyItems(inputCopies);
 	  },
 	  properties: {
 		  pattset: {
@@ -201,20 +202,20 @@ const cmdMods = {
 	}
 	text += arr.join("|");
 	elem.value = text;
-	inputCopyItem(elem);
+	inputCopyItems(elem);
   }
 }
 
 const patterns = {
 	articles: [
-                [/^[^]*?(Trenching[^]*?)(\s*Cutover Req[^]*|$)/g,"$1"],
+		[/^[^]*?(Trenching[^]*?)(\s*Cutover Req[^]*|$)/g,"$1"],
 		[/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
 		[/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
 		[/("|\-|\\*\? )/g,""],
 		[/(\\<*|&lt;)/g,"LT"],
 		[/(0040CE ... .+? ... .+?)( ... .+)/g, "$1 CU FT $2"],
 		[/([0-9]{4}(?:P[^E]|W[^L]|BO|PC|CR) ... .+? ... [0-9]+?) (... .+)/g, "$1 FT $2"],
-                [/([0-9]{4}[A-Z]{2,3} ... .+ ... .+ ... [0-9]*),*([0-9.]+)/g, "$1$2"]
+		[/([0-9]{4}[A-Z]{2,3} ... .+ ... .+ ... [0-9]*),*([0-9.]+)/g, "$1$2"]
 	],
 	articlesToJSON: [
 		[/("|\-|\\*\? )/g,""],
@@ -236,7 +237,7 @@ const patterns = {
 	],
 	specChars: [
 		[/(ATT |)[0-9]*[-+][0-9]+=[0-9]+( *ft,*|)/g,""],
-                [/([0-9])-([0-9])/g, "$1 to $2"],
+		[/([0-9])-([0-9])/g, "$1 to $2"],
 		//[/([0-9]+) *- *([0-9]+)/g,"$1 to $2"],
 		[/([0-9]+)(['\u2018\u2019\u201B]|-FOOT)/gi, "$1 ft"],
 		[/([0-9]+)["\u201C\u201D\u201F]/g, "$1 inches"],
@@ -245,29 +246,29 @@ const patterns = {
 	],
 	costDisputes: [
 		//[/\n/g,""], // remove new lines
-        [/\s\s+/g,"\n"],
-        [/\s*(:)\s*/g,"$1"],
+		[/\s\s+/g,"\n"],
+		[/\s*(:)\s*/g,"$1"],
 		//[/(?:  +|\t)(\b[^:]+:(?:  |\t).*?)(?=  +|\t+|\n|$)/g,"$1\n"], // match all
 		//[/([^:]+:(?:  |\t)[^]+?)(?=\n[^:]+:|$)/g,"$1"],
 		//[/([^:]+?)\s\s+/g,"$1 "],
 		//[/(?:Work Request:|Address:|Bid Area:|Remarks:)(?:  |\t)([^\s].*?)(?=\n|$)/g,"$1"],
 		//[/([^\n]+:(?:  |\t).*?)(\n|$)/g,""] // exclude
 		
-        //[/(  +|\t+)/g,""], // remove excess white space
+		//[/(  +|\t+)/g,""], // remove excess white space
 		//[/\n\n+/g,"\n"] // remove excess new lines
-    ],
+	],
 	costDisputes_backup: [
 		[/\n/g,""], // remove new lines
-        [/(:)(?!(  |\t))/g,"$1  "],
+		[/(:)(?!(  |\t))/g,"$1  "],
 		//[/(?:  +|\t)(\b[^:]+:(?:  |\t).*?)(?=  +|\t+|\n|$)/g,"$1\n"], // match all
 		//[/([^:]+:(?:  |\t)[^]+?)(?=\n[^:]+:|$)/g,"$1"],
 		//[/([^:]+?)\s\s+/g,"$1 "],
 		//[/(?:Work Request:|Address:|Bid Area:|Remarks:)(?:  |\t)([^\s].*?)(?=\n|$)/g,"$1"],
 		//[/([^\n]+:(?:  |\t).*?)(\n|$)/g,""] // exclude
 		
-        //[/(  +|\t+)/g,""], // remove excess white space
+		//[/(  +|\t+)/g,""], // remove excess white space
 		//[/\n\n+/g,"\n"] // remove excess new lines
-    ],
+	],
 	fixList: [
 		[/[A-Z0-9 &]+\n/g,""],
 		[/• /g,""],
@@ -420,14 +421,15 @@ function deleteCopyItem(idOrElem) {
 
 function setCopyItems(items, clear, options) {
   var cset = copies.currentSet;
+  var ct = 0;
   if (clear) {
 	document.getElementById("copy-items").innerHTML = "";
 	copies[cset] = {};
   }
   if (Object.keys(copies[cset]).length === 0) {
-	var ct = 1;
+	ct = 1;
   } else {
-	var ct = Object.keys(copies[cset]).length + 1;
+	ct = Object.keys(copies[cset]).length + 1;
   }
   for (var i in items) {
 	var text = items[i];
@@ -471,7 +473,7 @@ function setCopyItems(items, clear, options) {
   //saveCopies();
 }
 
-function inputCopyItem(elem) {
+function inputCopyItems(elem) {
   var input = elem.value;
   elem.value = "";
   var items = input.replace(/\n/g, "<br>").split(/--/g);
@@ -571,13 +573,13 @@ function toggleChkBox(elem) {
 }
 
 function chkValue(elem) {
-    if (elem?.value.match(/Other/gi)) {
-        var id = elem.id;
-        let inp = document.createElement("input");
-        inp.id = id;
-        inp.placeholder = "other";
-        elem.outerHTML = inp.outerHTML;
-    }
+	if (elem?.value.match(/Other/gi) && elem?.tagName.match(/(select|option)/gi)) {
+		var id = elem.id;
+		let inp = document.createElement("input");
+		inp.id = id;
+		inp.placeholder = "other";
+		elem.outerHTML = inp.outerHTML;
+	}
 }
 
 /****** FILL TEMPLATE ******/
@@ -897,25 +899,39 @@ function commands(elem) {
   // ![commandID] remaining string are properties|divided by vertical pipes|true
   // commandID([prop0,prop1,prop2])
   var text = elem.value;
-  var props = [];
+  var props = "";
   var cmdId = text.match(/^![^\s]+?\s/);
   if (cmdId) {
 	cmdId = cmdId[0];
-	props = text.replace(cmdId,"").split(/\|/g);
+	props = text.replace(cmdId,"");
+    cmdId = cmdId.replace("!","").trim();
+    var propLen = Object.keys(cmds.extract.properties).length;
+    if (propLen > 1 && !props.match(/\|/g)) {
+        // shift to new array at each space
+        var arr = [];
+        var propArr = props.split(/ /);
+        for (var i = propLen; i > 1; i--) {
+            let prop = propArr.shift();
+            arr.push(prop);
+        }
+        arr.push(propArr.join(" "));
+        props = arr;
+    } else {
+        props = props.split(/\|/g);
+    }
   } else {
 	cmdId = text;
   }
-  cmdId = cmdId.replace("!","").trim();
   if (!cmds[cmdId]) {
 	  console.log("Entry \"!"+cmdId+"\" is not a command.");
 	  return;
   } 
   if (text.match(/\s-[a-z]{1,3}(\s|$)/g)) { // modified handling
 	var modCode = text.match(/\s-[a-z]{1,3}(\s|$)/g)[0].trim().replace(/-/g,"");
-    if (!cmds[cmdId][modCode]) { 
-        console.log("ERROR, cmdMods['"+modCode+"'] is not a function.");
-        return;
-    }
+	if (!cmds[cmdId][modCode]) { 
+		console.log("ERROR, cmdMods['"+modCode+"'] is not a function.");
+		return;
+	}
 	cmdMods[modCode](cmdId,props,elem);
   } else { // standard handling
   try {
@@ -1042,7 +1058,7 @@ function setListeners() {
 	  } else if (elem.value.match(/^!/)) { // commands
 		commands(elem);
 	  } else {
-		inputCopyItem(elem);
+		inputCopyItems(elem);
 	  }
 	}
   });
@@ -1055,18 +1071,16 @@ function setListeners() {
 		p.remove();
 	}
   });
-  /*
-  document.addEventListener("blur", (e) => {
-		alert("blurring "+e.target.id);
-		if (e.target.id === "date") {
-			if (e.target.value === "today") {
+  document.addEventListener("change", (e) => {
+		//if (e.target.id === "date") {
+			if (e.target.value === "%today") {
 			  e.target.value = new Date().toLocaleDateString();
-			} else if (e.target.value === "now") {
+			} else if (e.target.value === "%now") {
 			  e.target.value = new Date().toLocaleString();
 			}
-		}
+		//}
   });
-  document.addEventListener("focus", (e) => {
+ /* document.addEventListener("focus", (e) => {
 	  alert("focus: "+e.target.id);
 	  db.currentElem = e.target;
   });*/
