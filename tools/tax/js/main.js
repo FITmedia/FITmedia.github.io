@@ -190,7 +190,7 @@ const cmds = {
 	  }
   },
   todo: {
-	func: () => {
+	func: async () => {
 		var boardName = "JK-Master TODO List";
 		var prefix = "MUST DO"; // i.e.: card name begins with...
 		var board = await getCardsByBoard(boardName);
