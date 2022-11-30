@@ -926,7 +926,7 @@ function commands(elem) {
 	cmdId = cmdId[0];
 	props = text.replace(cmdId,"");
     cmdId = cmdId.replace("!","").trim();
-    var propLen = Object.keys(cmds.extract.properties).length;
+    var propLen = Object.keys(cmds[cmdId].properties).length;
     if (propLen > 1 && !props.match(/\|/g)) {
         // shift to new array at each space
         var arr = [];
@@ -941,7 +941,7 @@ function commands(elem) {
         props = props.split(/\|/g);
     }
   } else {
-	cmdId = text;
+	cmdId = text.replace("!","");
   }
   if (!cmds[cmdId]) {
 	  console.log("Entry \"!"+cmdId+"\" is not a command.");
