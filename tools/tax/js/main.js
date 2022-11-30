@@ -921,9 +921,9 @@ function commands(elem) {
   // commandID([prop0,prop1,prop2])
   var text = elem.value;
   var props = "";
-  var cmdId = text.match(/^![^\s]+?\s/);
+  var cmdId = text.match(/^!([^\s]+?)\s/);
   if (cmdId) {
-	cmdId = cmdId[0];
+	cmdId = cmdId[1];
 	props = text.replace(cmdId,"");
     cmdId = cmdId.replace("!","").trim();
     var propLen = Object.keys(cmds[cmdId].properties).length;
