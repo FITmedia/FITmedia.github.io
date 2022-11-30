@@ -50,7 +50,7 @@ async function fetchBoardID(boardName) {
       `https://api.trello.com/1/members/${idUser}/boards?key=${key}&token=${token}`, 
       {method: 'GET'}
     );
-    var boards = JSON.parse(result);
+    var boards = result; // removed - JSON.parse(result);
     for (var bd in boards) {
       var board = boards[bd];
       if (board.name === boardName) {
@@ -67,7 +67,7 @@ async function fetchBoardID(boardName) {
     let result = await fetch(
       `https://api.trello.com/1/boards/${boardID}/cards?key=${key}&token=${token}`, 
       {method: "GET" });
-    var cards = JSON.parse(result);
+    var cards = result; // removed - JSON.parse(result);
     return cards;
   }
 
