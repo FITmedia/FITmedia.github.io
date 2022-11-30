@@ -188,7 +188,28 @@ const cmds = {
 			  desc: "text"
 		  }
 	  }
-  }
+  },
+  todo: {
+	func: () => {
+		var boardName = "JK-Master TODO List";
+		var prefix = "MUST DO"; // i.e.: card name begins with...
+		var board = await getCardsByBoard(boardName);
+		board.filterCards(
+			(card) => {
+			var patt = new RegExp(`^${prefix}`,"g");
+			return card.name.match(patt);
+			}
+		);
+		var content = [];
+		for (var c in board.cards) {
+			content.push(`[${board.cards[c].name}]`);
+		}
+		content = content.join("--");
+		inputCopies.value = content;
+		inputCopyItems(inputCopies);
+	},
+	properties: {}
+  },
 };
 
 const cmdMods = {
