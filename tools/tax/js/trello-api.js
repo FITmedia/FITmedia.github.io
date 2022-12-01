@@ -74,7 +74,9 @@ async function fetchBoardID(boardName) {
 async function getCardsByBoard(boardName) { //getCardsByBoard(boardName).filterCards((card) => card.name.match(/^MUST DO/gi))
     if (!boardName) { boardName = "JK-Master TODO List"}
     var boardID = await fetchBoardID(boardName);
+    console.log("getCardsByBoard, boardID = "+boardID);
     var cards = await fetchCards(boardID);
+    console.log("getCardsByBoard, cards[0].name = "+cards[0].name);
     var board = {cards: cards};
     board.getNames = (filter) => {
       var cards = board.cards;
