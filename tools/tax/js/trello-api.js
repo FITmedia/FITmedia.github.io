@@ -50,6 +50,7 @@ async function fetchBoardID(boardName) {
       `https://api.trello.com/1/members/${idUser}/boards?key=${key}&token=${token}`, 
       {method: 'GET'}
     );
+    console.log("fetchBoardID, result = "+result)
     var boards = result; // removed - JSON.parse(result);
     for (var bd in boards) {
       var board = boards[bd];
