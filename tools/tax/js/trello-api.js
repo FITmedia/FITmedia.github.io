@@ -4,6 +4,7 @@ const trelloDB = {
     key: "0b877c1aedbb0d48de9640ab4eef390d",
     token: "c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab",
     idUser: "jamieklueck",
+    board: {name: "JK-Master TODO List"},
     filter: {
       incomplete: (card) => {
         for (var i in card.labels) {
@@ -41,6 +42,59 @@ const trelloDB = {
     }
   };
 
+function fetchByPrefix(prefix) {
+    let request = boardRequest();
+    fetch(request[0],request[1]).then((boards) => {
+        if (trelloDB.board.id) { trelloDB.board.id = "" }
+        for (var b in boards) {
+            var board = boards[b];
+            if (board.name === trelloDB.board.name) {
+                trelloDB.board.id = board.id;
+                break;
+            }
+        }
+        if (trelloDB.board.id) {
+            let request = cardsRequest(board.id);
+            fetch(request[0],request[1]).then((cards) => {
+                prefix = new RegExp(`^${prefix}`,"g")
+                var content = [];
+                for (var c in cards) {
+                    var card = cards[c];
+                    if (card.name.match(prefix)) {
+                        content.push(`[${card.name}]`);
+                    }
+                }
+                inputCopies.value = content.join("--");
+                inputCopyItems(inputCopies);
+            })
+        } else {
+            inputCopies.value = "";
+        }
+    })
+}
+
+function boardRequest() {
+    var key = trelloDB.key;
+    var token = trelloDB.token;
+    var idUser = trelloDB.idUser;
+    var request = [
+        `https://api.trello.com/1/members/${idUser}/boards?key=${key}&token=${token}`, 
+        {method: 'GET'}
+    ];
+    return request;
+}
+
+function cardsRequest(boardID) {
+    //var fetch = UrlFetchApp.fetch;
+    var key = trelloDB.key;
+    var token = trelloDB.token;
+    let request = [
+      `https://api.trello.com/1/boards/${boardID}/cards?key=${key}&token=${token}`, 
+      {method: "GET" }
+    ];
+    return request;
+}
+
 async function fetchBoardID(boardName) {
     //var fetch = UrlFetchApp.fetch;
     var key = trelloDB.key;
@@ -50,7 +104,7 @@ async function fetchBoardID(boardName) {
       `https://api.trello.com/1/members/${idUser}/boards?key=${key}&token=${token}`, 
       {method: 'GET'}
     );
-    console.log("fetchBoardID, result = "+result)
+    console.log("fetchBoardID, result = "+result);
     var boards = result; // removed - JSON.parse(result);
     for (var bd in boards) {
       var board = boards[bd];
