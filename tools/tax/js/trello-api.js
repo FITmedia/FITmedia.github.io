@@ -44,8 +44,10 @@ const trelloDB = {
 
 function fetchByPrefix(prefix) {
     let request = boardRequest();
-    fetch(request[0],request[1]).then((boards) => {
+    console.log(`fetchByPrefix, boardRequest = ["${request[0]}",{method: "${request[1].method}"}]`);
+    fetch(request[0],request[1]).then(async (boards) => {
         if (trelloDB.board.id) { trelloDB.board.id = "" }
+        boards = await boards.json();
         for (var b in boards) {
             var board = boards[b];
             if (board.name === trelloDB.board.name) {
@@ -53,22 +55,29 @@ function fetchByPrefix(prefix) {
                 break;
             }
         }
+        console.log(`fetchByPrefix, trelloDB.board.id = ${trelloDB.board.id}`)
         if (trelloDB.board.id) {
             let request = cardsRequest(board.id);
-            fetch(request[0],request[1]).then((cards) => {
-                prefix = new RegExp(`^${prefix}`,"g")
+            console.log(`fetchByPrefix, cardsRequest = ["${request[0]}",{method: "${request[1].method}"}]`)
+            fetch(request[0],request[1]).then(async (cards) => {
+                prefix = new RegExp(`^${prefix}`,"g");
+                cards = await cards.json();
                 var content = [];
                 for (var c in cards) {
                     var card = cards[c];
                     if (card.name.match(prefix)) {
+                        console.log(`fetchByPrefix, card.name = ${card.name}`)
                         content.push(`[${card.name}]`);
                     }
                 }
-                inputCopies.value = content.join("--");
+                let text = content.join("--");
+                inputCopies.value = text;
                 inputCopyItems(inputCopies);
             })
         } else {
-            inputCopies.value = "";
+            let text = "Nothing to show...";
+            inputCopies.value = text;
+            setTimeout(() => { inputCopies.value = "" }, 3000);
         }
     })
 }
@@ -85,7 +94,6 @@ function boardRequest() {
 }
 
 function cardsRequest(boardID) {
-    //var fetch = UrlFetchApp.fetch;
     var key = trelloDB.key;
     var token = trelloDB.token;
     let request = [
