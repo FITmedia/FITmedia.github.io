@@ -190,7 +190,7 @@ const cmds = {
 	  }
   },
   todo: {
-	func: async () => {
+	func: () => {
 		var prefix = "MUST DO"; // i.e.: card name begins with...
 		fetchByPrefix(prefix);
 	},
@@ -443,7 +443,7 @@ function setCopyItems(items, clear, options) {
 	if (text.match(/^!/)) { 
 		hiddenInput.value = text;
 		commands(hiddenInput);
-		inputCopies.value = "";
+		//inputCopies.value = "";
 		continue;
 	}
 	var id = `div${ct}`;
@@ -907,12 +907,21 @@ function commands(elem) {
   // commandID([prop0,prop1,prop2])
   var text = elem.value;
   var props = "";
-  var cmdId = text.match(/^!([^\s]+?)\s/);
-  if (cmdId) {
-	cmdId = cmdId[1];
-	props = text.replace(cmdId,"");
-    cmdId = cmdId.replace("!","").trim();
-    var propLen = Object.keys(cmds[cmdId].properties).length;
+  var cmdId = text.match(/^(![^\s]+?)(\s|$)/);
+  cmdId = cmdId ? cmdId[1].replace("!","").trim() : "";
+  if (!cmds[cmdId]) {
+	  inputCopies.prev = inputCopies.value;
+	  inputCopies.value = "Entry \"!"+cmdId+"\" is not a command.";
+	  setTimeout(() => {
+		inputCopies.value = inputCopies.prev;
+		delete inputCopies.prev;
+	  },3000);
+	  console.log("Entry \"!"+cmdId+"\" is not a command.");
+	  return;
+  } 
+  props = text.replace("!"+cmdId,"").trim();
+  if (props !== "") {
+    var propLen = Object.keys(cmds[cmdId].properties)?.length || 0;
     if (propLen > 1 && !props.match(/\|/g)) {
         // shift to new array at each space
         var arr = [];
@@ -926,13 +935,7 @@ function commands(elem) {
     } else {
         props = props.split(/\|/g);
     }
-  } else {
-	cmdId = text.replace("!","");
   }
-  if (!cmds[cmdId]) {
-	  console.log("Entry \"!"+cmdId+"\" is not a command.");
-	  return;
-  } 
   if (text.match(/\s-[a-z]{1,3}(\s|$)/g)) { // modified handling
 	var modCode = text.match(/\s-[a-z]{1,3}(\s|$)/g)[0].trim().replace(/-/g,"");
 	if (!cmds[cmdId][modCode]) { 
@@ -941,10 +944,10 @@ function commands(elem) {
 	}
 	cmdMods[modCode](cmdId,props,elem);
   } else { // standard handling
-  try {
-	text = cmds[cmdId].func(props);
-	//copyNotify(text,inputCopies);
-  } catch(err){console.log("ERROR, commands, standard: "+err.message)}	  
+	try {
+		text = cmds[cmdId].func(props);
+		//copyNotify(text,inputCopies);
+	} catch(err){console.log("ERROR, commands, standard: "+err.message)}	  
   } 
 }
 
