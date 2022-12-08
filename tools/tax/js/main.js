@@ -310,9 +310,9 @@ function submitChanges(id) {
 	var h3 = elem.querySelector("h3");
 	var checks = elem.querySelectorAll("div.chkbx-unit");
 	var items = [h3.innerText];
-	for (var c in checks) {
-		var input = checks[c].querySelector("input");
-		var label = checks[c].querySelector("label");
+	for (var box of checks) {
+		var input = box.querySelector("input");
+		var label = box.querySelector("label");
 		if (input.checked) {
 			// how to send checkmark to trello?
 		} else {
