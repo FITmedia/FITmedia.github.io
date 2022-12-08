@@ -477,7 +477,7 @@ function setCopyItems(items, clear) {
 		var controls = [];
 		for (var b in copies.options.control) {
 			var ctrl = copies.options.control[b];
-			var span = `<span id="btn_${ctrl[0]}_${id}" class="copy_btn warn" onclick="${ctrl[1]}(${id})">${ctrl[0]}</span>`;
+			var span = `<span id="btn_${ctrl[0]}_${id}" class="copy_btn warn" onclick="${ctrl[1]}('${id}')">${ctrl[0]}</span>`;
 			controls.push(span);
 		}
 		controls = controls.join("");
