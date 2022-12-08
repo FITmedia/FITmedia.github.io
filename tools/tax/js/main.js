@@ -736,7 +736,7 @@ function saveCopies() {
   }
 }
 
-function loadCopies() {
+async function loadCopies() {
   if (db.localSave) {
 	try { var localStorage = window.localStorage } catch (err) {
 	  console.log("ERROR, loadCopies: "+err.message);
@@ -746,21 +746,20 @@ function loadCopies() {
 	//if (!window.localStorage) {
 	//	return;
 	//}
-	var load = localStorage.getItem("wb_copies_currentSet");
+	var load = await localStorage.getItem("wb_copies_currentSet");
 	if (!load) {
 	  console.log("\"wb_copies_currentSet\" was not found...\nCreating...");
-	  var cset = copies.currentSet;
-	  saveCopies();
-	} else {
-	  load = JSON.parse(load);
-	  var cset = load.currentSet;
-	  copies.currentSet = cset;
-	  copies[cset] = load[cset];
-	  var len = Object.keys(load[cset]).length;
-	  console.log(`Loading \"${cset}\"...\n${len} items`);
+	  var save = await saveCopies();
+	  load = await localStorage.getItem("wb_copies_currentSet");
 	}
-	return load[cset];
+	load = JSON.parse(load);
+	var cset = load.currentSet;
+	copies.currentSet = cset;
+	copies[cset] = load[cset];
+	var len = Object.keys(load[cset]).length;
+	console.log(`Loading \"${cset}\"...\n${len} items`);
   }
+  return load[cset];
 }
 
 function altSearch(input) {
@@ -1140,7 +1139,8 @@ function setListeners() {
 setTimeout(setListeners, 3000);
 
 setTimeout(() => { 
-    loadCopies();
-    setCopyItems(copies[copies.currentSet], true);
-    fillTemplateListener();
+    loadCopies().then((copySet) => { 
+		setCopyItems(copies[copies.currentSet], true);
+		fillTemplateListener();
+	});
 }, 2000);
