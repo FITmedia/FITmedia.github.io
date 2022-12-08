@@ -304,6 +304,26 @@ function srch(elem) {
 
 /***** COPY ITEMS *****/
 
+function submitChanges(id) {
+	// submit changes in checkbox back to source
+    var elem = document.getElementById(`border_${id}`);
+	var h3 = elem.querySelector("h3");
+	var checks = elem.querySelectorAll("div.chkbx-unit");
+	var items = [h3.innerText];
+	for (var c in checks) {
+		var input = checks[c].querySelector("input");
+		var label = checks[c].querySelector("label");
+		if (input.checked) {
+			// how to send checkmark to trello?
+		} else {
+			items.push(label.innerText);
+		}
+	}
+	var text = items.join(". . .");
+	inputCopies.value = text;
+	// TODO functionToPostUpdate()
+}
+
 function decorCopy(id, text) {
   text = text || "copied!";
   var elem = document.getElementById(id);
@@ -429,7 +449,7 @@ function deleteCopyItem(idOrElem) {
   //saveCopies();
 }
 
-function setCopyItems(items, clear, options) {
+function setCopyItems(items, clear) {
   var cset = copies.currentSet;
   var ct = 0;
   if (clear) {
@@ -452,9 +472,19 @@ function setCopyItems(items, clear, options) {
 	var id = `div${ct}`;
 	//console.log(id);
 	text = appendInputs(id,text);
-	//TODO: allow options to determine what copy buttons are provided
+	if (copies.options?.control) {
+		// [["submit", "submitFunc"],["email","emailFunc"]]
+		var controls = [];
+		for (var b in copies.options.control) {
+			var ctrl = copies.options.control[b];
+			var span = `<span id="btn_${ctrl[0]}_${id}" class="copy_btn warn" onclick="${ctrl[1]}(${id})">${ctrl[0]}</span>`;
+			controls.push(span);
+		}
+		controls = controls.join("");
+	} else { var controls = ""; }
 	var div = `<div id="border_${id}" class="copy_border">
 		<div id="warn_${id}" class="copy_control">
+		  ${controls}
 		  <span id="btn_clear_${id}" class="copy_btn warn" onclick="decorClear('${id}')">clear</span>
 		  <span id="btn_copy_${id}" class="copy_btn warn" onclick="decorCopy('${id}')">copy</span>
 		  <span id="btn_close_${id}" class="copy_btn" onclick="decorClose('${id}')">&#10005;</span>
@@ -534,6 +564,7 @@ function appendInputs(txtId,text) {
 		  }
 		  html += "</select>";
 	  } else if (match.match(/\.\s\.\s\./g)) {
+		  copies.options = {control: [["submit","submitChanges"]]};
 		  var splits = match.replace(/[\[\]]/g,"").split(". . .");
 		  var title = splits.shift();
 		  var label = ""; // `[${title}]`; --7.28.22 removed so checklists won't affect text

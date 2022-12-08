@@ -43,8 +43,8 @@ const trelloDB = {
   };
 
 function fetchByPrefix(prefix) {
-    let request = boardRequest();
-    console.log(`fetchByPrefix, boardRequest = ["${request[0]}",{method: "${request[1].method}"}]`);
+    let request = boardsRequest();
+    console.log(`fetchByPrefix, boardsRequest = ["${request[0]}",{method: "${request[1].method}"}]`);
     fetch(request[0],request[1]).then(async (boards) => {
         if (trelloDB.board.id) { trelloDB.board.id = "" }
         boards = await boards.json();
@@ -82,7 +82,7 @@ function fetchByPrefix(prefix) {
     })
 }
 
-function boardRequest() {
+function boardsRequest() {
     var key = trelloDB.key;
     var token = trelloDB.token;
     var idUser = trelloDB.idUser;
@@ -102,6 +102,18 @@ function cardsRequest(boardID) {
     ];
     return request;
 }
+
+function updateRequest(cardID,updates) {
+  var key = trelloDB.key;
+  var token = trelloDB.token;
+  let request = [
+   // `https://api.trello.com/1/boards/${boardID}/cards?key=${key}&token=${token}`, 
+   // {method: "GET" }
+  ];
+  return request;
+}
+
+/*----- V1 FUNCTIONS -----*/
 
 async function fetchBoardID(boardName) {
     //var fetch = UrlFetchApp.fetch;
