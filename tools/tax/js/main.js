@@ -1140,14 +1140,7 @@ function setListeners() {
 setTimeout(setListeners, 3000);
 
 setTimeout(() => { 
- // if (db.localSave) {
-  //  try { 
-		loadCopies();
-  //	  } catch (err) {
-  //	console.log("ERROR, loadCopies: "+err.message);
-  //	db.localSave = false;
-  //  }
- // }
-  setCopyItems(copies[copies.currentSet], true);
-  fillTemplateListener();
+    loadCopies();
+    setCopyItems(copies[copies.currentSet], true);
+    fillTemplateListener();
 }, 2000);
