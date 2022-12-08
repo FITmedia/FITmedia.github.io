@@ -190,8 +190,11 @@ const cmds = {
 	  }
   },
   todo: {
-	func: () => {
-		var prefix = "MUST DO"; // i.e.: card name begins with...
+	func: (arr) => {
+		var prefix = "MUST DO\\. \\. \\."; // i.e.: card name begins with...
+		if (arr) {
+			prefix = `(${arr.join("|")})\\. \\. \\.`;
+		}
 		fetchByPrefix(prefix);
 	},
 	properties: {}
