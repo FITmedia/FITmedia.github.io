@@ -136,7 +136,6 @@ const cmds = {
 	  var save = JSON.stringify({[cset]:copies[cset]});
 	  localStorage.setItem("wb_copies_currentSet",save);*/
 	  setCopyItems(copies[arr[0]],true);
-	  //saveCopies();
 	  copyNotify(`Switched to ${arr[0]} set`,inputCopies,3000);
 	},
 	properties: {
@@ -446,7 +445,7 @@ function deleteCopyItem(idOrElem) {
   }
   elem.outerHTML = "";
   delete copies[copies.currentSet][id];
-  //saveCopies();
+  saveCopies();
 }
 
 function setCopyItems(items, clear) {
@@ -510,7 +509,7 @@ function setCopyItems(items, clear) {
 		500
 	);
   }
-  //saveCopies();
+  saveCopies();
 }
 
 function inputCopyItems(elem) {
@@ -727,8 +726,8 @@ function saveCopies() {
 	//	return;
 	//}
 	var cset = copies.currentSet;
-	var save = {};
-	save[cset] = copies[cset];
+	var save = copies;
+	//save[cset] = copies[cset];
 	var len = Object.keys(save[cset]).length;
 	save = JSON.stringify(save);
 	localStorage.setItem("wb_copies_currentSet",save);
@@ -754,7 +753,7 @@ function loadCopies() {
 	  saveCopies();
 	} else {
 	  load = JSON.parse(load);
-	  var cset = Object.keys(load)[0];
+	  var cset = load.currentSet;
 	  copies.currentSet = cset;
 	  copies[cset] = load[cset];
 	  var len = Object.keys(load[cset]).length;
