@@ -1142,7 +1142,7 @@ setTimeout(setListeners, 3000);
 setTimeout(() => { 
  // if (db.localSave) {
   //  try { 
-	//	loadCopies() 
+		loadCopies();
   //	  } catch (err) {
   //	console.log("ERROR, loadCopies: "+err.message);
   //	db.localSave = false;
