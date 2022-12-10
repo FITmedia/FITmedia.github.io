@@ -71,6 +71,7 @@ var queueFixes = {
 };
 
 const copies = {
+  ext: {},
   currentSet: "household",
   taxassociate: {
 	div1: `This is Jamie with <span class="highlight">TurboTax Live</span>. I'm a <span class="highlight">Credentialed Tax Expert</span> with 6 years experience. How can I help you today?`,
@@ -190,7 +191,7 @@ const cmds = {
   },
   todo: {
 	func: (arr) => {
-		var prefix = "MUST DO\\. \\. \\."; // i.e.: card name begins with...
+		var prefix = "(MUST DO)\\. \\. \\."; // i.e.: card name begins with...
 		if (arr) {
 			prefix = `(${arr.join("|")})\\. \\. \\.`;
 		}
@@ -308,12 +309,15 @@ function submitChanges(id) {
     var elem = document.getElementById(`border_${id}`);
 	var h3 = elem.querySelector("h3");
 	var checks = elem.querySelectorAll("div.chkbx-unit");
+	var prefix = h3.innerText;
+	var cardId = copies.ext[camelCase(prefix)]?.id;
 	var items = [h3.innerText];
 	for (var box of checks) {
 		var input = box.querySelector("input");
 		var label = box.querySelector("label");
 		if (input.checked) {
 			// how to send checkmark to trello?
+			
 		} else {
 			items.push(label.innerText);
 		}
@@ -589,6 +593,8 @@ function appendInputs(txtId,text) {
   return txt;
 }
 
+/*----- UTILITIES -----*/
+
 function handleURL(url) {
 	inputCopies.value = encodeURI(url);
 	simpleCopy(inputCopies);
@@ -621,6 +627,27 @@ function chkValue(elem) {
 		elem.outerHTML = inp.outerHTML;
 	}
 }
+
+function camelCase(str) {
+	// https://trello.com/c/efweW65e/380-function-camelcasestr-js-4620
+	if (!str.match(/\s/)) { return str; }
+	var except = "in the and with from of is a an or at";
+	str = str.replace(/[^\w\s]/gi,"");
+	str = str.toLowerCase().split(/[\s\_]/g);
+	for (var i in str) {
+	  if (typeof str[i] !== "function") {
+	  if (i === 0) {
+		  str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+		} else {
+		  if (except.match(str[i]) == null) {
+			str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+		  }
+		}
+	  }
+	} // end i loop
+	str = str.join("");
+	return str.charAt(0).toLowerCase() + str.slice(1);
+  }
 
 /****** FILL TEMPLATE ******/
 

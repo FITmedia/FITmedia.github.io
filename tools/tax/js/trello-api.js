@@ -1,10 +1,15 @@
 const trelloDB = { 
     //generate key & token: https://trello.com/app-key
+    //GET all boards by user ID - https://api.trello.com/1/members/jamieklueck/boards?key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
+    //GET all cards by board ID - https://api.trello.com/1/boards/604a908f8a1c7b04080a853d/cards?key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
+    //GET all checklists by card ID - https://api.trello.com/1/cards/610946d1cb68101a6f1686a6/checkLists?checkItems_fields=name&fields=name&key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
+    //PUT complete item by checkItemId - https://api.trello.com/1/cards/610946d1cb68101a6f1686a6/checkItem/{idCheckItem}?state=complete&key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
     url: "https://api.trello.com",
     key: "0b877c1aedbb0d48de9640ab4eef390d",
     token: "c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab",
     idUser: "jamieklueck",
-    board: {name: "JK-Master TODO List"},
+    board: {name: "JK-Master TODO List",id:"604a908f8a1c7b04080a853d"},
+    card: (prefix) => copies.ext[camelCase(prefix)], // {name: "", id: ""}
     filter: {
       incomplete: (card) => {
         for (var i in card.labels) {
@@ -60,12 +65,24 @@ function fetchByPrefix(prefix) {
             let request = cardsRequest(board.id);
             console.log(`fetchByPrefix, cardsRequest = ["${request[0]}",{method: "${request[1].method}"}]`)
             fetch(request[0],request[1]).then(async (cards) => {
-                prefix = new RegExp(`^${prefix}`,"g");
+                /* don't think there's much benefit to doing this...
+                var prefixes = prefix.replace(/\. \. \./,"").split(/\|/g);
+                for (var p in prefixes) {
+                  let prefix = prefixes[p];
+                  let prefixId = camelCase(prefix);
+                  let card = copies.ext[prefixId];
+                  if (card) {
+                    prefixes.splice(prefixes.indexOf(prefix),1);
+                  }
+                }*/
+                var patt = new RegExp(`^${prefix}`);
                 cards = await cards.json();
                 var content = [];
                 for (var c in cards) {
                     var card = cards[c];
-                    if (card.name.match(prefix)) {
+                    if (card.name.match(patt)) {
+                        let match = card.name.match(patt)[0];
+                        copies.ext[camelCase(match)] = {name: card.name, id: card.id};
                         console.log(`fetchByPrefix, card.name = ${card.name}`)
                         content.push(`[${card.name}]`);
                     }
@@ -103,12 +120,21 @@ function cardsRequest(boardID) {
     return request;
 }
 
-function updateRequest(cardID,updates) {
+function updateCardRequestAll(cardId,updates) {
+  // { name: "MUST DO. . .Item 1", checklist: {id: "99999999aaaaaaaaAAAAAAAA", 
+  //   items: { "aaaaaaaa99999999AAAAAAAA": 
+  // }}}
+  // 1. 
   var key = trelloDB.key;
   var token = trelloDB.token;
+  for (var u in updates) {
+    if (u === "checklist") {
+      var checkItem = updates[u].checkList;
+    }
+  }
   let request = [
-   // `https://api.trello.com/1/boards/${boardID}/cards?key=${key}&token=${token}`, 
-   // {method: "GET" }
+   // `https://api.trello.com/1/cards/${cardId}/checkItem/${idCheckItem}?key=${key}&token=${token}`, 
+   // {method: "PUT" }
   ];
   return request;
 }
