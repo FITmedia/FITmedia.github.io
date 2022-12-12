@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link href="css/main.css"></link>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>CSV Viewer</title>
+        <link href="css/main.css" rel="stylesheet">
         <script src="js/main.js"></script>
 	</head>
 <body> <!--onload="myFunction()">-->
@@ -40,49 +43,6 @@ function parseCSV(text) {
       obj[id][hdr] = cols[h].replace(/"/g,"").replace(/ *%2C/g,",");
     }
   } catch (err) {console.log("\nERROR, parseCSV: "+err.message)}
-  }
-  return obj;
-}
-</script>
-<script>
-function parseCSV_old(text,hasHeaders) { // to convert to obj from CSV
-  var obj = {};
-  var quotes = text.match(/"[^"]*"/gm);
-  if (quotes && quotes.length > 0) {
-	 //console.log("Quotation marks found.");
-	for (var q in quotes) {
-	  var quote = quotes[q];
-	  var fixQuote = quote.replace(/\n/g,"").replace(/,/g,"....");
-	  text = text.replace(quote,fixQuote);
-	}
-  } /*else {
-	console.log("Quotation marks not found.");
-  }*/
-  var rows = text.replace(/\r/g,"").split(/\n/g);
-  if (hasHeaders) {
-	var headers = rows.shift().split(",");
-	obj.headers = headers;
-    //console.log(obj.headers)
-    if (db[db.currentFile]) {
-        var idHeader = db[db.currentFile].idHeader;
-        var hid = headers.indexOf(idHeader);
-    } else {
-        var hid = 0;
-    }
-  }
-  for (var r in rows) {
-	  var txt = rows[r].replace(/\s+/g," ");
-	  var cells = txt.split(",");
-	  var id = cells[hid];
-	  obj[id] = {};
-	  for (var c in cells) {
-		if (hasHeaders) {
-		  var hdr = headers[c];
-		} else {
-			var hdr = c;
-		}
-		obj[id][hdr] = cells[c].replace(/\.\.\.\./g,",").replace(/(^"|"$)/g,"");
-	  }
   }
   return obj;
 }
