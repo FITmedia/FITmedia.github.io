@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="css/main.css"></link>
+        <script src="js/main.js"></script>
+	</head>
+<body> <!--onload="myFunction()">-->
+
+<input type="file" id="myFile" multiple size="50" onchange="importFile()">
+<button id="loadFile" onclick="miniLoading(loadFile); initiateImport(myFile)">Choose Files</button>
+<span id="load"></span>
+<p id="demo"></p>
+
+<input id="search">
+  
+<script>
+function parseCSV(text) {
+  text = extractor("csv",text);
+  var lines = text.split(/\n/g);
+  var headers = lines.shift().match(/(".*?"|[^,\n\r]+)/g);
+  for (var h in headers) {
+      var hdr = headers[h];
+  }
+  var hid = db[db.currentFile].idHeader;
+  var c = headers.indexOf(hid);
+  var obj = { headers: headers };
+  for (var ln in lines) {
+    var line = lines[ln];
+    //split by comma that is not within quotes
+  try{
+    var cols = line.match(/(".*?"|[^,\n\r]+)/g);//.split(/,/g);
+    if (!cols) { continue }
+    var id = cols[c].replace(/"/g,"");
+    obj[id] = {};
+    for (var h in headers) {
+        var hdr = headers[h];
+     if (!cols[h]) {
+        cols[h] = "";
+      }
+      obj[id][hdr] = cols[h].replace(/"/g,"").replace(/ *%2C/g,",");
+    }
+  } catch (err) {console.log("\nERROR, parseCSV: "+err.message)}
+  }
+  return obj;
+}
+</script>
+<script>
+function parseCSV_old(text,hasHeaders) { // to convert to obj from CSV
+  var obj = {};
+  var quotes = text.match(/"[^"]*"/gm);
+  if (quotes && quotes.length > 0) {
+	 //console.log("Quotation marks found.");
+	for (var q in quotes) {
+	  var quote = quotes[q];
+	  var fixQuote = quote.replace(/\n/g,"").replace(/,/g,"....");
+	  text = text.replace(quote,fixQuote);
+	}
+  } /*else {
+	console.log("Quotation marks not found.");
+  }*/
+  var rows = text.replace(/\r/g,"").split(/\n/g);
+  if (hasHeaders) {
+	var headers = rows.shift().split(",");
+	obj.headers = headers;
+    //console.log(obj.headers)
+    if (db[db.currentFile]) {
+        var idHeader = db[db.currentFile].idHeader;
+        var hid = headers.indexOf(idHeader);
+    } else {
+        var hid = 0;
+    }
+  }
+  for (var r in rows) {
+	  var txt = rows[r].replace(/\s+/g," ");
+	  var cells = txt.split(",");
+	  var id = cells[hid];
+	  obj[id] = {};
+	  for (var c in cells) {
+		if (hasHeaders) {
+		  var hdr = headers[c];
+		} else {
+			var hdr = c;
+		}
+		obj[id][hdr] = cells[c].replace(/\.\.\.\./g,",").replace(/(^"|"$)/g,"");
+	  }
+  }
+  return obj;
+}
+</script>
+
+<textarea id="hiddenInput" style="position: absolute; top: -50px"></textarea>
+</body>
+</html>

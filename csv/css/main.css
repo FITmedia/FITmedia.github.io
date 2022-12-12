@@ -1,0 +1,355 @@
+body {
+	font-size: 16px;
+	font-family: Helvetica, sans-serif;
+}
+.match {
+	color: red;
+	cursor: pointer;
+}
+
+.match:hover {
+	background-color: #ffcccc;
+}
+
+#copy-items {
+    position: absolute;
+    top: 0;
+    left: 28%;
+    z-index: 3;
+}
+
+.copy-item {
+    box-sizing: border-box;
+    padding: 10px;
+    max-width: 600px;
+    border: solid 1px lightgrey;
+    border-radius: 18px;
+}
+
+.copy_border {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid lightgrey;
+  border-radius: 10px;
+  font-family: Helvetica, sans-serif;
+  padding: 10px;
+  margin: 20px 10px;
+  width: 60%;
+  background-color: white;
+}
+
+.copy_border div {
+	max-width: 100%;
+}
+
+.copy_control {
+  display: flex;
+  justify-content: space-around;
+  align-items: top;
+  position: relative;
+  top: -25px;
+  left: 40%;
+  z-index: 100;
+  width: 75px;
+  height: 26px;
+}
+
+.copy_btn {
+  cursor: pointer;
+  background: white;
+  color: #cccccc;
+  padding: 3px;
+}
+
+.copy_btn.lite {
+  color: blue;
+}
+
+.copy_border.lite {
+  border-color: blue;
+}
+
+#overlay {
+	position: fixed; /* Sit on top of the page content */
+	display: flex; /* Hidden by default */
+	align-items: center;
+	justify-content: center;
+	width: 100%; /* Full width (cover the whole page) */
+	height: 100%; /* Full height (cover the whole page) */
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+	z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+	cursor: pointer; /* Add a pointer on hover */
+}
+
+#dialog {
+	box-sizing: border-box;
+	position: relative;
+	display: block;
+	width: 75%;
+	height: 75%;
+	background-color: white;
+	border: 0 solid;
+	border-radius: 25px;
+	z-index: 3;
+	padding: 50px;
+	min-width: 455px;
+}
+
+#dialog .block-wrapper {
+	display: flex;
+	flex-flow: column nowrap;
+	height: 100%;
+	min-width: 355px;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#dialog .text-wrapper {
+	display: block;
+	height: 100%;
+	min-width: 355px;
+	justify-content: left;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+#dialog .fields {
+	position: relative;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: left;
+	justify-content: left;
+	overflow: auto;
+	margin: 0;
+	padding: 0;
+}
+
+#dialog .buttons {
+	position: relative;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: flex-end;
+	justify-content: right;
+	margin: 0;
+	padding: 0;
+}
+
+#dialog input {
+	border-radius: 25px;
+	border: 0.5px solid grey;
+	padding: 5px 10px;
+	margin: 15px 5px;
+}
+
+.wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 95vw;
+}
+
+#grid-container {
+    display: grid;
+    grid-gap: 5px;
+	box-sizing: border-box;
+}
+
+#grid-container > div {
+    height: 100%;
+}
+
+#grid-container1 {
+	display: grid;
+	grid-template-columns: fit-content(300px) fit-content(300px) 1fr;
+	grid-gap: 5px;
+	box-sizing: border-box;
+	min-height: 200px;
+	width: 49%;
+	/* background-color: #8cffa0; */
+	padding: 10px;
+}
+
+#grid-container2 {
+	display: grid;
+	grid-template-columns: fit-content(300px) fit-content(300px) 1fr;
+	grid-gap: 5px;
+	box-sizing: border-box;
+	min-height: 200px;
+	width: 49%;
+	/* background-color: #8cffa0; */
+	padding: 10px;
+}
+
+#grid-container.col3 {
+	grid-template-columns: 16vw 16vw 1fr;
+}
+
+#grid-container.col4 {
+	grid-template-columns: 1fr 25vw 25vw 25vw;
+}
+
+#grid-container.col5 {
+	grid-template-columns: 1fr 20vw 20vw 20vw 20vw;
+}
+
+#grid-container.col6 {
+	grid-template-columns: 1fr 16.6vw 16.6vw 16.6vw 16.6vw 1fr;
+}
+
+#grid-container.col7 {
+	grid-template-columns: 1fr 13.2vw 13.2vw 13.2vw 13.2vw 13.2vw 1fr;
+}
+
+#grid-container.col7 > div:nth-child(-n+7) {
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+#grid-container.col7 > div:nth-child(14n-6) {
+  background-color: lightblue;
+}
+
+#grid-test {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    max-width: 50vw;
+}
+
+.grid {
+   display: grid;
+	grid-template-columns: fit-content(2fr) fit-content(3fr) fit-content(1fr);
+	grid-gap: 5px;
+	box-sizing: border-box;
+	min-height: 200px;
+	width: 100%;
+	/* background-color: #8cffa0; */
+	padding: 10px;
+}
+
+.row {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.row .cell {
+	flex: 1;
+	text-align: center;
+}
+
+.row.header {
+	background-color: lightgrey;
+}
+
+#grid-container > div {
+	/* background-color: #8ca0ff; */
+	padding: 5px;
+	align-self: center;
+	overflow-x: hidden;
+}
+
+#grid-container > div.header {
+	background-color: lightgrey;
+}
+
+#grid-container > div.label {
+	justify-self: end;
+}
+
+input[type="file"] {
+    position: fixed;
+    top: -100px;
+}
+
+input /*, input[type="file"]*/ {
+	border-radius: 25px;
+	border: 1;
+    border-color: lightgrey;
+	padding: 5px 15px;
+	margin: 5px;
+}
+
+#search {
+    font-size: 1.5rem;
+}
+
+button {
+	border-radius: 25px;
+	background-color: #15b101;
+	color: white;
+	border: 0;
+	padding: 10px 20px;
+	margin: 5px;
+    min-width: 120px;
+    min-height: 36px;
+}
+
+button.disabled, 
+button.clickable.disabled:hover, 
+button.disabled:active {
+    background-color: lightgrey;
+    color: white;
+    cursor: auto;
+}
+
+lite {
+  color: lightgrey;
+}
+
+med {
+  color: grey;
+}
+
+dark {
+  color: #404040;
+}
+
+.clickable {
+	cursor: pointer;
+	padding: 5px;
+}
+
+.clickable:hover {
+	color: blue;
+}
+
+.clickable.selected {
+	background-color: lightgreen;
+}
+
+button.clickable:hover {
+	color: white;
+	background-color: #15b;
+}
+
+textarea {
+	min-width: 250px;
+}
+
+.code {
+	font-family: monospace;
+}
+
+.highlight {
+	background-color: yellow;
+}
+
+.hidden {
+	display: "none";
+}
+
+s {
+	display: inline-block;
+	width: 1.33rem;
+	height: 1rem;
+}
