@@ -449,11 +449,11 @@ function deleteCopyItem(idOrElem) {
 	var elem = document.getElementById(divId);
   } else {
 	var elem = idOrElem;
-	var id = elem.id.match(/border_(.+)$/)[1];
+	var id = elem.id.match(/[a-z-A-Z0-9\-]+_(.+)$/)[1];
   }
   elem.outerHTML = "";
   console.log(`Deleted copies["${copies.currentSet}"]["${id}"]`);
-  console.log(copies[copies.currentSet]);
+  //console.log(copies[copies.currentSet]);
   delete copies[copies.currentSet][id];
   saveCopies();
 }
