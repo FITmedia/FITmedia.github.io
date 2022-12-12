@@ -327,6 +327,10 @@ function submitChanges(id) {
 	// TODO functionToPostUpdate()
 }
 
+function submitChange() {
+	
+}
+
 function decorCopy(id, text) {
   text = text || "copied!";
   var elem = document.getElementById(id);
@@ -448,6 +452,7 @@ function deleteCopyItem(idOrElem) {
 	var id = elem.id;
   }
   elem.outerHTML = "";
+  console.log(`Deleted copies["${copies.currentSet}"]["${id}"]`)
   delete copies[copies.currentSet][id];
   saveCopies();
 }
