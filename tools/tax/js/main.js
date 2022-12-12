@@ -781,9 +781,10 @@ async function loadCopies() {
 	//}
 	var load = await localStorage.getItem("wb_copies_currentSet");
 	if (!load) {
-	  console.log("\"wb_copies_currentSet\" was not found...\nCreating...");
-	  var save = await saveCopies();
-	  load = await localStorage.getItem("wb_copies_currentSet");
+		return copies[copies.currentSet];
+		/* console.log("\"wb_copies_currentSet\" was not found...\nCreating...");
+		var save = await saveCopies();
+		load = await localStorage.getItem("wb_copies_currentSet"); */
 	}
 	load = JSON.parse(load);
 	var cset = load.currentSet;
