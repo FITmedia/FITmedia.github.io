@@ -446,7 +446,7 @@ var db = {
               .replace(/(, ADDRESS.*MAPS: *|)\n*-*[0-9]{2}\.[0-9]{5}, *-*[0-9]{2}\.[0-9]{5}$/g,"")
               +", ADDRESS NOT FOUND IN SYSTEM, NEW SUBDIVISION, COORDINATES OF ADDRESS GIVEN BY GOOGLE MAPS: "+text
           }
-          try {navigator.clipboard.writeText(text);} catch(err) {alert(err.message)} 
+          try {navigator.clipboard.writeText(text);} catch(err) {alert(err.message+"\nYou may need to enable the clipboard permission for this website.")} 
       });
       fixText.addEventListener("keydown",(e) => {
           if (e.key === "Enter") {
