@@ -1047,24 +1047,11 @@ var db = {
           }
       }
      // console.log("TEST SUBMISSION: \n"+values.toString());
-  
-      google.script.run.postToSheet(values,"DailyTracker")
-        //  data
-          /*{
-        owner: bill[headers.indexOf("who")], 
-        dateOccur: data.dateOccur, 
-        "from": "Chase Bank",
-        to: data.name,
-        amount: data.amt,
-        type: data.type, 
-        dueDate: bill[headers.indexOf("dueDate")],
-        payDate: getterA1('global!B2'),
-        link: values[0][10]
-      }*/
     overlay.style.display = "none";
     dialog.innerHTML = "";
   }
   
+setTimeout(() => {
   window.addEventListener("keydown", shortCuts);
   window.addEventListener("change", (e) => { 
       if (e.target.classList.contains("field")) { db[db.currentFile].load() }
@@ -1075,3 +1062,4 @@ var db = {
         search.dispatchEvent(new Event("blur"));
     }
   })
+}, 1000);
