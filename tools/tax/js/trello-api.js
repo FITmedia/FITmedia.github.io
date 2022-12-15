@@ -4,6 +4,18 @@ const trelloDB = {
     //GET all cards by board ID - https://api.trello.com/1/boards/604a908f8a1c7b04080a853d/cards?key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
     //GET all checklists by card ID - https://api.trello.com/1/cards/610946d1cb68101a6f1686a6/checkLists?checkItems_fields=name&fields=name&key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
     //PUT complete item by checkItemId - https://api.trello.com/1/cards/610946d1cb68101a6f1686a6/checkItem/{idCheckItem}?state=complete&key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
+    //So when a checklist copyItem is created...
+    //save trelloDb.board.id; save copies.ext[camelCase(prefix)].id; save prefix.checklist.id
+    //when I check off a list item I would like it to check off the same item in Trello...
+    //checkbox onchange get:cardId,idCheckItem
+    //then card.checklists[i].name, card.checklists[i].id
+    /* CHECKLIST EXAMPLE:
+    {"id":[checklistId],"name":[nameendingin^],"idBoard":[boardId],"idCard":[cardId],"pos":12288,
+      "checkItems":[
+        {"id":[checkItemId],"name":[name],"nameData":{"emoji":{}},"pos":143319.6466999055,"due":null,"dueReminder":null,"idMember":null,"idChecklist":[checklistId],"state":["incomplete" or "complete"]},
+        {...},
+        ...]}
+    */
     url: "https://api.trello.com",
     key: "0b877c1aedbb0d48de9640ab4eef390d",
     token: "c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab",
@@ -85,6 +97,16 @@ function fetchByPrefix(prefix) {
                         copies.ext[camelCase(match)] = {name: card.name, id: card.id};
                         console.log(`fetchByPrefix, card.name = ${card.name}`)
                         content.push(`[${card.name}]`);
+                        /* INCOMPLETE
+                        let request = checklistsRequest(card.id);
+                        fetch(request[0],request[1]).then((checklists) => {
+                            for (var c in checklists) {
+                              var checklist = checklists[c];
+                              if (checklist.name.match(/^$/)) {
+                                var id, name, checkItems
+                              }
+                            }
+                        });*/
                     }
                 }
                 let text = content.join("--");
@@ -110,14 +132,21 @@ function boardsRequest() {
     return request;
 }
 
-function cardsRequest(boardID) {
+function cardsRequest(boardId) {
     var key = trelloDB.key;
     var token = trelloDB.token;
     let request = [
-      `https://api.trello.com/1/boards/${boardID}/cards?key=${key}&token=${token}`, 
+      `https://api.trello.com/1/boards/${boardId}/cards?key=${key}&token=${token}`, 
       {method: "GET" }
     ];
     return request;
+}
+
+function checklistsRequest(cardId) {
+    let request = [
+      `https://api.trello.com/1/cards/${cardId}/checkLists?checkItems_fields=name&fields=name&key=${key}&token=${token}`,
+      {method: 'GET'}
+    ];
 }
 
 function updateCardRequestAll(cardId,updates) {
