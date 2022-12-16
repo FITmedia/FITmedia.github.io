@@ -199,6 +199,12 @@ const cmds = {
 	},
 	properties: {}
   },
+  log: {
+	func: (arr) => {
+		inputCopies.value = JSON.stringify(copies);
+	},
+	properties: {}
+  }
 };
 
 const cmdMods = {
