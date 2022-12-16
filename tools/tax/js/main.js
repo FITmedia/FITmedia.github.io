@@ -587,8 +587,8 @@ function appendInputs(txtId,text) {
 		  var label = ""; // `[${title}]`; --7.28.22 removed so checklists won't affect text
 		  temps[txtId].text = temps[txtId].text.replace(match, label); // remove from original
 		  txt = txt.replace(match, label);
-		  console.log(`copies.ext[${camelCase(title)}].id = ${copies.ext[camelCase(title)].id}`)
-		  var cardId = copies.ext[camelCase(title)].id;
+		  console.log(`copies.ext[${camelCase(title)}].id = ${copies.ext[camelCase(title)]?.id}`)
+		  var cardId = copies.ext[camelCase(title)]?.id;
 		  var html = `<div id="${id}"><h3>${title}</h3><div class="chkbx-form" cardId="${cardId}">`;
 		  for (var s in splits) {
 			  var split = splits[s];
@@ -800,6 +800,7 @@ async function loadCopies() {
 	var cset = load.currentSet;
 	copies.currentSet = cset;
 	copies[cset] = load[cset];
+	copies.ext = load.ext;
 	var len = Object.keys(load[cset]).length;
 	console.log(`Loading \"${cset}\"...\n${len} items`);
   }
