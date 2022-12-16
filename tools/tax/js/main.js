@@ -308,9 +308,9 @@ function submitChanges(id) {
 	// submit changes in checkbox back to source
     var elem = document.getElementById(`border_${id}`);
 	var h3 = elem.querySelector("h3");
+	var cardId = elem.querySelector(".chkbx-form").getAttribute("cardId");
 	var checks = elem.querySelectorAll("div.chkbx-unit");
 	var prefix = h3.innerText;
-	var cardId = copies.ext[camelCase(prefix)]?.id;
 	var items = [h3.innerText];
 	for (var box of checks) {
 		var input = box.querySelector("input");
@@ -325,10 +325,12 @@ function submitChanges(id) {
 	var text = items.join(". . .");
 	inputCopies.value = text;
 	// TODO functionToPostUpdate()
+	var request = updateCardRequest(cardId);
+	fetch(request[0],request[1]).then((res) => { alert(res) });
 }
 
 function submitChange() {
-	
+	// TODO - to send checkbox updates individually
 }
 
 function decorCopy(id, text) {
@@ -579,7 +581,8 @@ function appendInputs(txtId,text) {
 		  var label = ""; // `[${title}]`; --7.28.22 removed so checklists won't affect text
 		  temps[txtId].text = temps[txtId].text.replace(match, label); // remove from original
 		  txt = txt.replace(match, label);
-		  var html = `<div id="${id}"><h3>${title}</h3><div class="chkbx-form">`;
+		  var cardId = copies.ext[camelCase(title)].id;
+		  var html = `<div id="${id}"><h3>${title}</h3><div class="chkbx-form" cardId="${cardId}">`;
 		  for (var s in splits) {
 			  var split = splits[s];
 			  var opVal = split;

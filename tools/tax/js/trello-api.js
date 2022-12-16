@@ -63,7 +63,7 @@ function fetchByPrefix(prefix) {
     let request = boardsRequest();
     console.log(`fetchByPrefix, boardsRequest = ["${request[0]}",{method: "${request[1].method}"}]`);
     fetch(request[0],request[1]).then(async (boards) => {
-        if (trelloDB.board.id) { trelloDB.board.id = "" }
+        if (!trelloDB.board.id) { trelloDB.board.id = "" }
         boards = await boards.json();
         for (var b in boards) {
             var board = boards[b];
@@ -147,6 +147,20 @@ function checklistsRequest(cardId) {
       `https://api.trello.com/1/cards/${cardId}/checkLists?checkItems_fields=name&fields=name&key=${key}&token=${token}`,
       {method: 'GET'}
     ];
+}
+
+function updateCardRequest(cardId) {
+  var updates = "";
+  for (var i in copies.ext) {
+    if (copies.ext[i].id === cardId) {
+      updates = "&name="+copies.ext[i].name;
+      break;
+    }
+  }
+  let request = [
+    `https://api.trello.com/1/cards/${cardId}?key=${key}&token=${token}${updates}`,
+    {method: 'PUT'}
+  ];
 }
 
 function updateCardRequestAll(cardId,updates) {
