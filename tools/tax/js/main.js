@@ -581,6 +581,7 @@ function appendInputs(txtId,text) {
 		  var label = ""; // `[${title}]`; --7.28.22 removed so checklists won't affect text
 		  temps[txtId].text = temps[txtId].text.replace(match, label); // remove from original
 		  txt = txt.replace(match, label);
+		  console.log(`copies.ext[${camelCase(title)}].id = ${copies.ext[camelCase(title)].id}`)
 		  var cardId = copies.ext[camelCase(title)].id;
 		  var html = `<div id="${id}"><h3>${title}</h3><div class="chkbx-form" cardId="${cardId}">`;
 		  for (var s in splits) {
