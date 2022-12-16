@@ -143,6 +143,8 @@ function cardsRequest(boardId) {
 }
 
 function checklistsRequest(cardId) {
+    var key = trelloDB.key;
+    var token = trelloDB.token;
     let request = [
       `https://api.trello.com/1/cards/${cardId}/checkLists?checkItems_fields=name&fields=name&key=${key}&token=${token}`,
       {method: 'GET'}
@@ -150,6 +152,8 @@ function checklistsRequest(cardId) {
 }
 
 function updateCardRequest(cardId) {
+  var key = trelloDB.key;
+  var token = trelloDB.token;
   var updates = "";
   for (var i in copies.ext) {
     if (copies.ext[i].id === cardId) {
