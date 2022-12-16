@@ -161,6 +161,7 @@ function updateCardRequest(cardId) {
       break;
     }
   }
+  console.log(`updateCardRequest("${cardId}"), updates = "${updates}"`);
   let request = [
     `https://api.trello.com/1/cards/${cardId}?key=${key}&token=${token}${updates}`,
     {method: 'PUT'}
