@@ -329,6 +329,7 @@ function submitChanges(id) {
 		}
 	}
 	var text = items.join(". . .");
+	copies.ext[camelCase(prefix)].name = text;
 	inputCopies.value = text;
 	// TODO functionToPostUpdate()
 	var request = updateCardRequest(cardId);
