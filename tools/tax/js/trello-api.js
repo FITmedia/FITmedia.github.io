@@ -165,6 +165,7 @@ function updateCardRequest(cardId) {
     `https://api.trello.com/1/cards/${cardId}?key=${key}&token=${token}${updates}`,
     {method: 'PUT'}
   ];
+  return request;
 }
 
 function updateCardRequestAll(cardId,updates) {
