@@ -98,12 +98,14 @@ function fetchByPrefix(prefix) {
                         console.log(`fetchByPrefix, card.name = ${card.name}`)
                         content.push(`[${card.name}]`);
                         /* INCOMPLETE
-                        let request = checklistsRequest(card.id);
+                        let request = checklistsRequest(card.id); // GET all checklists and checkItems on card
                         fetch(request[0],request[1]).then((checklists) => {
                             for (var c in checklists) {
                               var checklist = checklists[c];
                               if (checklist.name.match(/^$/)) {
                                 var id, name, checkItems
+                                copies.ext[camelCase(match)].checkItems = checkItems;
+                                // forEach checkItem
                               }
                             }
                         });*/

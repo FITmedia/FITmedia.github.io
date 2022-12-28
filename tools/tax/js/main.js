@@ -333,7 +333,7 @@ function submitChanges(id) {
 	inputCopies.value = text;
 	// TODO functionToPostUpdate()
 	var request = updateCardRequest(cardId);
-	fetch(request[0],request[1]).then((res) => { alert(res) });
+	fetch(request[0],request[1]).then((res) => { alert(JSON.stringify(res)) });
 }
 
 function submitChange() {
