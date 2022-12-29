@@ -316,27 +316,33 @@ function submitChanges(id) {
 	var h3 = elem.querySelector("h3");
 	var cardId = elem.querySelector(".chkbx-form").getAttribute("cardId");
 	var checks = elem.querySelectorAll("div.chkbx-unit");
-	var prefix = h3.innerText;
+	var prefix = camelCase(h3.innerText);
 	var items = [h3.innerText];
 	for (var box of checks) {
 		var input = box.querySelector("input");
 		var label = box.querySelector("label");
 		if (input.checked) {
 			// how to send checkmark to trello?
-			
+			// submitChange(input.getAttribute("checkItemId ?"))
 		} else {
 			items.push(label.innerText);
 		}
 	}
 	var text = items.join(". . .");
-	copies.ext[camelCase(prefix)] = {name: text, id: cardId};
 	inputCopies.value = text;
-	// TODO functionToPostUpdate()
-	var request = updateCardRequest(cardId);
-	fetch(request[0],request[1]).then((res) => { alert(JSON.stringify(res)) });
+	if (copies.ext[prefix]) {
+		copies.ext[prefix].name = text;
+		copies.ext[prefix].id = cardId;
+		// TODO functionToPostUpdate() {
+			// change name of card - 
+			// forEach checkItem
+		// }
+		var request = updateCardRequest(cardId);
+		fetch(request[0],request[1]).then((res) => { console.log("submitChanges, response = "+JSON.stringify(res.json())) });
+	}
 }
 
-function submitChange() {
+function submitChange(checkItemId) {
 	// TODO - to send checkbox updates individually
 }
 

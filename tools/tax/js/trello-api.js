@@ -96,16 +96,23 @@ function fetchByPrefix(prefix) {
                         let match = card.name.match(patt)[0];
                         copies.ext[camelCase(match)] = {name: card.name, id: card.id};
                         console.log(`fetchByPrefix, card.name = ${card.name}`)
-                        content.push(`[${card.name}]`);
+                        content.push(`[${card.name}]`); // remove once checklist request code is complete
                         /* INCOMPLETE
                         let request = checklistsRequest(card.id); // GET all checklists and checkItems on card
                         fetch(request[0],request[1]).then((checklists) => {
                             for (var c in checklists) {
                               var checklist = checklists[c];
                               if (checklist.name.match(/^$/)) {
-                                var id, name, checkItems
+                                var checkItems = checklist.checkItems;
                                 copies.ext[camelCase(match)].checkItems = checkItems;
-                                // forEach checkItem
+                                var arr = [];
+                                for (var c in checkItems) {
+                                  var checkItem = checkItems[c];
+                                  if (checkItem.state === "incomplete") {
+                                    arr.push(checkItem.name);
+                                  }
+                                }
+                                content.push(match+". . ."+arr.join(". . ."));
                               }
                             }
                         });*/
