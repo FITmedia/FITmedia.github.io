@@ -443,7 +443,7 @@ var db = {
           e.target.value = text;
           if (div0) {
               div0.innerText = div0.innerText
-              .replace(/(, ADDRESS.*MAPS: *|)\n*-*[0-9]{2}\.[0-9]{5}, *-*[0-9]{2}\.[0-9]{5}$/g,"")
+              .replace(/(, ADDRESS.*MAPS: *|)\n*-*[0-9]{2}\.[0-9]+, *-*[0-9]{2}\.[0-9]+$/g,"")
               +", ADDRESS NOT FOUND IN SYSTEM, NEW SUBDIVISION, COORDINATES OF ADDRESS GIVEN BY GOOGLE MAPS: "+text
           }
           try {navigator.clipboard?.writeText(text);} catch(err) {alert(err.message+"\nYou may need to enable the clipboard permission for this website.")} 
