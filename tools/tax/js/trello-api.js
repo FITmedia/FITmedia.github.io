@@ -1,9 +1,9 @@
 const trelloDB = { 
     //generate key & token: https://trello.com/app-key
-    //GET all boards by user ID - https://api.trello.com/1/members/jamieklueck/boards?key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
-    //GET all cards by board ID - https://api.trello.com/1/boards/604a908f8a1c7b04080a853d/cards?key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
-    //GET all checklists by card ID - https://api.trello.com/1/cards/610946d1cb68101a6f1686a6/checkLists?checkItems_fields=name&fields=name&key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
-    //PUT complete item by checkItemId - https://api.trello.com/1/cards/610946d1cb68101a6f1686a6/checkItem/{idCheckItem}?state=complete&key=0b877c1aedbb0d48de9640ab4eef390d&token=c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab
+    //GET all boards by user ID - https://api.trello.com/1/members/jamieklueck/boards?key=API-KEY&token=TOKEN
+    //GET all cards by board ID - https://api.trello.com/1/boards/604a908f8a1c7b04080a853d/cards?key=API-KEY&token=TOKEN
+    //GET all checklists by card ID - https://api.trello.com/1/cards/610946d1cb68101a6f1686a6/checkLists?checkItems_fields=name&fields=name&key=API-KEY&token=TOKEN
+    //PUT complete item by checkItemId - https://api.trello.com/1/cards/610946d1cb68101a6f1686a6/checkItem/{idCheckItem}?state=complete&key=API-KEY&token=TOKEN
     //So when a checklist copyItem is created...
     //save trelloDb.board.id; save copies.ext[camelCase(prefix)].id; save prefix.checklist.id
     //when I check off a list item I would like it to check off the same item in Trello...
@@ -17,8 +17,8 @@ const trelloDB = {
         ...]}
     */
     url: "https://api.trello.com",
-    key: "0b877c1aedbb0d48de9640ab4eef390d",
-    token: "c587ea719822e90c47660d69094aaddc4acabb2bed2995649f36070caadc8dab",
+    key: "API-KEY",
+    token: "TOKEN",
     idUser: "jamieklueck",
     board: {name: "JK-Master TODO List",id:"604a908f8a1c7b04080a853d"},
     card: (prefix) => copies.ext[camelCase(prefix)], // {name: "", id: ""}
@@ -60,6 +60,11 @@ const trelloDB = {
   };
 
 function fetchByPrefix(prefix) {
+    let text = "No longer a valid command.";
+    inputCopies.value = text;
+    setTimeout(() => { inputCopies.value = "" }, 3000);
+    return; // removed due to security concerns
+    //------------------------
     let request = boardsRequest();
     console.log(`fetchByPrefix, boardsRequest = ["${request[0]}",{method: "${request[1].method}"}]`);
     fetch(request[0],request[1]).then(async (boards) => {
