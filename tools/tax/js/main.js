@@ -130,6 +130,7 @@ const cmds = {
 	  }
 	}
   },
+  mdl: cmds.marklink, // alias
   copies: { 
 	func: (arr) => {
 	  copies.currentSet = arr[0];
@@ -223,33 +224,8 @@ const cmdMods = {
 }
 
 const patterns = {
-	articles: [
-		[/^[^]*?(Trenching[^]*?)(\s*Cutover Req[^]*|$)/g,"$1"],
-		[/((?:Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+|)(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?(?:(?:\s+Footage:\s+?)|(?:Qty\/Ftg:\s+?)|(?:Amount:\s+?))([\d,\.]+)[^]*?Cost:[^]*?([\d,\.]+)/g, "[$2 ... $3 ... $4 ... $5]"],
-		[/\[(.+?)\]([^\[]*)/g, "$1\n\n"],
-		[/("|\-|\\*\? )/g,""],
-		[/(\\<*|&lt;)/g,"LT"],
-		[/(0040CE ... .+? ... .+?)( ... .+)/g, "$1 CU FT $2"],
-		[/([0-9]{4}(?:P[^E]|W[^L]|BO|PC|CR) ... .+? ... [0-9]+?) (... .+)/g, "$1 FT $2"],
-		[/([0-9]{4}[A-Z]{2,3} ... .+ ... .+ ... [0-9]*),*([0-9.]+)/g, "$1$2"]
-	],
-	articlesToJSON: [
-		[/("|\-|\\*\? )/g,""],
-		[/(\\<*|&lt;)/g,"LT"],
-		//[/(Trenching|Conduit|Bores|Miscellaneous)\s+Add\s+Remove\s+Article:\s+(\d{4}[A-Z]{2,3})[^]*?\t(\b[A-Z\d "\.\/\\\?\<\>\-\(\)]+)\n[^]*?((?:\s+Footage:|Qty\/Ftg:|Amount:)\s+?[\d,\.]+[^]*?)Cost:[^]*?([\d,\.]+)/g, "$1: { article: \"$2\", name: \"$3\", $4, cost: \"$5\" }\n"],
-	// match all [title][:][value] => [["title": "value"]]
-		[/([a-zA-Z/ ]+):\s+([^\s]+)[\t\n](?=\b[a-zA-Z/ ]+?|\}\})/g,"[[\"$1\": \"$2\"]]"],
-	// match all article names
-		[/Lookup\s\s\s([A-Z][^\n]+)/g,"[[name: \"$1\"]]"],
-	// match all sections
-		[/(Trenching|Conduit|Bores|Miscellaneous)([^]+?)(?=Trenching|Conduit|Bores|Miscellaneous|$)/g, "{\"$1\": { $2 }}"],
-		[/\}[^\}\{]*\{/g, ", "],
-	// match everything else
-		[/\]\][^\[\}\{]*\[\[/g,", "],
-		[/Amount:\s*Approved By:\s*/g,", "],
-		[/(\s+Add\sRemove\s\[\[|]] *)/g, ""]
-		//[/\b([a-zA-Z\/]+:)\s+(\d+)/g,"$1 $2"],
-		//[/\[(.+?)\]([^\[]*)/g, "$1\n\n"]
+	bookmarks: [
+		[/((?!https*:\/\/[^\s]+)[^\n]*)(?:\n)(https*:\/\/[^\s\n]+)/,"$1\n$2"]
 	],
 	specChars: [
 		[/(ATT |)[0-9]*[-+][0-9]+=[0-9]+( *ft,*|)/g,""],
@@ -259,31 +235,6 @@ const patterns = {
 		[/([0-9]+)["\u201C\u201D\u201F]/g, "$1 inches"],
 		[/['\u2018\u2019\u201B"\u201C\u201D\u201F\u0026]/g,""],
 		[/(,)(?=[^\s])/g,"$1 "]
-	],
-	costDisputes: [
-		//[/\n/g,""], // remove new lines
-		[/\s\s+/g,"\n"],
-		[/\s*(:)\s*/g,"$1"],
-		//[/(?:  +|\t)(\b[^:]+:(?:  |\t).*?)(?=  +|\t+|\n|$)/g,"$1\n"], // match all
-		//[/([^:]+:(?:  |\t)[^]+?)(?=\n[^:]+:|$)/g,"$1"],
-		//[/([^:]+?)\s\s+/g,"$1 "],
-		//[/(?:Work Request:|Address:|Bid Area:|Remarks:)(?:  |\t)([^\s].*?)(?=\n|$)/g,"$1"],
-		//[/([^\n]+:(?:  |\t).*?)(\n|$)/g,""] // exclude
-		
-		//[/(  +|\t+)/g,""], // remove excess white space
-		//[/\n\n+/g,"\n"] // remove excess new lines
-	],
-	costDisputes_backup: [
-		[/\n/g,""], // remove new lines
-		[/(:)(?!(  |\t))/g,"$1  "],
-		//[/(?:  +|\t)(\b[^:]+:(?:  |\t).*?)(?=  +|\t+|\n|$)/g,"$1\n"], // match all
-		//[/([^:]+:(?:  |\t)[^]+?)(?=\n[^:]+:|$)/g,"$1"],
-		//[/([^:]+?)\s\s+/g,"$1 "],
-		//[/(?:Work Request:|Address:|Bid Area:|Remarks:)(?:  |\t)([^\s].*?)(?=\n|$)/g,"$1"],
-		//[/([^\n]+:(?:  |\t).*?)(\n|$)/g,""] // exclude
-		
-		//[/(  +|\t+)/g,""], // remove excess white space
-		//[/\n\n+/g,"\n"] // remove excess new lines
 	],
 	fixList: [
 		[/[A-Z0-9 &]+\n/g,""],
