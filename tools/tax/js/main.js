@@ -130,7 +130,17 @@ const cmds = {
 	  }
 	}
   },
-  mdl: cmds.marklink, // alias
+  mdl: {
+	func: (arr) => { cmds.marklink.func(arr) }, // alias
+	properties: {
+	  url: {
+		desc: "URL to encode"
+	  },
+	  title: {
+		desc: "Title"
+	  }
+	}
+  },
   copies: { 
 	func: (arr) => {
 	  copies.currentSet = arr[0];
