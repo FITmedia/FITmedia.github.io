@@ -649,7 +649,7 @@ function fillTemplate(inputs,parag) {
 	  var tag = input.tagName;
 	  var repl = temps[txtId][key].replace(/[\.\+\*\?\^\$\(\)\[\]\{\}\|\\]/g,"\\$&");
 	  repl = new RegExp(repl,"g");
-	  if (tag === "INPUT") {
+	  if (tag === "INPUT" || tag === "TEXTAREA") {
 		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
 	  } else if (tag === "SELECT") {
 		text = text.replace(repl,value);// changed 7.22.22 - `[${key}]`
