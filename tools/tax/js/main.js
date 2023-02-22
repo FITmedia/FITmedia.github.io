@@ -526,7 +526,8 @@ function appendInputs_ok(txt) {
 function appendInputs(txtId,text) {
   temps[txtId] = {text: text};
   var txt = `<div id="${txtId}" class="copy_text" contenteditable="true">${text}</div>`;
-  var matches = txt.match(/\[[^\n\r\v\]]+\]/g); //.match(/\[[\w\s\d\|-]+\]/g); 
+  // var matches = txt.match(/\[[^\n\r\v\]]+\]/g);
+  var matches = txt.match(/\[+[^\n\r\v\]]+\]+/g);
   var used = [];
   if (matches) {
 	for (var ea in matches) {
@@ -567,6 +568,8 @@ function appendInputs(txtId,text) {
 			  html += opt;
 		  }
 		  html += "</div></div>";
+	  } else if (match.match(/\[\[[^\n\r\v\]]+\]\]/g)) { // matches [[text here]]
+		var html = `<textarea id="${id}" placeholder="${placeholder}"></textarea>`;
 	  } else {
 		//var txtId = `text_${id}`;
 		var html = `<input id="${id}" placeholder="${placeholder}">`; // removed 1.9.22 - onkeyup="try{window.database.update(${id})} catch(err){alert(err.message)}"
