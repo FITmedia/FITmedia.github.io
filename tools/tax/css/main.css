@@ -37,6 +37,13 @@ input {
   width: 250px;
 }
 
+textarea {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 15px 15px 5px 15px;
+    width: 250px;
+}
+
 /*
 label.checkbox > input {
 	width: 30px;

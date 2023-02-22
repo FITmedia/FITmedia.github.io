@@ -669,7 +669,8 @@ function fillTemplateListener() {
 	  if (!parent) { return }
 	  keySwitcher(e,"Enter","\\n");
 	  var parag = parent.getElementsByClassName("copy_text")[0];
-	  var ins = parent.getElementsByTagName('input');
+	  // var ins = parent.getElementsByTagName('input');
+	  var ins = parent.querySelectorAll('input, textarea');
 	  var dds = parent.getElementsByTagName('select');
 	  parag.contentEditable = false;
 	  var inputs = [];
