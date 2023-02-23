@@ -661,13 +661,14 @@ function fillTemplate(inputs,parag) {
 
 function fillTemplateListener() {
   var test = (e) => {
-	if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
+	var tagName = e.target.tagName;
+	if (tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT") {
 	  var parent = e.target.parentElement;
 	  while (parent && !parent.classList.contains("copy_border")) {
 		parent = parent.parentElement;
 	  }
 	  if (!parent) { return }
-	  keySwitcher(e,"Enter","\\n");
+	  if (tagName === "INPUT") { keySwitcher(e,"Enter","\\n") }
 	  var parag = parent.getElementsByClassName("copy_text")[0];
 	  // var ins = parent.getElementsByTagName('input');
 	  var ins = parent.querySelectorAll('input, textarea');
