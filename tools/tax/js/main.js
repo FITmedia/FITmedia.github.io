@@ -511,7 +511,7 @@ function setCopyItems(items, clear) {
 function inputCopyItems(elem) {
   var input = elem.value;
   elem.value = "";
-  var items = input.replace(/\n/g, "<br>").split(/--/g);
+  var items = input.replace(/\n/g, "<br>").split(/~~/g);
   var arr = [];
   for (var i in items) {
 	arr.push(items[i]);
