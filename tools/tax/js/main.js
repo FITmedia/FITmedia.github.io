@@ -678,7 +678,11 @@ function fillTemplateListener() {
 		parent = parent.parentElement;
 	  }
 	  if (!parent) { return }
-	  if (tagName === "INPUT") { keySwitcher(e,"Enter","\\n") }
+	  if (tagName === "INPUT") { 
+		keySwitcher(e,"Enter","\\n");
+	  } else if (tagName === "TEXTAREA") {
+		e.target.value = e.target.value.replace(/\n/g,"\\n");
+	  }
 	  var parag = parent.getElementsByClassName("copy_text")[0];
 	  // var ins = parent.getElementsByTagName('input');
 	  var ins = parent.querySelectorAll('input, textarea');
