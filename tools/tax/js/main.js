@@ -478,6 +478,7 @@ function setCopyItems(items, clear) {
 		}
 		controls = controls.join("");
 	} else { var controls = ""; }
+	text = text.replace(/\n/g,"<br>");
 	var div = `<div id="border_${id}" class="copy_border">
 		<div id="warn_${id}" class="copy_control">
 		  ${controls}
