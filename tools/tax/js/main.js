@@ -257,10 +257,11 @@ const patterns = {
 	],
 	fixSF: [
 		[/_/g,"*"],
-		[/(\n\n|^)([^\n]+)\n\n/g,"$1*$2*\\n\\n"],
+		[/(\n\n|^)([^\n]+)\n\n/g,"$1**$2**\n\n"],
 		[/\[[^\]]+\]\((http[^\s]*)[^\)]*\) ?(?= )/g, "$1"],
-		[/\n(?!(- |\*|--|\n))/g,"\\n- "],
-		[/\n[\t ]*\-\-/g,"\\n--"]
+        [/^\n*([^*\n]+)/g,"- $1"],
+		[/\n(?!(- |\*|--|\n))/g,"\n- "],
+		[/\n+[\t ]*\-\-/g,"\n--"]
 	]
 };
 
@@ -494,6 +495,7 @@ function setCopyItems(items, clear) {
 	ct++;
 	setTimeout(
 		() => {
+		document.getElementById(`text_${id}`).innerText = text;
 		var items = document.getElementsByClassName("copy_border");
 		var chks = document.getElementsByClassName("chkbx-unit");
 		for (let i in items) {
@@ -1091,6 +1093,16 @@ function extractor(pattSet,text) {
   };
   return run(text,patts);
 }
+
+function extractToCopyItem(pattName,text) {
+	inputCopies.value = "";
+	inputCopyItems(inputCopies);
+	setTimeout(() => {
+	  var lastNum = document.getElementById("copy-items").querySelectorAll("copy_text").length;
+	  var target = document.getElementById(`div${lastNum}`);
+	  target.innerText = extractor(pattName,text)
+	},500)
+  }
   
 /***** LISTENERS *****/
 
