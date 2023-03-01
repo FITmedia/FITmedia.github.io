@@ -330,7 +330,7 @@ function decorCopy(id, text) {
   if (text !== "copied!") {
 	deleteCopyItem(border);
   } else {
-	simpleCopy(elem);
+	simplerCopy(elem);
 	setTimeout(() => {
 	  btn.innerHTML = oldTxt;
 	  btn.classList.remove("lite");
@@ -415,8 +415,17 @@ function simpleCopy(elem) {
   } catch (err){console.log("ERROR, simpleCopy: "+err.message)}
 }
 
+function simplerCopy(elem) {
+	if (typeof elem === "string") {
+		var text = elem;
+	} else {
+		var text = elem.value || elem.innerText;
+	}
+	navigator.clipboard.writeText(text);
+}
+
 function copyNotify(copyText,notifyElem,timeOut) {
-	simpleCopy(copyText);
+	simplerCopy(copyText);
 	var notice = `copied "${copyText.slice(0,25)}..."!`;
 	notifyElem.value = notice;
 	if (timeOut) {
@@ -478,7 +487,7 @@ function setCopyItems(items, clear) {
 		}
 		controls = controls.join("");
 	} else { var controls = ""; }
-	text = text.replace(/\n/g,"<br>");
+	text = text.replace(/(\\n|\n)/g,"<br>");
 	var div = `<div id="border_${id}" class="copy_border">
 		<div id="warn_${id}" class="copy_control">
 		  ${controls}
@@ -514,7 +523,7 @@ function setCopyItems(items, clear) {
 function inputCopyItems(elem) {
   var input = elem.value;
   elem.value = "";
-  var items = input.replace(/\n/g, "<br>").split(/~~/g);
+  var items = input.replace(/(\\n|\n)/g, "<br>").split(/~~/g);
   var arr = [];
   for (var i in items) {
 	arr.push(items[i]);
@@ -597,7 +606,7 @@ function appendInputs(txtId,text) {
 
 function handleURL(url) {
 	inputCopies.value = encodeURI(url);
-	simpleCopy(inputCopies);
+	simplerCopy(inputCopies);
 	inputCopies.value = "Copied link successfully!";
 	setTimeout(() => {
 		inputCopies.value = "";
@@ -658,7 +667,7 @@ function fillTemplate(inputs,parag) {
 	var input = inputs[i];
 	if (typeof input === "object") {
 	  var key = input.id;
-	  var value = input.value.replace(/\\n/g,"<br>");
+	  var value = input.value.replace(/(\\n|\n)/g,"<br>");
 	  var tag = input.tagName;
 	  var repl = temps[txtId][key].replace(/[\.\+\*\?\^\$\(\)\[\]\{\}\|\\]/g,"\\$&");
 	  repl = new RegExp(repl,"g");
@@ -684,7 +693,7 @@ function fillTemplateListener() {
 	  if (tagName === "INPUT") { 
 		keySwitcher(e,"Enter","\\n");
 	  } else if (tagName === "TEXTAREA") {
-		e.target.value = e.target.value.replace(/\n/g,"\\n");
+		//e.target.value = e.target.value.replace(/\n/g,"\\n");
 	  }
 	  var parag = parent.getElementsByClassName("copy_text")[0];
 	  // var ins = parent.getElementsByTagName('input');
@@ -1139,7 +1148,7 @@ function setListeners() {
 	  if (elem.value.match(/^@/)) {
 		fixQueues(elem);
 	   // try{fixVTO(elem);}catch(err){alert(err.message)}
-		simpleCopy(elem);
+		simplerCopy(elem);
 		elem.value = "copied!";
 		setTimeout(() => {elem.value = ""},3000);
 	  } else if (elem.value.match(/^!/)) { // commands
