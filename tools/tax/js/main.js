@@ -503,7 +503,7 @@ function setCopyItems(items, clear) {
 	ct++;
 	setTimeout(
 		() => {
-		document.getElementById(`text_${id}`).innerText = text;
+		//document.getElementById(`text_${id}`).innerText = text;
 		var items = document.getElementsByClassName("copy_border");
 		var chks = document.getElementsByClassName("chkbx-unit");
 		for (let i in items) {
@@ -1106,9 +1106,9 @@ function extractToCopyItem(pattName,text) {
 	inputCopies.value = "";
 	inputCopyItems(inputCopies);
 	setTimeout(() => {
-	  var lastNum = document.getElementById("copy-items").querySelectorAll("copy_text").length;
+	  var lastNum = document.getElementById("copy-items").querySelectorAll(".copy_text").length;
 	  var target = document.getElementById(`div${lastNum}`);
-	  target.innerText = extractor(pattName,text)
+	  target.innerText = extractor(pattName,text);
 	},500)
   }
   
