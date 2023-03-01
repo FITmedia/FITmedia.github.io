@@ -416,12 +416,17 @@ function simpleCopy(elem) {
 }
 
 function simplerCopy(elem) {
-	if (typeof elem === "string") {
-		var text = elem;
-	} else {
-		var text = elem.value || elem.innerText;
+	try {
+		if (typeof elem === "string") {
+			var text = elem;
+		} else {
+			var text = elem.value || elem.innerText;
+		}
+		navigator.clipboard.writeText(text);
+	} catch (err) {
+		console.log("ERROR, simplerCopy: "+err.message+"\nMake sure clipboard is allowed in settings.\nSwitching to simpleCopy instead.");
+		simpleCopy(elem);
 	}
-	navigator.clipboard.writeText(text);
 }
 
 function copyNotify(copyText,notifyElem,timeOut) {
