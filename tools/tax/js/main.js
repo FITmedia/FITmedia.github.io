@@ -1197,4 +1197,7 @@ setTimeout(() => {
 		setCopyItems(copies[copies.currentSet], true);
 		fillTemplateListener();
 	});
+	var lastMod = document.lastModified;
+	var vers = lastMod.toString().replace(/(\d{2})\/(\d{2})\/\d{2}(\d{2}) (\d{2}):(\d{2}):\d{2}/,"$1.$2.$3t$4$5");
+	version.innerText = vers;
 }, 2000);
