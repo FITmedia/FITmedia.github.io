@@ -424,7 +424,7 @@ function simplerCopy(elem) {
 	if (navigator.clipboard) {
 		navigator.clipboard.writeText(text);
 	} else {
-		console.log("ERROR, simplerCopy: "+err.message+"\nMake sure clipboard is allowed in settings.\nSwitching to simpleCopy instead.");
+		console.log("ERROR, simplerCopy: Make sure clipboard is allowed in settings.\nSwitching to simpleCopy instead.");
 		simpleCopy(elem);
 	}
 }
