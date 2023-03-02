@@ -416,14 +416,14 @@ function simpleCopy(elem) {
 }
 
 function simplerCopy(elem) {
-	try {
-		if (typeof elem === "string") {
-			var text = elem;
-		} else {
-			var text = elem.value || elem.innerText;
-		}
+	if (typeof elem === "string") {
+		var text = elem;
+	} else {
+		var text = elem.value || elem.innerText;
+	}
+	if (navigator.clipboard) {
 		navigator.clipboard.writeText(text);
-	} catch (err) {
+	} else {
 		console.log("ERROR, simplerCopy: "+err.message+"\nMake sure clipboard is allowed in settings.\nSwitching to simpleCopy instead.");
 		simpleCopy(elem);
 	}
