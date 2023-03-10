@@ -156,6 +156,28 @@ const cmds = {
 	  }
 	}
   },
+  changeYear: {
+	func: (arr) => {
+		var initURL = arr[0];
+		var newYear = arr[1];
+		var currYear = (new Date().getFullYear() - 1).toString();
+		var patt = patterns.irsURL[0];
+		if (newYear === currYear || !newYear) {
+			var repl = "$1pdf$3$5";
+		} else {
+			var repl = "$1$2$3--"+newYear+"$5";
+		}
+		var newURL = initURL.replace(patt,repl);
+	},
+	properties: {
+		initURL: {
+			desc: "URL to change"
+		},
+		newYear: {
+			desc: "Year requested"
+		}
+	}
+  },
   chores: {
 	  func: (arr) => {
 	  // test: !chores killien|7/18/2022|2 drainers|10
@@ -261,6 +283,9 @@ const patterns = {
 		[/\n\n?(?!(- |\*|--|\n))/g,"\n- "],
 		[/(\n\n|^)-? ?(PCA Review|Supplemental Review|Case Summary) *\n\n?/g,"$1**$2**\n\n"],
 		[/\n+[\t ]*\-\-/g,"\n--"]
+	],
+	irsURL: [
+		[/[^]+(https*:\/\/www\.irs\.gov\/pub\/irs-)(pdf|prior)(\/[^-]+)([^.]+)(\.pdf)/g,"$1$2$3$4$5"]
 	]
 };
 
