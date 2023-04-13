@@ -611,6 +611,9 @@ function appendInputs(txtId,text) {
 		  console.log(`copies.ext[${camelCase(title)}].id = ${copies.ext[camelCase(title)]?.id}`)
 		  var cardId = copies.ext[camelCase(title)]?.id;
 		  var html = `<div id="${id}"><h3>${title}</h3><div class="chkbx-form" cardId="${cardId}">`;
+		  // var div = document.createElement("div");
+		  // div.id = id;
+		  // div.innerHTML = `<h3>${title}</h3><div class="chkbx-form" cardId="${cardId}">`;
 		  for (var s in splits) {
 			  var split = splits[s];
 			  var opVal = split;
@@ -618,8 +621,12 @@ function appendInputs(txtId,text) {
 			  var opt = `<div class="chkbx-unit"><input id="${txtId}_chbx${s}" type="checkbox"><label for=""${txtId}_chbx${s}" onclick="toggleChkBox(this)">${opPh}</label></div>`;
 			  //var opt = `<label class="checkbox"><input type="checkbox">${opPh}</label>`;
 			  html += opt;
+			  //div.innerHTML += opt;
 		  }
 		  html += "</div></div>";
+		  // div.innerHTML += "</div>";
+		  // setEditToggle(div)
+		  // TODO: make programmatic to implement setEditToggle(checklistElem)
 	  } else if (match.match(/\[\[[^\n\r\v\]]+\]\]/g)) { // matches [[text here]]
 		var html = `<textarea id="${id}" placeholder="${placeholder}"></textarea>`;
 	  } else {
@@ -687,6 +694,25 @@ function camelCase(str) {
 	str = str.join("");
 	return str.charAt(0).toLowerCase() + str.slice(1);
   }
+
+function setEditToggle(elem) {
+  elem.addEventListener("click", (e) => {
+    if (e.ctrlKey && e.target.tagName === "LABEL") {
+      var label = e.target;
+      var input = document.createElement("input");
+      label.after(input);
+      label.classList.add("hidden");
+      input.classList.remove("hidden");
+      input.addEventListener("blur", (e) => {
+        label.innerHTML = input.value;
+        input.value = "";
+        input.classList.add("hidden");
+        label.classList.remove("hidden");
+        input.remove();
+      });
+    }
+  });
+}
 
 /****** FILL TEMPLATE ******/
 
