@@ -665,7 +665,7 @@ function toggleChkBox(elem) {
 }
 
 function chkValue(elem) {
-	if (elem?.value.match(/Other/gi) && elem?.tagName.match(/(select|option)/gi)) {
+	if (elem?.value.match(/^Other$/g) && elem?.tagName.match(/(select|option)/gi)) {
 		var id = elem.id;
 		let inp = document.createElement("input");
 		inp.id = id;
