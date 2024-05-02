@@ -13,7 +13,7 @@ var states = {
   AZ:"site:azdor.gov/",
   AR:"site:dfa.arkansas.gov/",
   CA:"site:ftb.ca.gov/",
-  CO:"site:colorado.gov/revenue",
+  CO:"site:tax.colorado.gov",
   CT:"site:ct.gov/drs/site/",
   DE:"site:revenue.delaware.gov/",
   FL:"site:dor.myflorida.com/",
