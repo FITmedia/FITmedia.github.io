@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Page Title</title>
+<style>
+/*body {
+	font-family: monospace;
+	font-size: 16px;
+	background: black;
+	color: green;
+}*/
+
+body {
+  background-color: black;
+  background-image: radial-gradient(
+	rgba(0, 50, 0, 0.75), black 120%
+  );
+  height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 2rem;
+  color: hsl(110, 89%, 68%);
+  font: 1.3rem Inconsolata, monospace;
+  text-shadow: 0 0 5px #17cf17;
+  &::after {
+	content: "";
+	position: absolute;
+	z-index: 1000;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: repeating-linear-gradient(
+	  0deg,
+	  rgba(black, 0.15),
+	  rgba(black, 0.75) 1px,
+	  transparent 1px,
+	  transparent 2px
+	);
+	pointer-events: none;
+  }
+}
+
+::selection {
+  background: #0080FF;
+  text-shadow: none;
+}
+
+.flex {
+	display: flex;
+	align-items: baseline;
+	justify-content: left;
+}
+
+.tip {
+	padding: 0 0 0 10px;
+	/*color: rgba(0,255,0,0.35);*/
+	color: hsl(110, 89%, 68%);
+	font-size: .75rem;
+}
+
+textarea {
+	background: rgba(0,255,0,0.05);
+	/*color: rgba(0,255,0,0.35);*/
+	font: 1.3rem Inconsolata, monospace;
+	text-transform: uppercase;
+	text-shadow: 0 0 5px #17cf17;
+	color: hsl(110, 89%, 68%);/*#1adb1a;*/
+	height: 288px;
+	padding: 10px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	/*border-color: -internal-light-dark(rgb(0, 230, 0), rgb(0, 255, 0));*/
+}
+
+button {
+	background-color: rgba(0,255,0,0.05);
+	color: hsl(110, 89%, 68%);
+	/*color: black;
+	font-family: monospace;*/
+	font: 1.3rem Inconsolata, monospace;
+	text-shadow: 0 0 5px #17cf17;
+	border: 1px solid hsl(110, 89%, 68%);
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+h3 {
+	font: 2rem Inconsolata, monospace;
+	display: inline-block;
+	text-align: center;
+	margin: 0 0 0 20px;
+	max-width: 100%;
+}
+
+.hidden {
+	display: none;
+}
+</style>
+	</head>
+	<script>
+		const db = {
+			current: {},
+			liken: [],
+			words: {},
+			oldText: "",
+			longest: 0
+		};
+		
+		function getLikeness(text) {
+			clearAll();
+			var words = text.toUpperCase().trim().split(/\n/g);
+			for (var w in words) {
+				var word = words[w];
+				db.words[word] = {};
+				for (var w2 in words) {
+					var wrd2 = words[w2]; 
+					if (db.current?.likeness === db.words[word][wrd2]?.likeness
+					|| !db.current?.likeness) {
+						db.words[word][wrd2] = compareWords(word,wrd2);
+						if (!db.liken.includes(wrd2)) {
+							db.liken.push(wrd2);
+						}
+					}
+				}
+			}
+			return db.words;
+		}
+		
+		function compareWords(wrd1,wrd2) {
+			var obj = {array: [], likeness: 0};
+			for (var l in wrd1) {
+				var ltr1 = wrd1[l];
+				var ltr2 = wrd2[l];
+				obj.array.push(ltr1 === ltr2);
+			   if (ltr1 === ltr2) {obj.likeness++}
+			}
+			return obj;
+		}
+		
+		function displayData() {
+			output.innerText = JSON.stringify(getLikeness(mainInput.value)).replace(/("[A-Z]+")/g,"\n$1");   
+		}
+
+		function getStats(wordData) {
+			var arr = [];
+			var len = Object.keys(wordData).length;
+		   // pick word that is unlike less than half the other words
+			var pick = Math.floor((len - 1)/2);
+			for (var word in wordData) {
+				var data = wordData[word];
+				var l = data.likeness;
+				if (l === 0) { pick-- }
+				arr.push(word +": "+l);
+			}
+			if (pick === 0) { arr.unshift("*[TOP PICK]*") }
+			return arr.join(", ");
+		}
+		
+		function clearAll() {
+			db.current = {};
+			db.liken = [];
+			db.words = {};
+		   current.innerHTML = "";
+			return true;
+		}
+		
+		function displayWords(words) {
+			//var words = mainInput.value !== "" ? getLikeness(mainInput.value) : db.words;
+			try {
+				// all words (db.words)
+					// each word's set of comparison words (wordData = db.words[word])
+						// each comparison word's data (wordObj = db.words[word][word2])
+			//var words = db.liken.length === 0 ? getLikeness(mainInput.value) : db.words;
+			output.innerHTML = "";
+			for (var w in words) {
+				var word = w;
+				var wordData = words[w];
+				//console.log(word)
+				if (!db.liken.includes(word)) {continue}
+				if (typeof word !== "string") {continue}
+				var div = document.createElement("div");
+			   var p = document.createElement("p");
+			   var tip = document.createElement("span");
+			   var input = document.createElement("input");
+			   var label = document.createElement("label");
+			   input.setAttribute("type", "checkbox");
+			   input.id = word+"_input";
+			   input.addEventListener("change",(e) => {
+				   var lbl = e.target.nextSibling.innerText; 
+				   var res = prompt("Likeness");
+				   if (!res) { return }
+				   db.current.word = lbl;
+				   db.current.likeness = res;
+				   //let i = db.liken.indexOf(word);
+					//db.liken.splice(i,1); 
+				   //console.log(db.current.word+" L="+db.current.likeness);
+				   //current.innerText = db.current.word+" L="+db.current.likeness;
+				   for (var d in db.words[db.current.word]) {
+					   var l = db.words[db.current.word][d].likeness;
+					   //console.log(d+": "+l+" vs "+parseInt(db.current.likeness));
+					   if (l !== parseInt(db.current.likeness)) {
+						   //console.log(l+" !== "+ parseInt(db.current.likeness));
+						   let i = db.liken.indexOf(d);
+						   db.liken.splice(i,1);
+					   }
+				   }
+				   output.innerHTML = "";
+				   //console.log(db.liken);
+				   displayWords(db.words);
+                   displayWords(getLikeness(mainInput.value))
+				   // remove words from db.liken that do not match the likeness
+				   // run displayWords() again
+				})
+			   label.setAttribute("for", word+"_input");
+			   label.innerText = word;
+			   tip.innerText = getStats(wordData);
+			   tip.classList.add("tip");
+			   p.appendChild(input);
+			   p.appendChild(label);
+			   p.appendChild(tip);
+			   div.appendChild(p);
+			   output.appendChild(div)
+			}
+			mainInput.value = db.liken.join("\n");
+			} catch (err) {console.log(err.message)}
+		}
+/*
+FEARED
+RARELY
+BIGGER
+STONES
+FIGURE
+NATURE
+RIGGED
+ATTACK
+ALWAYS
+BREAKS
+CHANGE
+TEEVEE
+*/
+function getWords(elem) {
+	db.oldText = elem.value;
+	var text = db.oldText;
+	db.longest = 0;
+	text = text.replace(/\n/g,"");
+    if (text.match(/^[A-Z]+$/)) { return }
+	var words = text.match(/[A-Z]{3,}/gi);
+	db.longest = words[0].length;
+	/*for (var w in words) {
+		var len = words[w].length;
+		if (len > db.longest) {
+			db.longest = len;
+		}
+	}*/
+	text = words.join("");
+	words = text.match(new RegExp(`[A-Z]{${db.longest}}`,"gi"));
+	elem.value = words.join("\n");
+}
+
+function revert(elem,revertTo) {
+	db.oldText = elem.value;
+	elem.value = revertTo;
+    db.longest = 0;
+}
+
+function toggleButton(elem1,elem2) {
+	elem1.classList.add("hidden");
+	elem2.classList.remove("hidden");
+}
+
+function getWordsBtn(elem) {
+	try {
+	getWords(mainInput);
+    toggleButton(elem,elem.nextElementSibling);
+	mainInput.addEventListener("keyup", maxLength);
+	} catch (err) { console.log("ERROR, Get Words Button: "+err.message) }
+}
+
+function revertBtn(elem) {
+	try {
+	revert(mainInput,db.oldText); 
+	toggleButton(elem,elem.previousElementSibling);
+	mainInput.removeEventListener("keyup", maxLength);
+	} catch (err) { console.log("ERROR, Revert Button: "+err.message) }
+}
+
+function maxLength() {
+    var elem = document.getElementById("mainInput");
+	var text = elem.value;
+	var lines = text.split("\n");
+	var len = db.longest > 0 ? db.longest : lines[0].length;
+	for (var ln in lines) {
+		var line = lines[ln];
+		var nxt = parseInt(ln) + 1;
+		if (line.length === len) { continue }
+		var ct = len - line.length;
+		if (!lines[nxt]) { continue }
+		var nextLine = lines[nxt];
+		lines[ln] += nextLine.slice(0,ct);
+		lines[nxt] = nextLine.slice(ct);
+	}
+	elem.value = lines.join("\n");
+}
+
+/*
+XOB00:l];:[TIME
+;L/SOME
+J'((!>
+:{.(I^$^/>)|
+%+\)/($=4^'#
+-=>!'[:)%
+[>?$(=><«)]
+/,$]|@['/>-
+[%*|^'>}.|
+/==. (%.-)$/(
+'!k-}^MAZE
+[|#SICK"[-,:
+<el:|%' ]MAT
+E^<'$])=:.![
+BX8BA8!.@"/RUDE?|
+;<^l,<' +*+{
+%_+\ DN
+</*0"+!
+[)I,)0j<(>
+/:*]VOTE{)\
+$*((<;^[::-
+[^!_-)L0
+VE[*? |@+:.%
+:1:STAY : !+(?
+>*] *+|\'1%?
+4'$$: </-([]]
+_??|;_#?=%
+%/<-{)=(."
+/<POLE;/0?T
+0LD. .{/#<?]
+)%-.\'0#^[
+;,)'<)?$, [L,
+*/
+/*
+0x2700!:'?'[0/)0
+0x270C(({(1**+)$
+,.(SAYS='#>
+:(?!<'>(?-<[
+D)*$
+.MAUL$}'>\:+
+($!>;^%" +HIT
+5*!4"*;\?{=
+?5ICK=$;{\$*
+>(':!.|+>}<
+(WAYS<' .\{
+:9-.^,{-\:,
+}."I{!^?-/:%
+,!!}+#|=/, !?
+%${]-,}"V,
+MATE, I !%* ((
+==}*,"=;$
+\#0./?<#>' !?
+J^*$-_MIND;$
+)+,>=^_)]|!
+@'/12\2*^4
+%]]]%>_i.
+*'>$)([*
+\FURS%$!C;,
+!=\/_\!%<P
+ICK!/]!10{
+, !'I$=]$$
+*^#]_-^*=-
+':-/*_:=:?_{
+!)_-.>,[" BAR
+E|>!<;:POTS<
+:!?\$*^?
+*/
+		</script>
+	<body>
+		<div class="flex">
+			<textarea id="mainInput"></textarea>
+			<h3 id="current"><h3>
+		</div>
+		<p><button onclick="displayWords(getLikeness(mainInput.value))">Display</button>
+<button onclick="getWordsBtn(this)">Get Words</button>
+<button class="hidden" onclick="revertBtn(this)">Revert</button></p>
+		<div id="output"></div>
+	</body>
+</html>
