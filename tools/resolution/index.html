@@ -488,10 +488,23 @@ function getActionItems(text,data) {
 				data[caseNum].notes.push(note);
 			}
 		}
+		cleanUpNotes(data[caseNum].notes);
 	 }
    }
    //output.innerText = JSON.stringify(data);
    return data;
+}
+
+function cleanUpNotes(notes) {
+    var arr = [];
+    // push only unique tasks to the array
+    notes.forEach((ea) => {
+        if (!arr.includes(ea)) {
+            arr.push(each);
+        }
+    });
+    notes = arr;
+    return notes;
 }
 
 function formatActionItems(data) {
