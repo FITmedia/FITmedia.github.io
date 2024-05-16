@@ -488,7 +488,7 @@ function getActionItems(text,data) {
 				data[caseNum].notes.push(note);
 			}
 		}
-		cleanUpNotes(data[caseNum].notes);
+		data[caseNum].notes = cleanUpNotes(data[caseNum].notes);
 	 }
    }
    //output.innerText = JSON.stringify(data);
@@ -503,8 +503,7 @@ function cleanUpNotes(notes) {
             arr.push(each);
         }
     });
-    notes = arr;
-    return notes;
+    return arr;
 }
 
 function formatActionItems(data) {
