@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<style>
+  body {
+    background-color: white;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .img_wrapper {
+    position: relative;
+    z-index: 1;
+    width: 816px;
+    height: 1056px;
+  }
+
+  img {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .checkboxes {
+    z-index: 100;
+    position: absolute;
+    width: 50%;
+  }
+
+  input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    font-size: 2rem;
+    padding: 0.1rem;
+    /*border: 0.25rem solid green;*/
+    /*border-radius: 0.5rem;*/
+  }
+
+  input[type="checkbox"]::before {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    /* https://bennettfeely.com/clippy/ */
+    /*clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);*/
+    /*clip-path: polygon(36% 75%, 26% 55%, 13% 54%, 33% 100%, 100% 21%);*/
+    /*clip-path: polygon(17% 46%, 38% 69%, 86% 13%, 100% 15%, 38% 90%, 6% 49%);*/
+    clip-path: polygon(34% 53%, 43% 80%, 76% 25%, 95% 21%, 43% 100%, 19% 53%);
+    transform: scale(0);
+    background-color: black;
+  }
+
+  input[type="checkbox"]:checked::before {
+    transform: scale(1);
+  }
+
+  input[type="checkbox"]:hover {
+    color: black;
+  }
+
+  .checkboxes .checkbox_label {
+    /*background-color: hsla(233, 95%, 89%, 0.525);*/
+    padding: 0;
+    margin: 0;
+  }
+
+  .checkboxes .checkbox_label input {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    padding-block: 0;
+    padding-inline: 0;
+  }
+
+  .info_section {
+    z-index: 100;
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row;
+    position: relative;
+    /*top: 527px;
+    height: 400px;
+    width: 430px;
+    left: 327px;*/
+  }
+
+  .right_column {
+    box-sizing: border-box;
+    position: absolute;
+    width: 95px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    right: 0;
+  }
+
+  .info_section span {
+    position: absolute;
+    font-family:'Courier New', Courier, monospace;
+    font-size: 16px;
+    width: 95px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    outline: none;
+  }
+
+  .transactions, .worksheet {
+    z-index: 100;
+    box-sizing: border-box;
+  }
+
+  .transactions span {
+    display: block;
+    position: static;
+    font-family:'Courier New', Courier, monospace;
+    font-size: 14px;
+    width: 100%;
+    min-height: 16px;
+    margin: 0;
+    padding: 0 5px;
+    text-align: right;
+  }
+
+  .worksheet {
+    background: lightgrey;
+    padding: 20px;
+  }
+
+  .worksheet span {
+    display: block;
+    position: static;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    width: 100%;
+    min-height: 16px;
+    margin: 0;
+    padding: 0 5px;
+    text-align: right;
+  }
+
+  .editable {
+    background-color: hsla(232, 96%, 89%, 50%);
+  }
+
+  .calculated {
+    background-color: hsla(113, 96%, 89%, 0.5);
+  }
+
+  .prefilled {
+    /* to use prefilled in calculations, but keep invisible */
+    color: hsla(0, 0%, 0%, 0);
+  }
+
+  .override {
+    color: rgb(175, 0, 0);
+    background-color: hsla(232, 96%, 89%, 50%);
+  }
+
+  .transactions div.cell-wrapper {
+    display: flex;
+    position: relative;
+    align-items:flex-end;
+    overflow: hidden;
+    width: 100%;
+    min-height: 16px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .worksheet div.cell-wrapper {
+    display: flex;
+    position: relative;
+    align-items:flex-end;
+    overflow: hidden;
+    width: 100%;
+    min-height: 16px;
+    margin: 0;
+    padding: 5px 0;
+  }
+
+  .worksheet .editable {
+    border: 1px black solid;
+  }
+
+  .transactions span.total {
+    position: absolute;
+    bottom: 0px;
+  }
+
+  .double {
+    height: 2rem !important;
+  }
+
+  .triple {
+    height: 3rem !important;
+  }
+
+  .space_4 {
+    height: 4rem !important;
+  }
+
+  .space_5 {
+    height: 5rem !important;
+  }
+
+  .space_6 {
+    height: 6rem !important;
+  }
+
+  .left_1 {
+    left: -144px !important;
+  }
+
+  .active {
+    box-sizing: border-box;
+    border: 1px solid blue; 
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  div#report {
+    position: fixed;
+    z-index: 100;
+    height: 50px;
+    bottom: 0px;
+    background-color: white;
+    padding: 10px;
+  }
+
+  .page_1 #taxpayer_info { 
+    top: 99px;
+    left: 54px;
+    width: 708px;
+    height: 456px;
+  }
+
+  .page_1 .transactions { position: absolute; width: 713px; height: 511px; top: 496px; left: 52px; }
+  .page_2 .transactions { position: absolute; display: flex; width: 380px; height: 511px; top: 126px; left: 385px; }
+  .page_2 .worksheet { position: absolute; display: flex; width: 700px; height: auto; top: 700px; left: 40px; }
+  .page_3 .transactions { position: absolute; display: flex; width: 380px; height: 511px; top: 158px; left: 385px; }
+
+  .page_1 .checkboxes { position: absolute; top: 206px; left: 21px; }
+  .page_1 #box_A { margin: 85px 0 0 0; }
+  .page_1 #box_B,.page_1 #box_C,.page_1 #box_D,.page_1 #box_E { margin: 15px 0 0 0; }
+
+  .info_section .name_on_return { position: absolute; width: 535px; height: 20px; top: 42px; left: 0px; text-align: left; }
+  .info_section .primary_ssn { position: absolute; width: 142px; height: 20px; top: 42px; left: 550px; text-align: center; }
+
+  .transactions .col_right { position: absolute; margin: 0; padding: 0; width: 114px; height: 100%; top: 0px; left: 600px; }
+
+  .transactions .col_a { position: static; margin: 0; padding: 0; width: 114px; height: 100%; top: 0px; left: 0px; }
+  .transactions .col_b { position: static; margin: 0; padding: 0; width: 114px; height: 100%; top: 0px; left: 0px; }
+  .transactions .col_c { position: static; margin: 0; padding: 0; width: 114px; height: 100%; top: 0px; left: 0px; }
+  .transactions .col_d { position: static; margin: 0; padding: 0; width: 114px; height: 100%; top: 0px; left: 0px; }
+
+  .worksheet .col_labels { position: static; margin: 0; padding: 0; width: 300px; height: 100%; top: 0px; left: 0px; }
+  .worksheet .col_ta { position: static; margin: 0; padding: 0; width: 180px; height: 100%; top: 0px; left: 0px; }
+  .worksheet #ln19wks_row1b { min-height: 78px; }
+
+  @media print {
+    .editable, .calculated, .override {
+      background-color: transparent;
+    }
+    .override {
+      color: black;
+    }
+    .ui {
+      display: none !important;
+    }
+  }
+
+</style>
+<script src="../main.js"></script>
+<script src="f2210.js"></script>
+<body>
+  <div class="img_wrapper page_1">
+    <img src="f2210-1.svg">
+    <div id="taxpayer_info" class="info_section">
+      <span class="name_on_return editable" contenteditable></span>
+      <span class="primary_ssn editable" contenteditable></span>
+    </div>
+    <div class="transactions">
+    <div class="col_right">
+      <div class="cell-wrapper double"><span id="ln1" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="ln2" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="ln3" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="ln4" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper left_1"><span id="ln5" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="ln6" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="ln7" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="ln8" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="ln9" class="editable" contenteditable></span></div>
+    </div>
+    <div class="checkboxes">
+      <label class="checkbox_label"><input id="ln9_no" type="checkbox" class="editable"></label>
+      <label class="checkbox_label"><input id="ln9_yes" type="checkbox" class="editable"></label>
+      <label class="checkbox_label"><input id="box_A" type="checkbox" class="editable"></label>
+      <label class="checkbox_label"><input id="box_B" type="checkbox" class="editable"></label>
+      <label class="checkbox_label"><input id="box_C" type="checkbox" class="editable"></label>
+      <label class="checkbox_label"><input id="box_D" type="checkbox" class="editable"></label>
+      <label class="checkbox_label"><input id="box_E" type="checkbox" class="editable"></label>
+    </div>
+</div>
+  </div>
+  <div class="img_wrapper page_2">
+    <img src="f2210-2.svg">
+    <div class="transactions">
+      <div class="col_a">
+        <div class="cell-wrapper space_4"><span id="ln10a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper space_6"><span id="ln11a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper space_4"></div>
+        <div class="cell-wrapper"></div>
+        <div class="cell-wrapper double"></div>
+        <div class="cell-wrapper triple"><span id="ln15a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper double"></div>
+        <div class="cell-wrapper triple"><span id="ln17a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper triple"><span id="ln18a" class="editable" contenteditable></span></div>
+    </div>
+    <div class="col_b">
+      <div class="cell-wrapper space_4"><span id="ln10b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_6"><span id="ln11b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_4"><span id="ln12b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="ln13b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="ln14b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="ln15b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="ln16b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="ln17b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="ln18b" class="editable" contenteditable></span></div>
+    </div>
+    <div class="col_c">
+      <div class="cell-wrapper space_4"><span id="ln10c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_6"><span id="ln11c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_4"><span id="ln12c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="ln13c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="ln14c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="ln15c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="ln16c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="ln17c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="ln18c" class="editable" contenteditable></span></div>
+    </div>
+    <div class="col_d">
+      <div class="cell-wrapper space_4"><span id="ln10d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_6"><span id="ln11d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_4"><span id="ln12d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="ln13d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="ln14d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="ln15d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"></div>
+      <div class="cell-wrapper triple"><span id="ln17d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"></div>
+      <div class="cell-wrapper space_5"><span id="ln19" class="editable" contenteditable></span></div>
+    </div>
+</div>
+<div class="worksheet ui">
+  <div class="col_labels">
+    <div class="cell-wrapper"><span>Enter estimated payments made, separating date from amount with a space, or tab. Enter each transaction on a new line.</span></div>
+  </div>
+  <div class="col_ta">
+    <div class="cell-wrapper"><textarea id="ln19wks_row1b" class="editable"></textarea></div>
+  </div>
+</div>
+  </div>
+  <div class="img_wrapper page_3">
+    <img src="f2210-3.svg">
+    <div class="transactions">
+      <div class="col_a">
+        <div class="cell-wrapper"><span id="pg3_ln1a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln2a" class="prefilled"></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln3a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper triple"><span id="pg3_ln4a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln5a" class="prefilled"></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln6a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper space_4"><span id="pg3_ln7a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln8a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper triple"><span id="pg3_ln9a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln10a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln11a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper double"><span id="pg3_ln12a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln13a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln14a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln15a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper triple"><span id="pg3_ln16a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln17a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper double"><span id="pg3_ln18a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln19a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln20a" class="prefilled"></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln21a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper triple"><span id="pg3_ln22a"></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln23a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln24a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln25a"></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln26a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper double"><span id="pg3_ln27a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper double"><span id="pg3_ln28a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln29a" class="prefilled"></span></div>
+        <div class="cell-wrapper triple"><span id="pg3_ln30a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln31a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln32a" class="prefilled"></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln33a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln34a" class="prefilled"></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln35a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="pg3_ln36a" class="editable" contenteditable></span></div>
+    </div>
+    <div class="col_b">
+      <div class="cell-wrapper"><span id="pg3_ln1b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln2b" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln3b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln4b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln5b" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln6b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_4"><span id="pg3_ln7b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln8b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln9b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln10b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln11b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln12b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln13b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln14b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln15b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln16b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln17b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln18b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln19b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln20b" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln21b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln22b" class="editable" contenteditable=""></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln23b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln24b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln25b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln26b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln27b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln28b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln29b" class="prefilled"></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln30b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln31b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln32b" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln33b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln34b" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln35b" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln36b" class="editable" contenteditable></span></div>
+    </div>
+    <div class="col_c">
+      <div class="cell-wrapper"><span id="pg3_ln1c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln2c" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln3c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln4c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln5c" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln6c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_4"><span id="pg3_ln7c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln8c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln9c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln10c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln11c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln12c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln13c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln14c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln15c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln16c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln17c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln18c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln19c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln20c" class="prefilled" ></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln21c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln22c" class="editable" contenteditable=""></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln23c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln24c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln25c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln26c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln27c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln28c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln29c" class="prefilled"></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln30c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln31c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln32c" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln33c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln34c" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln35c" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln36c" class="editable" contenteditable></span></div>
+    </div>
+    <div class="col_d">
+      <div class="cell-wrapper"><span id="pg3_ln1d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln2d" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln3d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln4d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln5d" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln6d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper space_4"><span id="pg3_ln7d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln8d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln9d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln10d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln11d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln12d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln13d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln14d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln15d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln16d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln17d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln18d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln19d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln20d" class="prefilled" ></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln21d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln22d" class="editable" contenteditable=""></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln23d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln24d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln25d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln26d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln27d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper double"><span id="pg3_ln28d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln29d" class="prefilled"></span></div>
+      <div class="cell-wrapper triple"><span id="pg3_ln30d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln31d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln32d" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln33d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln34d" class="prefilled"></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln35d" class="editable" contenteditable></span></div>
+      <div class="cell-wrapper"><span id="pg3_ln36d" class="editable" contenteditable></span></div>
+    </div>
+</div>
+  </div>
+  <div id="report" class="hidden"></div>
+</body>
+</html>
