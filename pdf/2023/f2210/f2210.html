@@ -110,12 +110,12 @@
     outline: none;
   }
 
-  .transactions, .worksheet {
+  .transactions, .worksheet, .rows {
     z-index: 100;
     box-sizing: border-box;
   }
 
-  .transactions span {
+  .transactions span, .rows span {
     display: block;
     position: static;
     font-family:'Courier New', Courier, monospace;
@@ -184,6 +184,18 @@
     padding: 5px 0;
   }
 
+  .rows div.cell-wrapper {
+    display: flex;
+    position: relative;
+    align-items:flex-end;
+    overflow: hidden;
+    width: 25%;
+    min-height: 16px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
   .worksheet .editable {
     border: 1px black solid;
   }
@@ -211,6 +223,18 @@
 
   .space_6 {
     height: 6rem !important;
+  }
+
+  .page_2_wks .h42 {
+    height: 42px;
+  }
+
+  .page_2_wks .h58 {
+    height: 58px;
+  }
+
+  .page_2_wks .h88 {
+    height: 88px;
   }
 
   .left_1 {
@@ -245,6 +269,7 @@
   .page_1 .transactions { position: absolute; width: 713px; height: 511px; top: 496px; left: 52px; }
   .page_2 .transactions { position: absolute; display: flex; width: 380px; height: 511px; top: 126px; left: 385px; }
   .page_2 .worksheet { position: absolute; display: flex; width: 700px; height: auto; top: 700px; left: 40px; }
+  .page_2_wks .rows { position: absolute; display: flex; flex-flow: column wrap; width: 340px; height: 794px; top: 197px; left: 422px; }
   .page_3 .transactions { position: absolute; display: flex; width: 380px; height: 511px; top: 158px; left: 385px; }
 
   .page_1 .checkboxes { position: absolute; top: 206px; left: 21px; }
@@ -265,6 +290,9 @@
   .worksheet .col_ta { position: static; margin: 0; padding: 0; width: 180px; height: 100%; top: 0px; left: 0px; }
   .worksheet #ln19wks_row1b { min-height: 78px; }
 
+  .rows .row { display: flex; flex-flow: row nowrap; width: 340px; min-height: 16px; margin: 0; }
+  .rows .total { position: absolute; width: 76px; bottom: 5px; right: 14px; }
+
   @media print {
     .editable, .calculated, .override {
       background-color: transparent;
@@ -278,14 +306,17 @@
   }
 
 </style>
-<script src="../main.js"></script>
+<script src="../../csv.js"></script>
 <script src="f2210.js"></script>
 <body>
+  <input type="file" id="myFile" multiple size="50" onchange="importFile()">
+<button id="loadFile" onclick="miniLoading(loadFile); initiateImport(myFile)">Choose Files</button>
+
   <div class="img_wrapper page_1">
     <img src="f2210-1.svg">
     <div id="taxpayer_info" class="info_section">
-      <span class="name_on_return editable" contenteditable></span>
-      <span class="primary_ssn editable" contenteditable></span>
+      <span id="name_on_return" class="name_on_return editable" contenteditable></span>
+      <span id="primary_ssn" class="primary_ssn editable" contenteditable></span>
     </div>
     <div class="transactions">
     <div class="col_right">
@@ -368,6 +399,84 @@
   </div>
 </div>
   </div>
+  <div class="img_wrapper ui page_2_wks">
+    <img src="i2210-7.svg"> 
+    <div class="rows">
+      <div id="wks_row1a" class="row double">
+        <div class="cell-wrapper"><span id="ln1a-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln1a-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln1a-c" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln1a-d" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row1b" class="row h88">
+        <div class="cell-wrapper"><span id="ln1b-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln1b-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln1b-c" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln1b-d" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row2" class="row h42">
+        <div class="cell-wrapper"><span id="ln2-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln2-b" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row3" class="row h58">
+        <div class="cell-wrapper"><span id="ln3-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln3-b" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row4" class="row h58">
+        <div class="cell-wrapper"><span id="ln4-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln4-b" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row5" class="row h42">
+        <div class="cell-wrapper"><span id="ln5-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln5-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln5-c" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row6" class="row h58">
+        <div class="cell-wrapper"><span id="ln6-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln6-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln6-c" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row7" class="row h58">
+        <div class="cell-wrapper"><span id="ln7-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln7-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln7-c" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row8" class="row h42">
+        <div class="cell-wrapper"><span id="ln8-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln8-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln8-c" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row9" class="row h58">
+        <div class="cell-wrapper"><span id="ln9-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln9-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln9-c" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row10" class="row h58">
+        <div class="cell-wrapper"><span id="ln10-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln10-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln10-c" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row11" class="row h42">
+        <div class="cell-wrapper"><span id="ln11-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln11-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln11-c" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln11-d" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row12" class="row h58">
+        <div class="cell-wrapper"><span id="ln12-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln12-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln12-c" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln12-d" class="editable" contenteditable></span></div>
+      </div>
+      <div id="wks_row13" class="row h58">
+        <div class="cell-wrapper"><span id="ln13-a" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln13-b" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln13-c" class="editable" contenteditable></span></div>
+        <div class="cell-wrapper"><span id="ln13-d" class="editable" contenteditable></span></div>
+      </div>
+      <div class="total"><span id="ln14" class="editable" contenteditable></span></div>
+    </div>
+</div>
   <div class="img_wrapper page_3">
     <img src="f2210-3.svg">
     <div class="transactions">
@@ -525,6 +634,9 @@
     </div>
 </div>
   </div>
-  <div id="report" class="hidden"></div>
+  <div id="report" class="hidden ui">
+    <input type="file" id="myFile" multiple size="50" onchange="importFile(f2210)">
+    <button id="loadFile" onclick="/*miniLoading(loadFile);*/ initiateImport(myFile)">Choose Files</button>
+  </div>
 </body>
 </html>

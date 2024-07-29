@@ -1,4 +1,13 @@
 const f2210 = {
+    currentFile: { name: "2023 Form 2210" },
+    lines: {},
+    sela: function () { 
+        var res = []; 
+        for (var i in arguments) { 
+            res.push(arguments[i]);
+        } 
+        return document.querySelectorAll(res.join(",")); 
+    },
     sel: (str) => {
       try { return document.querySelector(str) }
       catch (err) { return }
@@ -8,10 +17,13 @@ const f2210 = {
       catch (err) { return }
     },
     val: (str) => getValue(str),
+    vals: (str) => getValues(str),
+    set: (sel,val) => setValue(sel,val),
     sumArray: (arr) => {
         var total = 0;
         for (let i in arr) {
             let num = f2210.val(arr[i]);
+            if (!num) { continue }
             total += num;
         }
         return total;
@@ -47,8 +59,33 @@ const f2210 = {
             }
         }
     },*/
+    data: {
+        row1a: [
+            ["a","b","c","d"],
+            ["4/15/2023","6/15/2023","9/15/2023","1/15/2024"],
+            ["#ln17a","#ln17b","#ln17c","#ln17d"]
+        ],
+        periodCalcs: [
+            {"a":"4/15/2023","b":"6/15/2023","rate":0.07,"limit":"6/30/2023","cols":["a","b"],"dayFld":"#ln3","calc":"#ln4"},
+            {"a":"06/30/23","b":"06/30/23","c":"09/15/23","rate":0.07,"limit":"9/30/2023","cols":["a","b","c"],"dayFld":"#ln6","calc":"#ln7"},
+            {"a":"09/30/23","b":"09/30/23","c":"09/30/23","rate":0.08,"limit":"12/31/2023","cols":["a","b","c"],"dayFld":"#ln9","calc":"#ln10"},
+            {"a":"12/31/23","b":"12/31/23","c":"12/31/23","d":"01/15/24","rate":0.08,"limit":"4/15/2024","cols":["a","b","c","d"],"dayFld":"#ln12","calc":"#ln13"}
+        ]
+    },
     prefills: {
         // invisible fields, representing numbers that were prefilled into the field
+        "#ln2-a": "4/15/23",
+        "#ln2-b": "6/15/23",
+        "#ln5-a": "6/30/23",
+        "#ln5-b": "6/30/23",
+        "#ln5-c": "9/15/23",
+        "#ln8-a": "9/30/23",
+        "#ln8-b": "9/30/23",
+        "#ln8-c": "9/30/23",
+        "#ln11-a": "12/31/23",
+        "#ln11-b": "12/31/23",
+        "#ln11-c": "12/31/23",
+        "#ln11-d": "1/15/24",
         "#pg3_ln2a": 4,
         "#pg3_ln2b": 2.4,
         "#pg3_ln2c": 1.5,
@@ -131,7 +168,42 @@ const f2210 = {
             ? f2210.val("#ln10d") - f2210.val("#ln15d")
             : "",
         "#ln19": () => f2210.worksheets["Penalty Worksheet"](),
+        // worksheet page
+        "#ln1a-a": () => f2210.val("#ln17a"),
+        "#ln1a-b": () => f2210.val("#ln17b"),
+        "#ln1a-c": () => f2210.val("#ln17c"),
+        "#ln1a-d": () => f2210.val("#ln17d"),
+        /*"#ln1b-a": () => f2210.val(" "),
+        "#ln1b-b": () => f2210.val(" "),
+        "#ln1b-c": () => f2210.val(" "),
+        "#ln1b-d": () => f2210.val(" "),
+        "#ln3-a": () => f2210.val(" "),
+        "#ln3-b": () => f2210.val(" "),*/
+        "#ln4-a": () => periodPenalty(1,"a"),
+        "#ln4-b": () => periodPenalty(1,"b"),
+        /*"#ln6-a": () => f2210.val(" "),
+        "#ln6-b": () => f2210.val(" "),
+        "#ln6-c": () => f2210.val(" "),*/
+        "#ln7-a": () => periodPenalty(2,"a"),
+        "#ln7-b": () => periodPenalty(2,"b"),
+        "#ln7-c": () => periodPenalty(2,"c"),
+        /*"#ln9-a": () => f2210.val(" "),
+        "#ln9-b": () => f2210.val(" "),
+        "#ln9-c": () => f2210.val(" "),*/
+        "#ln10-a": () => periodPenalty(3,"a"),
+        "#ln10-b": () => periodPenalty(3,"b"),
+        "#ln10-c": () => periodPenalty(3,"c"),
+        /*"#ln12-a": () => f2210.val(" "),
+        "#ln12-b": () => f2210.val(" "),
+        "#ln12-c": () => f2210.val(" "),
+        "#ln12-d": () => f2210.val(" "),*/
+        "#ln13-a": () => periodPenalty(4,"a"),
+        "#ln13-b": () => periodPenalty(4,"b"),
+        "#ln13-c": () => periodPenalty(4,"c"),
+        "#ln13-d": () => periodPenalty(4,"d"),
+        "#ln14": () => totalPenalty(),
         // page 3
+        // column a
         "#pg3_ln3a": () => f2210.multi("#pg3_ln1a","#pg3_ln2a"),
         "#pg3_ln6a": () => f2210.multi("#pg3_ln4a","#pg3_ln5a"),
         "#pg3_ln8a": () => f2210.max("#pg3_ln6a","#pg3_ln7a"),
@@ -146,12 +218,12 @@ const f2210 = {
         "#pg3_ln19a": () => f2210.subt("#pg3_ln17a","#pg3_ln18a"),
         "#pg3_ln21a": () => f2210.multi("#pg3_ln19a","#pg3_ln20a"),
         "#pg3_ln23a": () => f2210.subt("#pg3_ln21a","#pg3_ln22a"),
-        //"#pg3_ln24a": () => f2210.multi(pg1_ln9,0.25 ),
+        "#pg3_ln24a": () => f2210.multi("#ln9",0.25),
         "#pg3_ln26a": () => f2210.sum("#pg3_ln24a","#pg3_ln25a"),
         "#pg3_ln27a": () => f2210.min("#pg3_ln23a","#pg3_ln26a"),
         //"#pg3_ln28a": // see instructions 
         //"#pg3_ln30a": // see instructions 
-        "#pg3_ln31a": () => f2210.subt("#pg3_ln29a","#pg3_ln30a"),
+        "#pg3_ln31a": () => f2210.val("#pg3_ln28a") === 0 ? 0 : f2210.subt("#pg3_ln29a","#pg3_ln30a"),
         "#pg3_ln33a": () => f2210.multi("#pg3_ln32a", f2210.min("#pg3_ln28a","#pg3_ln31a")),
         "#pg3_ln35a": () => f2210.multi("#pg3_ln28a","#pg3_ln34a"),
         "#pg3_ln36a": () => f2210.sum("#pg3_ln33a","#pg3_ln35a"),
@@ -171,13 +243,13 @@ const f2210 = {
         "#pg3_ln21b": () => f2210.multi("#pg3_ln19b","#pg3_ln20b"),
         "#pg3_ln22b": () => f2210.val("#pg3_ln27a"),
         "#pg3_ln23b": () => f2210.subt("#pg3_ln21b","#pg3_ln22b"),
-        //"#pg3_ln24b": () => f2210.multi(pg1_ln9,0.25 ),
+        "#pg3_ln24b": () => f2210.multi("#ln9",0.25),
         "#pg3_ln25b": () => f2210.subt("#pg3_ln26a","#pg3_ln27a"),
         "#pg3_ln26b": () => f2210.sum("#pg3_ln24b","#pg3_ln25b"),
         "#pg3_ln27b": () => f2210.min("#pg3_ln23b","#pg3_ln26b"),
         //"#pg3_ln28b": // see instructions 
         //"#pg3_ln30b": // see instructions 
-        "#pg3_ln31b": () => f2210.subt("#pg3_ln29b","#pg3_ln30b"),
+        "#pg3_ln31b": () => f2210.val("#pg3_ln28a") === 0 ? 0 : f2210.subt("#pg3_ln29b","#pg3_ln30b"),
         "#pg3_ln33b": () => f2210.multi("#pg3_ln32b", f2210.min("#pg3_ln28b","#pg3_ln31b")),
         "#pg3_ln35b": () => f2210.multi("#pg3_ln28b","#pg3_ln34b"),
         "#pg3_ln36b": () => f2210.sum("#pg3_ln33b","#pg3_ln35b"),
@@ -197,13 +269,13 @@ const f2210 = {
         "#pg3_ln21c": () => f2210.multi("#pg3_ln19c","#pg3_ln20c"),
         "#pg3_ln22c": () => f2210.suma("#pg3_ln27a","#pg3_ln27b"),
         "#pg3_ln23c": () => f2210.subt("#pg3_ln21c","#pg3_ln22c"),
-        //"#pg3_ln24c": () => f2210.multi(pg1_ln9,0.25 ),
+        "#pg3_ln24c": () => f2210.multi("#ln9",0.25),
         "#pg3_ln25c": () => f2210.subt("#pg3_ln26b","#pg3_ln27b"),
         "#pg3_ln26c": () => f2210.sum("#pg3_ln24c","#pg3_ln25c"),
         "#pg3_ln27c": () => f2210.min("#pg3_ln23c","#pg3_ln26c"),
         //"#pg3_ln28c": // see instructions 
         //"#pg3_ln30c": // see instructions 
-        "#pg3_ln31c": () => f2210.subt("#pg3_ln29c","#pg3_ln30c"),
+        "#pg3_ln31c": () => f2210.val("#pg3_ln28a") === 0 ? 0 : f2210.subt("#pg3_ln29c","#pg3_ln30c"),
         "#pg3_ln33c": () => f2210.multi("#pg3_ln32c", f2210.min("#pg3_ln28c","#pg3_ln31c")),
         "#pg3_ln35c": () => f2210.multi("#pg3_ln28c","#pg3_ln34c"),
         "#pg3_ln36c": () => f2210.sum("#pg3_ln33c","#pg3_ln35c"),
@@ -223,13 +295,13 @@ const f2210 = {
         "#pg3_ln21d": () => f2210.multi("#pg3_ln19d","#pg3_ln20d"),
         "#pg3_ln22d": () => f2210.suma("#pg3_ln27a","#pg3_ln27b","#pg3_ln27c"),
         "#pg3_ln23d": () => f2210.subt("#pg3_ln21d","#pg3_ln22d"),
-        //"#pg3_ln24d": () => f2210.multi(pg1_ln9,0.25 ),
+        "#pg3_ln24d": () => f2210.multi("#ln9",0.25),
         "#pg3_ln25d": () => f2210.subt("#pg3_ln26c","#pg3_ln27c"),
         "#pg3_ln26d": () => f2210.sum("#pg3_ln24d","#pg3_ln25d"),
         "#pg3_ln27d": () => f2210.min("#pg3_ln23d","#pg3_ln26d"),
         //"#pg3_ln28d": // see instructions 
         //"#pg3_ln30d": // see instructions 
-        "#pg3_ln31d": () => f2210.subt("#pg3_ln29d","#pg3_ln30d"),
+        "#pg3_ln31d": () => f2210.val("#pg3_ln28a") === 0 ? 0 : f2210.subt("#pg3_ln29d","#pg3_ln30d"),
         "#pg3_ln33d": () => f2210.multi("#pg3_ln32d", f2210.min("#pg3_ln28d","#pg3_ln31d")),
         "#pg3_ln35d": () => f2210.multi("#pg3_ln28d","#pg3_ln34d"),
         "#pg3_ln36d": () => f2210.sum("#pg3_ln33d","#pg3_ln35d"),
@@ -237,14 +309,16 @@ const f2210 = {
     worksheets: {
         "Penalty Worksheet": () => {
             // row1b - [[date1,date2...,[payment1,payment2...]]
-            var row1a = [
+            var row1a = f2210.data.row1a;
+            /*[
                 ["a","b","c","d"],
                 ["4/15/2023","6/15/2023","9/15/2023","1/15/2024"],
                 ["#ln17a","#ln17b","#ln17c","#ln17d"]
                 //[4000,3000,3000,3000]
-            ];
+            ];*/
            console.log(`Line 17 (a) value: ${f2210.val("#ln17a")}`)
             var row1b = allocatePmts(row1a);
+            displayPmts(row1b);
             var penalty = 0;
             for (var c in row1b) {
                 // for each column:
@@ -253,28 +327,55 @@ const f2210 = {
                 var col = c; // d
                 if (row1b[c].length === 0) { 
                     var pmtDate = null;
-                    var amtPaid = row1a[2][row1a[0].indexOf(col)];
-                    penalty += pmtPenalty(col,pmtDate,amtPaid);
+                    let sel = row1a[2][row1a[0].indexOf(col)];
+                    var amtPaid = f2210.val(sel);
+                    penalty += pmtPenaltyTotal(col,pmtDate,amtPaid);
+                    continue;
                 } else {
-                    for (var t in row1b[c]) {
-                        var pmtDate = row1b[c][t][0];
-                        var amtPaid = row1b[c][t][1];
-                        penalty += pmtPenalty(col,pmtDate,amtPaid);
+                    for (var t in row1b[c]) { // t = 0  row1b["a"][0] = ["4/15/24",2000]
+                        var pmtDate = row1b[c][t][0]; // row1b["a"][0][0] = "4/15/24"
+                        let sel = row1b[c][t][1]; 
+                        var amtPaid = f2210.val(sel); // row1b["a"][0][1] = 2000
+                        penalty += pmtPenaltyTotal(col,pmtDate,amtPaid);
                     }
                 }
             }
             console.log("Penalty is $"+(Math.round(penalty * 100 ) / 100));
             return Math.round(penalty * 100 ) / 100;
-        }
+        },
     }
 };
+/*
+28894
+
+
+6852
+48666
+1713
+5058
+24820
+130240
+
+04/30/23 2000
+06/15/23 3000
+09/15/23 4000
+01/15/24 4000
+*/
+
+/*
+Example data from 2210 instructions:
+04/30/23 2000
+06/15/23 3000
+09/15/23 4000
+01/15/24 4000
+*/
 
 function allocatePmts(row1a) {
     try {
     var report = "";
     var data = {a:[],b:[],c:[],d:[]};
     var row1b = f2210.sel("#ln19wks_row1b")?.value;
-    if (!row1b) { return data; }
+    if (!row1b || row1b === "") { return data; }
     row1b = row1b.split(/\n/g).map((ea) => ea.split(/[ \t]/g));
     //var row1b = document.querySelector("#ln19wks_row1b").value.split(/\n/g).map((ea) => ea.split(/[ \t,]/g));
     // TODO: sort by date
@@ -319,13 +420,31 @@ function allocatePmts(row1a) {
     } catch (err) { alert(err.message) }
 }
 
-function pmtPenalty(col,pmtDate,amtPaid) {
-    var period = [
+function displayPmts(row1b) {
+    for (var c in row1b) { // c = "a"  row1b["a"] = [["4/15/24",2000],["6/15/24",3000]]
+        if (row1b[c].length === 0) { // row1b["a"] = [];
+            continue;
+        } else {
+            var arr = [];
+            var sel = "#ln1b-"+c; // "#ln1b-a"
+            for (var t in row1b[c]) { // t = 0  row1b["a"][0] = ["4/15/24",2000]
+                var pmtDate = row1b[c][t][0]; // row1b["a"][0][0] = "4/15/24"
+                var amtPaid = row1b[c][t][1]; // row1b["a"][0][1] = 2000
+                arr.push(pmtDate+" "+amtPaid); // "4/15/24 2000"
+            }
+            f2210.sel(sel).innerText = arr.join("\n");
+        }
+    }
+}
+
+function pmtPenaltyTotal(col,pmtDate,amtPaid) {
+    var period = f2210.data.periodCalcs;
+    /*[
         {"a":"4/15/2023","b":"6/15/2023","rate":0.07,"limit":"6/30/2023","cols":["a","b"]},
         {"a":"06/30/23","b":"06/30/23","c":"09/15/23","rate":0.07,"limit":"9/30/2023","cols":["a","b","c"]},
         {"a":"09/30/23","b":"09/30/23","c":"09/30/23","rate":0.08,"limit":"12/31/2023","cols":["a","b","c"]},
         {"a":"12/31/23","b":"12/31/23","c":"12/31/23","d":"01/15/24","rate":0.08,"limit":"4/15/2024","cols":["a","b","c","d"]}
-    ];
+    ];*/
     var penalty = 0;
     console.log(`column (${col})\npmtDate: ${pmtDate}\namtPaid: ${amtPaid}`)
     for (var n in period) {
@@ -349,6 +468,71 @@ function pmtPenalty(col,pmtDate,amtPaid) {
     return penalty;
 }
 
+function periodPenalty(n,col) {
+    var period = f2210.data.periodCalcs;
+    /*[
+        {"a":"4/15/2023","b":"6/15/2023","rate":0.07,"limit":"6/30/2023","cols":["a","b"],"dayFld":"#ln3","calc":"#ln4"},
+        {"a":"06/30/23","b":"06/30/23","c":"09/15/23","rate":0.07,"limit":"9/30/2023","cols":["a","b","c"],"dayFld":"#ln6","calc":"#ln7"},
+        {"a":"09/30/23","b":"09/30/23","c":"09/30/23","rate":0.08,"limit":"12/31/2023","cols":["a","b","c"],"dayFld":"#ln9","calc":"#ln10"},
+        {"a":"12/31/23","b":"12/31/23","c":"12/31/23","d":"01/15/24","rate":0.08,"limit":"4/15/2024","cols":["a","b","c","d"],"dayFld":"#ln12","calc":"#ln13"}
+    ];*/
+    var penalty = 0;
+    n = n - 1; // change to [0-9] count
+    if (!period[n]) { return "" }
+    var startDate = period[n][col];
+    if (!startDate) { return "" }
+    var rate = period[n].rate;
+    var limit = new Date(period[n].limit).getTime();
+    var start = new Date(startDate).getTime();
+    var pl = f2210.sel("#ln1b-"+col).innerText;
+    if (!pl || pl === "") { return "" }
+    console.log("Period "+n)
+    // split into [[],[]] by new lines
+    var pmts = pl.split(/\n/g);
+    // then spaces
+    pmts = pmts.map((ea) => ea.split(/ /g));
+    var nl = "";
+    var res = "";
+    var dayFld = "";
+    for (var p in pmts) {
+        if (parseInt(p) > 0) { nl = "\n" }
+        var pmtDate = pmts[p][0];
+        var amtPaid = pmts[p][1];
+        var paid = pmtDate ? new Date(pmtDate).getTime() : limit;
+        var amt = parseFloat(amtPaid);
+        paid = f2210.min(paid,limit);
+        var days = Math.round((paid - start)/1000/60/60/24);
+        if (days < 0) { continue; }
+        console.log(period[n].dayFld+"-"+col)
+        dayFld += nl + days;
+        console.log(days+" days")
+        var yrDays = n < 3 ? 365 : 366; 
+        var calc = Math.round(amt * (days / yrDays) * rate * 100) / 100;
+        console.log(res);
+        //f2210.sel("#ln4-"+col).innerText 
+        res += nl + calc;
+    }
+    f2210.sel(period[n].dayFld+"-"+col).innerText = dayFld;
+    return res || "";
+    //penalty += res;
+    //return penalty;
+}
+
+function totalPenalty() {
+    var period = f2210.data.periodCalcs;
+    var penalty = 0;
+    for (var n in period) {
+        var sel = period[n].calc;
+        var cols = period[n].cols;
+        for (var c in cols) {
+            var col = cols[c];
+            var amounts = f2210.vals(sel+"-"+col);
+            penalty += f2210.sumArray(amounts);
+        }
+    }
+    return toTaxFormat(penalty,2);
+}
+
 function columnPaste(elem,text) {
     var values = text.split(/\n/g);
     var fields = document.querySelectorAll(".editable:not([type='checkbox'])");
@@ -370,17 +554,44 @@ function columnPaste(elem,text) {
     }
 }
 
+function distribute(form) {
+    var lines = form.lines;
+    var order = form.currentFile.ids || Object.keys(lines);
+    //var fields = document.querySelectorAll(".editable:not([type='checkbox'])");
+    for (let ln in order) {
+        if (start) {
+            let value = order[ln];
+            let sel = "#"+ln;
+            if (!form.fld(sel)) { continue }
+            form.set(sel,value);
+        }
+    }
+}
+
 function recalculate() {
     var frms = f2210.formulas;
     for (let sel in frms) {
         var elem = document.querySelector(sel);
-        if (!elem.classList.contains("calculated")) { continue; }
+        if (!elem.classList.contains("calculated")) { 
+            continue; 
+        }
         var value = frms[sel]();
         if (elem.getAttribute("type") === "checkbox") {
             elem.checked = value;
         } else {
             elem.innerText = value;
         }
+    }
+}
+
+function recordEdits() {
+    var fields = f2210.sela(".editable");
+    for (var f in fields) {
+        var field = fields[f];
+        if (!field.id) { continue }
+        var sel = "#"+field.id;
+        var value = f2210.val(sel);
+        f2210.lines[sel] = value;
     }
 }
 
@@ -400,28 +611,90 @@ function bool(str) {
 
 function toDate(num) {
     return new Date(num).toLocaleDateString();
-  }
+}
 
-function getValue(str) {
+function toCurrency(num,decimals) {
+    var dec = 0;
+    if (decimals) { dec = 2 }
+    var opt = { style: 'currency', currency: 'USD', maximumFractionDigits: dec };
+	var fixed = new Intl.NumberFormat('en-US', opt);
+    return fixed.format(num);
+}
+
+function toTaxFormat(num,decimals) {
+    var dec = 0;
+    if (decimals) { dec = 2 }
+    var opt = { maximumFractionDigits: dec };
+	var fixed = new Intl.NumberFormat('en-US', opt);
+    return fixed.format(num);
+}
+
+function getValue(str,multiline) {
+    var field = f2210.fld(str);
     // if 'str' is a valid query string
-    if (typeof str === "string" && f2210.fld(str)) {
-        var val = f2210.fld(str).value || f2210.fld(str).innerText;
-        if (val !== "" && typeof val === "string" && typeof parseFloat(val) === "number") {
+    if (typeof str === "string" && field) {
+        var val = field.checked || field.value || field.innerText;
+        if (val.match && val.match(/\n/)) { multiline = true }
+        // if 'val' is expected to contain multiple numbers (new line separated)
+        if (multiline && val !== "") {
+            var split = val.split(/\n/g);
+            var values = [];
+            for (var v in split) {
+                var value = parseValue(split[v]);
+                if (!value) { continue }
+                if (value.toString() === "NaN") { continue }
+                values.push(value);
+            }
+            return values;
+        } else if (val !== "" && typeof val === "string" && parseFloat(val).toString() !== "NaN") {
             val = parseFloat(val.replace(/[$,]/g,"").trim());
         } else if (val === "") {
             val = 0;
         }
-        return val;
-    } else if (typeof str === "string" && typeof parseFloat(str) === "number") {
-        return parseFloat(str);
+        return parseValue(val);
+    } else { return parseValue(str) }
+}
+
+function parseValue(val) {
+    if (typeof val === "string" 
+        && parseFloat(val.replace(/[$,]/g,"")).toString() !== "NaN"
+        // is not a multiline or space-separated value
+        && !val.match(/[\n\t ]/)
+        // is not a date string
+        && !val.trim().match(/^\d{1,2}\/\d{1,2}\/*\d{0,4}$/)
+        // is not a SSN, EIN, 
+        // or US Phone using "()", "-", and/or "."
+        // as separators
+        && !val.trim()
+        .match(/^(\d{3}-\d{2}-\d{4}|\d{2}-\d{6}|\(*\d{3}\)* *\d{3}-\d{4}|\d{3}[-.]\d{3}[-.]\d{4})$/)
+    ) {
+        return parseFloat(val.replace(/[$,]/g,"").trim());
+    } else if (val === "") {
+        val = 0;
     } else {
-        return str;
+        return val;
+    }
+}
+
+function getValues(str) {
+    return getValue(str,true);
+}
+
+function setValue(sel,val) {
+    var field = f2210.fld(sel);
+    if (field.getAttribute("type") === "checkbox") {
+        var bool = (val !== "true" || val !== true) ? false : true;
+        field.checked = bool;
+        return;
+    } else if (field.tagName === "TEXTAREA" || field.tagName === "INPUT") {
+        field.value = val;
+    } else {
+        field.innerText = val;
     }
 }
 
 document.addEventListener("paste",(e) => {
     if (e.target.classList.contains("editable") && e.target.tagName !== "TEXTAREA") {
-        alert(e.target.tagName);
         e.preventDefault();
         navigator.clipboard.readText().then((txt) => {
             columnPaste(e.target,txt);
@@ -444,6 +717,15 @@ document.addEventListener("keydown",(e) => {
         for (let field of fields) {
             field.innerText = "";
             recalculate();
+        }
+    } else if (e.key === "S" && e.shiftKey && !e.target.classList.contains("editable")) {
+        recordEdits();
+        saveForm(f2210);
+    } else if (e.key === "O" && e.shiftKey && !e.target.classList.contains("editable")) {
+        if (f2210.sel("#report")?.classList.contains("hidden")) {
+            f2210.sel("#report").classList.remove("hidden");
+        } else {
+            f2210.sel("#report").classList.add("hidden");
         }
     }
 });
@@ -483,6 +765,9 @@ setTimeout(() => {
     for (let sel in pfs) {
         var value = pfs[sel];
         var elem = document.querySelector(sel);
+        elem.removeAttribute("contenteditable");
+        elem.classList.remove("editable");
+        elem.classList.add("prefilled");
         elem.innerText = value;
     }
     var fmls = f2210.formulas;
@@ -492,4 +777,20 @@ setTimeout(() => {
         elem.classList.remove("editable");
         elem.classList.add("calculated");
     }
+    var test = `28894
+
+
+6852
+48666
+1713
+5058
+24820
+130240`;
+    var taTest = `04/30/23 2000
+06/15/23 3000
+09/15/23 4000
+01/15/24 4000`;
+   // columnPaste(f2210.sel("#ln1"),test);
+    //f2210.sel("#ln19wks_row1b").value = taTest;
+    //recalculate();
  }, 200)
