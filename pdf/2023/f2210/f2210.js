@@ -569,9 +569,8 @@ function periodPenalty(n,col) {
     var limit = new Date(period[n].limit).getTime();
     var start = new Date(startDate).getTime();
     try{
-    //var pl = f2210.sel("#ln1b-"+col).innerText;
-    var pmts = f2210.val("#ln1b-"+col);
-    } catch (err) { console.log("ERROR, periodPenalty: "+err.message+"\npvalue of '#ln1b-"+col+"' = "+pl)}
+    var pmts = f2210.sel("#ln1b-"+col).innerText;
+    //var pmts = f2210.val("#ln1b-"+col);
     if (!pmts || pmts === "") { return "" }
     if (!pmts instanceof Array) {
         // split into [[],[]] by new lines
@@ -581,6 +580,7 @@ function periodPenalty(n,col) {
     }
     // then spaces
     pmts = pmts.map((ea) => ea.split(/ /g));
+    } catch (err) { console.log("ERROR, periodPenalty: "+err.message+"\npvalue of '#ln1b-"+col+"' = "+pmts)}
     var nl = "";
     var res = "";
     var dayFld = "";
@@ -892,20 +892,4 @@ setTimeout(() => {
         elem.classList.remove("editable");
         elem.classList.add("calculated");
     }
-    var test = `28894
-
-
-6852
-48666
-1713
-5058
-24820
-130240`;
-    var taTest = `04/30/23 2000
-06/15/23 3000
-09/15/23 4000
-01/15/24 4000`;
-   // columnPaste(f2210.sel("#ln1"),test);
-    //f2210.sel("#ln19wks_row1b").value = taTest;
-    //recalculate();
  }, 200)
