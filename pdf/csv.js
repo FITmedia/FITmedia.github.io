@@ -92,9 +92,9 @@ var db = {
   }
   
   async function importFile(form){
-    var x = document.getElementById("myFile");
+    //var x = document.getElementById("myFile");
     try{
-    var txt = "";
+   /* var txt = "";
     if (document.getElementById("results")) {
         results.innerHTML = "";
     }
@@ -121,36 +121,42 @@ var db = {
                 return;
             }
             txt += "size: " + file.size + " bytes <br>";
-          }
+          }*/
+          var file = document.getElementById("myFile").files[0];
           var text = await file.text();
-          var splits = text.split(/\n/g); //parseCSV(text,true);
-          var obj = {};
-          form.currentFile.ids = [];
-          splits.forEach((ea) => {
-            var sp = ea.split(/,/g);
-            var k = sp[0];
-            var v = sp[1];
-            obj[k] = v;
-            form.currentFile.ids.push(k);
-          });
-          if (form.currentFile.name !== fileName) {
-              form.currentFile.name = fileName;
+          if (file.type.match("csv")) {
+            var splits = text.split(/\n/g); //parseCSV(text,true);
+            var obj = {};
+            form.currentFile.ids = [];
+            splits.forEach((ea) => {
+              var sp = ea.split(/,/g);
+              var k = sp[0];
+              var v = sp[1];
+              obj[k] = v;
+              form.currentFile.ids.push(k);
               form.lines = obj;
+            });
+          } else if (file.type.match("json")) {
+            f2210.loadJSON(text);
           }
-        }
-      }
-    } else {
-      if (x.value == "") {
+          if (form.currentFile.name !== file.name) {
+              form.currentFile.name = file.name;
+          }
+          f2210.sel("#report").classList.add("hidden");
+       // }
+     // }
+   // } else {
+     /* if (x.value == "") {
         txt += "Select one or more files.";
       } else {
         txt += "The files property is not supported by your browser!";
         txt += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead. 
       }
-    }
+    } */
     distribute(form);
     recalculate();
     //loadFile.loading.stop();
-    } catch (err) {console.log("ERROR, importFiles: "+err.message)}
+    } catch (err) {console.log("ERROR! importFiles: "+err.message)}
   }
   
   function miniLoading(elem) {
@@ -189,17 +195,18 @@ var db = {
   }
 
   function saveForm(form) {
-    var data = form.fields;
-    var rows = [];
-    for (var sel in data) {
-      var value = data[sel];
-      rows.push([sel,value])
-    }
-    if (confirm("Copy to clipboard instead of exporting?")) {
+    /*if (confirm("Copy to clipboard instead of exporting?")) {
+      var data = form.fields;
+      var rows = [];
+      for (var sel in data) {
+        var value = data[sel];
+        rows.push([sel,value])
+      }
       navigator.clipboard.writeText(rows.join("\n"));
-    } else {
-      exportToCsv(rows);
-    }
+    } else {*/
+      //exportToCsv(rows);
+      exportJSON(form);
+    //}
   }
   
   function exportToCsv(form) {
@@ -231,6 +238,7 @@ var db = {
           csvFile = stringifyCSV(rows,true);
       }
       var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+      // var blob = new Blob([JSON.stringify(obj, null, 2)], {type: "application/json"});
       if (navigator.msSaveBlob) { // IE 10+
           navigator.msSaveBlob(blob, fileName);
       } else {
@@ -247,6 +255,28 @@ var db = {
           }
       }
   }
+
+  function exportJSON(form) {
+    // https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+        var fileName = form.currentFile.name;
+        var rows = form.lines;
+        var blob = new Blob([JSON.stringify(rows, null, 2)], {type: "application/json"});
+        if (navigator.msSaveBlob) { // IE 10+
+            navigator.msSaveBlob(blob, fileName);
+        } else {
+            var link = document.createElement("a");
+            if (link.download !== undefined) { // feature detection
+                // Browsers that support HTML5 download attribute
+                var url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", fileName);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    }
   
   // parseCSV is in HTML pane due to "infinite loop" error
   

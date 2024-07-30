@@ -13,8 +13,13 @@ const f2210 = {
       catch (err) { return }
     },
     fld: (str) => {
-      try { return document.querySelector(str) }
-      catch (err) { return }
+        try { 
+            if (!str.match(/^#/)) {
+                // assume 'str' is meant to be an id
+                str = "#"+str;
+            }
+            return document.querySelector(str) 
+        } catch (err) { return }
     },
     val: (str) => getValue(str),
     vals: (str) => getValues(str),
@@ -42,6 +47,12 @@ const f2210 = {
     div: (sel1,sel2) => (f2210.val(sel1) || 0) / (f2210.val(sel2) || 0),
     min: (sel1,sel2) => {return (f2210.val(sel1) || 0) < (f2210.val(sel2) || 0) ? (f2210.val(sel1) || 0) : (f2210.val(sel2) || 0)},
     max: (sel1,sel2) => {return (f2210.val(sel1) || 0) > (f2210.val(sel2) || 0) ? (f2210.val(sel1) || 0) : (f2210.val(sel2) || 0)},
+    loadJSON: (text) => {
+        var json = JSON.parse(text);
+        f2210.lines = json;
+        f2210.currentFile.ids = Object.keys(json);
+        distribute(f2210);
+    },
     //chk: (sel1) => { f2210.sel(sel1).checked = true },
     /*chk: (sel1,sel2) => {
         // if first element is unchecked, check it
@@ -71,6 +82,79 @@ const f2210 = {
             {"a":"09/30/23","b":"09/30/23","c":"09/30/23","rate":0.08,"limit":"12/31/2023","cols":["a","b","c"],"dayFld":"#ln9","calc":"#ln10"},
             {"a":"12/31/23","b":"12/31/23","c":"12/31/23","d":"01/15/24","rate":0.08,"limit":"4/15/2024","cols":["a","b","c","d"],"dayFld":"#ln12","calc":"#ln13"}
         ]
+    },
+    instructions: {
+        "#ln2": `IF you file 1040, 1040-NR, or 1040-SR
+THEN include on line 2 the amounts on...
+
+Schedule 2 (Form 1040):
+Line 4,
+Line 8 (additional tax on distributions only),
+Line 9,*
+Line 10,
+Line 11,
+Line 12,
+Line 14,
+Line 15,
+Line 16,
+Line 17a,
+Line 17c,
+Line 17d,
+Line 17e,
+Line 17f,
+Line 17g,
+Line 17h,
+Line 17i,
+Line 17j,
+Line 17l, and
+Line 17z.
+
+* If you’re a household employer, include your household employment taxes on line 2. Don’t include household employment taxes if both of the following are true: (1) You didn’t have federal income tax withheld from your income, and (2) You wouldn’t be required to make estimated tax payments even if the household employment taxes weren't included.`,
+        "#ln3": `Enter the total amount of the following payments and refundable credits, if any, that you claim on your tax return.
+
+• Earned income credit.
+• Additional child tax credit.
+• Refundable part of the American opportunity credit (Form 8863, line 8).
+• Premium tax credit (Form 8962).
+• Credit for federal tax paid on fuels.
+• Qualified sick and family leave credits from Schedule(s) H (Schedule 3 (Form 1040), line 13z).
+• Credit determined under section 1341(a)(5)(B). To figure the amount of the section 1341 credit, see Repayments in Pub. 525, Taxable and Nontaxable Income.`,
+    "#ln6": `Enter the taxes withheld shown on the following lines:
+
+• Form 1040 or 1040-SR, line 25d;
+• Form 1040-NR, lines 25d, 25e, 25f, and 25g;
+• Also, Schedule 3 (Form 1040), line 11, if you filed the above forms;
+• Form 1041, Schedule G, line 14.
+
+Filers of Form 8689, Allocation of Individual Income Tax to the U.S. Virgin Islands. Also enter on this line the amount(s) from Form 8689, lines 41 and 46, that you entered on line 33 of your 2023 Form 1040 or 1040-SR.`,
+    "#ln8": `IF you filed for 2022...
+THEN add the following amounts shown on your 2022 tax return.
+
+Line 22,
+
+Schedule 2 (Form 1040):
+Line 4,
+Line 8 (additional tax on distributions only),
+Line 9,*
+Line 10,
+Line 11,
+Line 12,
+Line 14,
+Line 15,
+Line 16,
+Line 17a,
+Line 17c,
+Line 17d,
+Line 17e,
+Line 17f,
+Line 17g,
+Line 17h,
+Line 17i,
+Line 17j,
+Line 17l, and
+Line 17z.
+
+* If you’re a household employer, include your household employment taxes on line 2. Don’t include household employment taxes if both of the following are true: (1) You didn’t have federal income tax withheld from your income, and (2) You wouldn’t be required to make estimated tax payments even if the household employment taxes weren't included.`,
     },
     prefills: {
         // invisible fields, representing numbers that were prefilled into the field
@@ -417,7 +501,7 @@ function allocatePmts(row1a) {
     report += "\n\n"+(JSON.stringify(data));
     console.log(report);
     return data;
-    } catch (err) { alert(err.message) }
+    } catch (err) { alert("ERROR, allocatePmts: "+err.message) }
 }
 
 function displayPmts(row1b) {
@@ -484,11 +568,17 @@ function periodPenalty(n,col) {
     var rate = period[n].rate;
     var limit = new Date(period[n].limit).getTime();
     var start = new Date(startDate).getTime();
-    var pl = f2210.sel("#ln1b-"+col).innerText;
+    try{
+    //var pl = f2210.sel("#ln1b-"+col).innerText;
+    var pl = f2210.val("#ln1b-"+col);
+    } catch (err) { console.log("ERROR, periodPenalty: "+err.message+"\npvalue of '#ln1b-"+col+"' = "+pl)}
     if (!pl || pl === "") { return "" }
-    console.log("Period "+n)
-    // split into [[],[]] by new lines
-    var pmts = pl.split(/\n/g);
+    if (!pl instanceof Array) {
+        // split into [[],[]] by new lines
+        var pmts = pl.split(/\n/g);
+    } else if (pl === []) {
+        return "";
+    }
     // then spaces
     pmts = pmts.map((ea) => ea.split(/ /g));
     var nl = "";
@@ -503,7 +593,6 @@ function periodPenalty(n,col) {
         paid = f2210.min(paid,limit);
         var days = Math.round((paid - start)/1000/60/60/24);
         if (days < 0) { continue; }
-        console.log(period[n].dayFld+"-"+col)
         dayFld += nl + days;
         console.log(days+" days")
         var yrDays = n < 3 ? 365 : 366; 
@@ -512,7 +601,11 @@ function periodPenalty(n,col) {
         //f2210.sel("#ln4-"+col).innerText 
         res += nl + calc;
     }
-    f2210.sel(period[n].dayFld+"-"+col).innerText = dayFld;
+    var field = f2210.sel(period[n].dayFld+"-"+col);
+    field.innerText = dayFld;
+    field.removeAttribute("contenteditable");
+    field.classList.remove("editable");
+    field.classList.add("calculated");
     return res || "";
     //penalty += res;
     //return penalty;
@@ -534,21 +627,33 @@ function totalPenalty() {
 }
 
 function columnPaste(elem,text) {
+    if (text.match(/^\s*\{[^"]*"[^"]*":[^]+\}\s*$/)) {
+        var json = JSON.parse(text);
+        f2210.lines = json;
+        f2210.currentFile.ids = Object.keys(json);
+        distribute(f2210);
+        return;
+    }
     var values = text.split(/\n/g);
-    var fields = document.querySelectorAll(".editable:not([type='checkbox'])");
+    var fields = document.querySelectorAll(".editable");
+    //.querySelectorAll(".editable:not([type='checkbox'])");
     var vals = values.length;
     var ct = 0;
     var start = false;
     for (let field of fields) {
-        console.log((elem === field) +" - "+ elem +" === " + field);
+        // console.log((elem === field) +" - "+ elem +" === " + field);
         if (elem === field && !start) {
             start = true;
         }
         if (start) {
             let value = values[ct];
-            field.innerText = value;
+            f2210.set(field.id,value);
+            /*if (field.getAttribute("type") === "checkbox") {
+                field.checked = (value === "true" || value === true) ? true : false;
+            } else {
+            }*/
             ct++;
-            console.log(ct+" === "+vals);
+            // console.log(ct+" === "+vals);
             if (ct === vals) { break }
         }
     }
@@ -557,14 +662,13 @@ function columnPaste(elem,text) {
 function distribute(form) {
     var lines = form.lines;
     var order = form.currentFile.ids || Object.keys(lines);
+    console.log(form.currentFile.ids)
     //var fields = document.querySelectorAll(".editable:not([type='checkbox'])");
     for (let ln in order) {
-        if (start) {
-            let value = order[ln];
-            let sel = "#"+ln;
-            if (!form.fld(sel)) { continue }
-            form.set(sel,value);
-        }
+        let sel = order[ln];
+        if (!form.fld(sel)) { continue }
+        let value = lines[sel];
+        form.set(sel,value);
     }
 }
 
@@ -633,12 +737,16 @@ function getValue(str,multiline) {
     var field = f2210.fld(str);
     // if 'str' is a valid query string
     if (typeof str === "string" && field) {
-        var val = field.checked || field.value || field.innerText;
-        if (val.match && val.match(/\n/)) { multiline = true }
+        var val = field.value || field.innerText;
+        if (field.getAttribute("type") === "checkbox") {
+            val = field.checked;
+        }
+        if (val.match && val.match(/\n/) /*|| field.classList.contains("multiline")*/) { multiline = true }
         // if 'val' is expected to contain multiple numbers (new line separated)
-        if (multiline && val !== "") {
-            var split = val.split(/\n/g);
+        if (multiline) {
             var values = [];
+            if (val === "") { return values }
+            var split = val.split(/\n/g);
             for (var v in split) {
                 var value = parseValue(split[v]);
                 if (!value) { continue }
@@ -683,10 +791,17 @@ function getValues(str) {
 function setValue(sel,val) {
     var field = f2210.fld(sel);
     if (field.getAttribute("type") === "checkbox") {
-        var bool = (val !== "true" || val !== true) ? false : true;
+        var bool = (val === "true" || val === true) ? true : false;
         field.checked = bool;
         return;
-    } else if (field.tagName === "TEXTAREA" || field.tagName === "INPUT") {
+    }
+    //if (val.split("\n").length > 1) {
+    //    val = val.replace(/\\n/g,"\n");
+    //}
+    if (val instanceof Array) {
+        val = val.join("\n");
+    }
+    if (field.tagName === "TEXTAREA" || field.tagName === "INPUT") {
         field.value = val;
     } else {
         field.innerText = val;
