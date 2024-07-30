@@ -571,16 +571,22 @@ function periodPenalty(n,col) {
     try{
     var pmts = f2210.sel("#ln1b-"+col).innerText;
     //var pmts = f2210.val("#ln1b-"+col);
+    // possible formats of 'pmts':
+    // undefined x
+    // "" (blank) x
+    // string matching '[date] [number]'
+    // string matching '[date] [number]\n[date] [number]'+
+    // array [] or [[]]
     if (!pmts || pmts === "") { return "" }
-    if (!pmts instanceof Array) {
-        // split into [[],[]] by new lines
-        pmts = pmts.split(/\n/g);
-    } else if (pmts === []) {
+    if (typeof pmts === "string") {
+        // split into [] by new lines
+        pmts = pmts.split(/\n/g); // should make array even if no split
+        // then spaces [[]]
+        pmts = pmts.map((ea) => ea.split(/ /g));
+    } else if (pmts instanceof Array && pmts.length === 0) {
         return "";
     }
-    // then spaces
-    pmts = pmts.map((ea) => ea.split(/ /g));
-    } catch (err) { console.log("ERROR, periodPenalty: "+err.message+"\npvalue of '#ln1b-"+col+"' = "+pmts)}
+    } catch (err) { console.log("ERROR, periodPenalty: "+err.message+"\nvalue of '#ln1b-"+col+"' = "+pmts)}
     var nl = "";
     var res = "";
     var dayFld = "";
