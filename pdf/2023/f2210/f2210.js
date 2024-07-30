@@ -570,13 +570,13 @@ function periodPenalty(n,col) {
     var start = new Date(startDate).getTime();
     try{
     //var pl = f2210.sel("#ln1b-"+col).innerText;
-    var pl = f2210.val("#ln1b-"+col);
+    var pmts = f2210.val("#ln1b-"+col);
     } catch (err) { console.log("ERROR, periodPenalty: "+err.message+"\npvalue of '#ln1b-"+col+"' = "+pl)}
-    if (!pl || pl === "") { return "" }
-    if (!pl instanceof Array) {
+    if (!pmts || pmts === "") { return "" }
+    if (!pmts instanceof Array) {
         // split into [[],[]] by new lines
-        var pmts = pl.split(/\n/g);
-    } else if (pl === []) {
+        pmts = pmts.split(/\n/g);
+    } else if (pmts === []) {
         return "";
     }
     // then spaces
