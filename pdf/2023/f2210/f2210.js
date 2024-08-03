@@ -257,10 +257,27 @@ Line 17z.
         "#ln1a-b": () => f2210.val("#ln17b"),
         "#ln1a-c": () => f2210.val("#ln17c"),
         "#ln1a-d": () => f2210.val("#ln17d"),
-        /*"#ln1b-a": () => f2210.val(" "),
-        "#ln1b-b": () => f2210.val(" "),
-        "#ln1b-c": () => f2210.val(" "),
-        "#ln1b-d": () => f2210.val(" "),
+        "#ln1b-a": () => {
+            if (f2210.sel("#ln19wks_row1b").value === "") {
+                return "4/15/2024 "+f2210.val("#ln1a-a");
+            } 
+        },
+        "#ln1b-b": () => {
+            if (f2210.sel("#ln19wks_row1b").value === "") {
+                return "4/15/2024 "+f2210.val("#ln1a-b");
+            } 
+        },
+        "#ln1b-c": () => {
+            if (f2210.sel("#ln19wks_row1b").value === "") {
+                return "4/15/2024 "+f2210.val("#ln1a-c");
+            } 
+        },
+        "#ln1b-d": () => {
+            if (f2210.sel("#ln19wks_row1b").value === "") {
+                return "4/15/2024 "+f2210.val("#ln1a-d");
+            } 
+        },
+        /*
         "#ln3-a": () => f2210.val(" "),
         "#ln3-b": () => f2210.val(" "),*/
         "#ln4-a": () => periodPenalty(1,"a"),
@@ -633,6 +650,7 @@ function totalPenalty() {
 }
 
 function columnPaste(elem,text) {
+    var values = "";
     if (text.match(/^\s*\{[^"]*"[^"]*":[^]+\}\s*$/)) {
         var json = JSON.parse(text);
         f2210.lines = json;
@@ -640,7 +658,12 @@ function columnPaste(elem,text) {
         distribute(f2210);
         return;
     }
-    var values = text.split(/\n/g);
+    if (elem.classList.contains("multiline")) {
+        // if starting element does not have 'multiline' class
+        values = text;
+    } else {
+        values = text.split(/\n/g);
+    }
     var fields = document.querySelectorAll(".editable");
     //.querySelectorAll(".editable:not([type='checkbox'])");
     var vals = values.length;
@@ -815,7 +838,10 @@ function setValue(sel,val) {
 }
 
 document.addEventListener("paste",(e) => {
-    if (e.target.classList.contains("editable") && e.target.tagName !== "TEXTAREA") {
+    if (e.target.classList.contains("editable") 
+        && e.target.tagName !== "TEXTAREA"
+        && !e.target.classList.contains("multiline")
+    ) {
         e.preventDefault();
         navigator.clipboard.readText().then((txt) => {
             columnPaste(e.target,txt);
@@ -844,7 +870,8 @@ document.addEventListener("keydown",(e) => {
         saveForm(f2210);
     } else if (e.key === "O" && e.shiftKey && !e.target.classList.contains("editable")) {
         if (f2210.sel("#report")?.classList.contains("hidden")) {
-            f2210.sel("#report").classList.remove("hidden");
+            //f2210.sel("#report").classList.remove("hidden");
+            myFile.click();
         } else {
             f2210.sel("#report").classList.add("hidden");
         }
