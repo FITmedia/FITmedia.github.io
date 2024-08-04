@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<table id="demo">
+<tr>
+<td><input type="date"></td>
+<td><input class="payment"></td>
+<td><select>
+<option>
+--
+</option>
+<option>
+Overpayment
+</option>
+<option>
+Withholding
+</option>
+<option>
+Estimate
+</option>
+<option>
+Extension
+</option>
+<option>
+Paid w/ Return
+</option>
+</select></td>
+</tr>
+<tr>
+<td><input type="date"></td>
+<td><input class="payment"></td>
+<td><select>
+<option>
+--
+</option>
+<option>
+Overpayment
+</option>
+<option>
+Withholding
+</option>
+<option>
+Estimate
+</option>
+<option>
+Extension
+</option>
+<option>
+Paid w/ Return
+</option>
+</select></td>
+</tr>
+<tr>
+<td><input type="date"></td>
+<td><input class="payment"></td>
+<td><select>
+<option>
+--
+</option>
+<option>
+Overpayment
+</option>
+<option>
+Withholding
+</option>
+<option>
+Estimate
+</option>
+<option>
+Extension
+</option>
+<option>
+Paid w/ Return
+</option>
+</select></td>
+</tr>
+<tr>
+<td><input type="date"></td>
+<td><input class="payment"></td>
+<td><select>
+<option>
+--
+</option>
+<option>
+Overpayment
+</option>
+<option>
+Withholding
+</option>
+<option>
+Estimate
+</option>
+<option>
+Extension
+</option>
+<option>
+Paid w/ Return
+</option>
+</select></td>
+</tr>
+<tr>
+<td><input type="date"></td>
+<td><input class="payment"></td>
+<td><select>
+<option>
+--
+</option>
+<option>
+Overpayment
+</option>
+<option>
+Withholding
+</option>
+<option>
+Estimate
+</option>
+<option>
+Extension
+</option>
+<option>
+Paid w/ Return
+</option>
+</select></td>
+</tr>
+
+</table>
+
+<button onclick="output.innerText = myFunction()">Click Me!</button>
+<div id="output"></div>
+<script>
+const formTest = {
+  lines: {}
+};
+
+//function swapFields() {
+	
+//}
+
+//document.addEventListener("click",(e) => {
+	
+//});
+
+function myFunction() {
+	//javascript: alert(["2023-07-02","2023-05-04"].sort((a,b) => a - b))
+    try {
+    var rows = demo.querySelectorAll("tr");
+    var data = [];
+    for (var row of rows) {
+        var fields = row.querySelectorAll("td>input,td>select");
+        var rowValues = {};
+        for (var ea of fields) {
+        	if (ea.getAttribute("type") === "date") {
+            	rowValues.date = new Date(ea.value) || "";
+            } else if (ea.classList.contains("payment")) {
+            	rowValues.payment = ea.value;
+            } else if (ea.tagName === "SELECT") {
+            	rowValues.type = ea.value;
+            }
+        }
+        if (rowValues.type === "--") { continue }
+        data.push(rowValues);
+    }
+    data.sort((a,b) => a.date - b.date);
+    return JSON.stringify(data)
+    } catch (err) {alert(err.message)}
+}
+</script>
+
+</body>
+</html>

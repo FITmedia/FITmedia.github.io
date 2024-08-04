@@ -475,8 +475,9 @@ function allocatePmts(row1a) {
     try {
     var report = "";
     var data = {a:[],b:[],c:[],d:[]};
-    var row1b = f2210.sel("#ln19wks_row1b")?.value;
-    if (!row1b || row1b === "") { return data; }
+    //var row1b = f2210.sel("#ln19wks_row1b")?.value;
+    var row1b = f2210.val("#ln19wks_row1b");
+    if (!row1b || row1b === "" || row1b instanceof Array) { return data; }
     row1b = row1b.split(/\n/g).map((ea) => ea.split(/[ \t]/g));
     //var row1b = document.querySelector("#ln19wks_row1b").value.split(/\n/g).map((ea) => ea.split(/[ \t,]/g));
     // TODO: sort by date
@@ -620,9 +621,8 @@ function periodPenalty(n,col) {
         console.log(days+" days")
         var yrDays = n < 3 ? 365 : 366; 
         var calc = Math.round(amt * (days / yrDays) * rate * 100) / 100;
-        console.log(res);
         //f2210.sel("#ln4-"+col).innerText 
-        res += nl + calc;
+        res += nl + toTaxFormat(calc,2);
     }
     var field = f2210.sel(period[n].dayFld+"-"+col);
     field.innerText = dayFld;
@@ -709,11 +709,12 @@ function recalculate() {
             continue; 
         }
         var value = frms[sel]();
-        if (elem.getAttribute("type") === "checkbox") {
+        f2210.set(sel,value);
+        /*if (elem.getAttribute("type") === "checkbox") {
             elem.checked = value;
         } else {
             elem.innerText = value;
-        }
+        }*/
     }
 }
 
@@ -757,7 +758,7 @@ function toCurrency(num,decimals) {
 function toTaxFormat(num,decimals) {
     var dec = 0;
     if (decimals) { dec = 2 }
-    var opt = { maximumFractionDigits: dec };
+    var opt = { maximumFractionDigits: dec, minimumFractionDigits: dec };
 	var fixed = new Intl.NumberFormat('en-US', opt);
     return fixed.format(num);
 }
@@ -769,12 +770,11 @@ function getValue(str,multiline) {
         var val = field.value || field.innerText;
         if (field.getAttribute("type") === "checkbox") {
             val = field.checked;
-        }
-        if (val.match && val.match(/\n/) /*|| field.classList.contains("multiline")*/) { multiline = true }
+            return val;
+        } else if (field.classList.contains("multiline")) {
         // if 'val' is expected to contain multiple numbers (new line separated)
-        if (multiline) {
             var values = [];
-            if (val === "") { return values }
+            if (val === "" || val === 0) { return values }
             var split = val.split(/\n/g);
             for (var v in split) {
                 var value = parseValue(split[v]);
@@ -783,7 +783,11 @@ function getValue(str,multiline) {
                 values.push(value);
             }
             return values;
-        } else if (val !== "" && typeof val === "string" && parseFloat(val).toString() !== "NaN") {
+        } else if (val !== "" 
+            && typeof val === "string" 
+            && parseFloat(val).toString() !== "NaN"
+            && !field.classList.contains("preserve")
+        ) {
             val = parseFloat(val.replace(/[$,]/g,"").trim());
         } else if (val === "") {
             val = 0;
@@ -794,6 +798,7 @@ function getValue(str,multiline) {
 
 function parseValue(val) {
     if (typeof val === "string" 
+        // is 
         && parseFloat(val.replace(/[$,]/g,"")).toString() !== "NaN"
         // is not a multiline or space-separated value
         && !val.match(/[\n\t ]/)
@@ -829,6 +834,13 @@ function setValue(sel,val) {
     //}
     if (val instanceof Array) {
         val = val.join("\n");
+    } else if (typeof val === "number") {
+        val = toTaxFormat(val,0);
+    } else if (!field.classList.contains("multiline") 
+        && !field.classList.contains("preserve")
+        && parseFloat(val.replace(/[$,]/g,"")).toString() !== "NaN"
+    ) {
+        val = toTaxFormat(val,0);
     }
     if (field.tagName === "TEXTAREA" || field.tagName === "INPUT") {
         field.value = val;
