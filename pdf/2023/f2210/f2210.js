@@ -849,6 +849,21 @@ function setValue(sel,val) {
     }
 }
 
+function toggleClass(sel1,sel2,cls) {
+    var chkElem = f2210.sel(sel1);
+    var target = f2210.sel(sel2);
+    // (".ui"): if the box is checked, the worksheet will be printed
+    if (chkElem.checked
+        && target.classList.contains(cls) // not print
+    ) {
+        target.classList.remove(cls); // enable print
+    } else if (!chkElem.checked
+        && !target.classList.contains(cls) // will print
+    ) {
+        target.classList.add(cls); // disable print
+    }
+}
+
 document.addEventListener("paste",(e) => {
     if (e.target.classList.contains("editable") 
         && e.target.tagName !== "TEXTAREA"
@@ -918,6 +933,10 @@ document.addEventListener("dblclick",(e) => {
         // remove selection and recalculate
         e.target.parentNode.click();
     }
+});
+
+document.addEventListener("change",(e) => {
+    toggleClass('#option_ui','div.page_2_wks','ui');
 });
 
 setTimeout(() => { 
