@@ -302,7 +302,7 @@ Line 17z.
         "#ln13-b": () => periodPenalty(4,"b"),
         "#ln13-c": () => periodPenalty(4,"c"),
         "#ln13-d": () => periodPenalty(4,"d"),
-        "#ln14": () => totalPenalty(),
+        "#ln14": () => f2210.worksheets["Penalty Worksheet"](), // totalPenalty(), - Not working (8.19.24)
         // page 3
         // column a
         "#pg3_ln3a": () => f2210.multi("#pg3_ln1a","#pg3_ln2a"),
