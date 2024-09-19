@@ -431,9 +431,9 @@ function getActionItems(text,data) {
 				// if note contains an alt day count of format "[7]"
 				// or a due date of format "[2/29]"
 				// replace existing with new note (updating count)
-				let text = note.replace(/^([^]+)(?: \[[^\]]+\])$/,"$1").trim();
+				let text = note.replace(/\-/g,`\-`).replace(/^([^]+)(?: \[[^\]]+\])$/,"$1").trim();
 				let due = note.replace(/^(?:[^]+ )(\[[^\]]+\])$/,"$1").trim();
-				  //console.log(`text = "${text}"`)
+				  console.log(`new RegExp("${text}")`);
 				//var patt = new RegExp("^"+text+"( *\\[\\d\\]| *\\[\\d{1,2}\\/\\d{1,2}\\]|)$","");
 				var patt = new RegExp(text,"i");
 				var dayPatt = new RegExp("^"+text+"( *\\[\\d\\])$","");
