@@ -585,7 +585,13 @@ function appendInputs(txtId,text) {
 	for (var ea in matches) {
 	  var match = matches[ea];
 	  if (used.includes(match)) { continue; } else { used.push(match); }
+	  //var prefill = "";
 	  var placeholder = match.replace(/[\[\]]*/g, ""); // remove [ ]
+	  /*if (placeholder.match(/`/)) {
+		var pnp = match.replace(/\[+([^:\]]+)\: *`([^`]+)` *\]+/,"$2");
+		placeholder = pnp[1];
+	  	prefill = pnp[2];
+   	  }*/
 	  let id = txtId+"_input"+ea; //match.replace(/\|/g,"_").replace(/[\[\]]*/g,""); // .match(/\w/g).join("");
 	  temps[txtId][id] = match;
 	  if (match.match(/\|/g)) {
