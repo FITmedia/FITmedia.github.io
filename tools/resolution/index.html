@@ -395,8 +395,8 @@ function getActionItems(text,data) {
 		 ct++; // why?
 		 continue;
 	 }
-	 var end = item.match(/(?: - ([^]+?)|) \((\d{1,2})\)$/);
-	 if (!end) { end = item.match(/(?: - ([^]+?)|)$/); }
+	 var end = item.match(/(?: - ([^\-]+?)|) \((\d{1,2})\)$/);
+	 if (!end) { end = item.match(/(?: - ([^\-]+?)|)$/); }
 	 var notes = end && end[1] ? end[1] : null;
 	 var days = "";
 	 if (end && end[2]) {
