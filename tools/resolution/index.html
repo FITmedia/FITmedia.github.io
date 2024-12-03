@@ -371,7 +371,7 @@ Same-day Consult Calls
 */
 
 function getActionItems(text,data) {
-	if(!data) { data = {} }
+   if (!data) { data = {} }
    var items = text.trim().split(/\n/g);
    var ct = 1;
    var title = "Action Items";
@@ -380,11 +380,11 @@ function getActionItems(text,data) {
 	 if (item.match(/(Edit Subject|Watchlist)/i)) {continue}
 	 // title = item.match(/(Action Items|Emails\/Voicemails|Next Action|Review Docs)/);
 	 // if (title) { data[title] = [] }
-	 var cxId = item.match(/^([^*]+ \*\d{4}|[^(]+? \(\d{8}\))/) ? item.match(/^([^*]+ \*\d{4}|[^(]+? \(\d{8}\))/)[0] : null;
-	 if (cxId?.match(/^[^(]+? \(\d{8}\)/)) {
-		cxId = cxId.replace(/\(\d{8}\)/,""); // remove '(00001234)' from cxId
+	 var cxId = item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)\d{8}\))/) ? item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)\d{8}\))/)[0] : null;
+	 if (cxId?.match(/[^(]+? \((?:Portfolio - |)\d{8}\)/)) {
+		cxId = cxId.replace(/\((?:Portfolio - |)\d{8}\)/,""); // remove '(00001234)' from cxId
 	 }
-	 var caseNum = item.match(/ \((\d{8})\) /) ? item.match(/ \((\d{8})\) /)[1] : null;
+	 var caseNum = item.match(/ \((?:Portfolio - |)\d{8}\) */) ? item.match(/ \(((?:Portfolio - |)\d{8})\) */)[1] : null;
 	 if (!cxId && !caseNum) {
 		if (item.match(/(Action Items|Emails\/Voicemails|Next Action|Review Docs)/i)) { 
 			data[item] = {text: "<invert>~~"+item+"~~</invert>", notes: []};
