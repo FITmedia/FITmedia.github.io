@@ -670,9 +670,10 @@ function formatChecklist(html) {
 
 function myFunc() {
 	var text = demo.value;
-	if (text.match(/^=[0-9,.$]+[\+\-\/\*][0-9,.$]+/m)) {
+	/*if (text.match(/^=[0-9,.$]+[\+\-\/\*][0-9,.$]+/m)) {
 		doMathInline(demo);
-	} else if (text.match(/"C:\\[^"]+"/i)) {
+	} else*/ 
+	if (text.match(/"C:\\[^"]+"/i)) {
 		getFileNamesInline(demo);
 	} else if (text.match(/"board":\s*[^]+\s*"name":\s*"Tax Resolution"/)) {
 		var json = JSON.parse(text);
