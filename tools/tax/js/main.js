@@ -382,7 +382,7 @@ const db = {
       var ins = border.getElementsByTagName("input");
       var dds = border.getElementsByTagName("select");
       for (var i in ins) {
-          if (ins[i].tagName === "INPUT") {
+          if (ins[i].tagName === "INPUT" || ins[i].tagName === "TEXTAREA") {
               if (ins[i].getAttribute("type") === "checkbox") {
                   ins[i].checked = false;
               } else {
