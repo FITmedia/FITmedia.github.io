@@ -383,9 +383,11 @@ function getActionItems(text,data) {
 	 var cxId = item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)\d{8}\))/) ? item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)\d{8}\))/)[0] : null;
 	 if (cxId?.match(/[^(]+? \((?:Portfolio - |)\d{8}\)/)) {
 		cxId = cxId.replace(/\((?:Portfolio - |)\d{8}\)/,""); // remove '(00001234)' from cxId
+        console.log("CX Name = "+cxId)
 	 }
 	 var caseNum = item.match(/ \((?:Portfolio - |)\d{8}\) */) ? item.match(/ \(((?:Portfolio - |)\d{8})\) */)[1] : null;
-	 if (!cxId && !caseNum) {
+	 console.log("Case Number = "+caseNum)
+     if (!cxId && !caseNum) {
 		if (item.match(/(Action Items|Emails\/Voicemails|Next Action|Review Docs)/i)) { 
 			data[item] = {text: "<invert>~~"+item+"~~</invert>", notes: []};
 			// data[title][item] = {text: "<invert>~~"+item+"~~</invert>", notes: []};
@@ -395,9 +397,11 @@ function getActionItems(text,data) {
 		 ct++; // why?
 		 continue;
 	 }
-	 var end = item.match(/(?: - ([^\-]+?)|) \((\d{1,2})\)$/);
-	 if (!end) { end = item.match(/(?: - ([^\-]+?)|)$/); }
+	 var end = item.replace(caseNum,"").match(/(?: - ([^]+?)|) \((\d{1,2})\)$/);
+	 if (!end) { end = item.replace(caseNum,"").match(/(?: - ([^]+?)|)$/); }
+     console.log("end = "+end)
 	 var notes = end && end[1] ? end[1] : null;
+     console.log("notes = "+notes)
 	 var days = "";
 	 if (end && end[2]) {
 		if (end[2].toString() === "0") {
@@ -406,6 +410,7 @@ function getActionItems(text,data) {
 			days = end[2];
 		}
 	 }
+     console.log("days = "+days)
 	 if (!data[caseNum]) {
 		data[caseNum] = {};
 		data[caseNum].cxId = cxId;
