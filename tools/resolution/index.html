@@ -371,6 +371,7 @@ Same-day Consult Calls
 */
 
 function getActionItems(text,data) {
+	try {
    if (!data) { data = {} }
    var items = text.trim().split(/\n/g);
    var ct = 1;
@@ -380,12 +381,12 @@ function getActionItems(text,data) {
 	 if (item.match(/(Edit Subject|Watchlist)/i)) {continue}
 	 // title = item.match(/(Action Items|Emails\/Voicemails|Next Action|Review Docs)/);
 	 // if (title) { data[title] = [] }
-	 var cxId = item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)\d{8}\))/) ? item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)\d{8}\))/)[0] : null;
-	 if (cxId?.match(/[^(]+? \((?:Portfolio - |)\d{8}\)/)) {
-		cxId = cxId.replace(/\((?:Portfolio - |)\d{8}\)/,""); // remove '(00001234)' from cxId
+	 var cxId = item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\))/) ? item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\))/)[0] : null;
+	 if (cxId?.match(/[^(]+? \((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\)/)) {
+		cxId = cxId.replace(/\((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\)/,""); // remove '(00001234)' from cxId
         console.log("CX Name = "+cxId)
 	 }
-	 var caseNum = item.match(/ \((?:Portfolio - |)\d{8}\) */) ? item.match(/ \(((?:Portfolio - |)\d{8})\) */)[1] : null;
+	 var caseNum = item.match(/ \((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\) */) ? item.match(/ \(((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+))\) */)[1] : null;
 	 console.log("Case Number = "+caseNum)
      if (!cxId && !caseNum) {
 		if (item.match(/(Action Items|Emails\/Voicemails|Next Action|Review Docs)/i)) { 
@@ -397,7 +398,7 @@ function getActionItems(text,data) {
 		 ct++; // why?
 		 continue;
 	 }
-	 var end = item.replace(caseNum,"").match(/(?: - ([^]+?)|) \((\d{1,2})\)$/);
+	 var end = item.replace(caseNum,"").match(/(?: - ([^]+?)|) \((?:\d{8}|[^ ]+ [^)]+)\)$/);
 	 if (!end) { end = item.replace(caseNum,"").match(/(?: - ([^]+?)|)$/); }
      console.log("end = "+end)
 	 var notes = end && end[1] ? end[1] : null;
@@ -500,6 +501,7 @@ function getActionItems(text,data) {
    }
    //output.innerText = JSON.stringify(data);
    return data;
+} catch (err) { console.log("ERROR, getActionItems: "+err.message) }
 }
 
 function cleanUpNotes(notes) {
