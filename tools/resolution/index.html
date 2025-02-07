@@ -214,10 +214,11 @@ h3 {
 <p id="updateURL_output"></p>
 <p>
 <select id="updateURL_year" onchange="doUpdateURL(this.id)">
-<option value = "2023">2023</option>
-<option value = "2022">2022</option>
-<option value = "2021">2021</option>
-<option value = "2020">2020</option>
+	<option value = "2024">2024</option>
+	<option value = "2023">2023</option>
+	<option value = "2022">2022</option>
+	<option value = "2021">2021</option>
+	<option value = "2020">2020</option>
 </select>
 <select id="updateURL_docsDD" onchange="docsDDchoice()">
 </select>
@@ -306,18 +307,43 @@ function doUpdateURL_new(src) {
 	updateURL_output.innerHTML = updateURL(type,form,year);
 }
 
-function docsDDchoice() {
+function docsDDchoice_old() {
 	//var val = ;
 	//val = val.replace(/^(?:[fip])([fip])/i,"$1");
 	updateURL_form.value = updateURL_docsDD.value;
 	doUpdateURL("updateURL_docsDD");
+}
+
+function docsDDchoice() {
+	updateURL_form.value = updateURL_docsDD.value;
+	setTypesDD(updateURL_docsDD.value);
+	doUpdateURL("updateURL_docsDD");
+}
+
+function setTypesDD(docName) {
+	updateURL_type.innerHTML = "";
+	let types = db.docCodes[docName][2];
+	for (let t in types) {
+		let type = types[t];
+		let display = db.docTypes[type];
+		let opt = document.createElement("OPTION");
+		opt.innerText = display;
+		opt.value = type;
+		updateURL_type.appendChild(opt);
+	}
 }
 </script>
 
 <script>
 
 const db = {
-	actionItemsWF: [
+	actionItemsWF: [ // Lead
+		`Go to "Open Tasks."`,
+		`Copy priority tasks (shift-?).`,
+		`Copy all cases to the function.`,
+		`Copy action items to Case Action Items doc by section.`
+	],
+	actionItemsWF_CRS: [
 		`Go to "Open Tasks."`,
 		`Copy priority tasks (shift-\\).`,
 		`Move "in progress" tasks to "Next Action" section.`,
@@ -332,7 +358,7 @@ const db = {
 		`Copy all cases to the function.`,
 		`Copy action items to Case Action Items doc by section.`
 	],
-	docCodes: [
+	docCodes_old: [
 		["1040", "Form 1040"],
 		["1040sa", "Schedule A"],
 		["1040sb", "Schedule B"],
@@ -349,11 +375,34 @@ const db = {
 		["8949", "Form 8949"],
 		["i1040tt", "Tax / EITC Tables"]
 	],
+	docCodes: {
+		"1040": ["1040", "Form 1040", ["f"]],
+		"1040gi": ["1040gi", "Form 1040 Instructions", ["i"]],
+		"1040sa": ["1040sa", "Schedule A", ["f", "i"]],
+		"1040sb": ["1040sb", "Schedule B", ["f", "i"]],
+		"1040sc": ["1040sc", "Schedule C", ["f", "i"]],
+		"1040sse": ["1040sse", "Schedule SE", ["f", "i"]],
+		"1040sd": ["1040sd", "Schedule D", ["f", "i"]],
+		"1040se": ["1040se", "Schedule E", ["f", "i"]],
+		"1040s1": ["1040s1", "Schedule 1", ["f", "i"]],
+		"1040s2": ["1040s2", "Schedule 2", ["f", "i"]],
+		"1040s3": ["1040s3", "Schedule 3", ["f", "i"]],
+		"1040s8": ["1040s8", "Schedule 8812", ["f", "i"]],
+		"8863": ["8863", "Form 8863", ["f", "i"]],
+		"8962": ["8962", "Form 8962", ["f", "i"]],
+		"8949": ["8949", "Form 8949", ["f", "i"]],
+		"1040tt": ["1040tt", "Tax / EITC Tables" , ["i"]] 
+	},
 	sections: {
 		"Action Items": {"id": "actionItems_TA"},
 		"Emails/Voicemails": {"id": "emailsVM_TA"},
 		"Next Action": {"id": "nextAction_TA"},
 		"Review Docs": {"id": "reviewDocs_TA"}
+	},
+	docTypes: {
+		"f": "Form",
+		"i": "Instructions",
+		"p": "Publication"
 	}
 };
 var data = {};
