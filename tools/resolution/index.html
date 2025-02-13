@@ -419,20 +419,23 @@ function getActionItems(text,data) {
    var title = "Action Items";
    for (var i in items) {
 	 var item = items[i];
-	 if (item.match(/(Edit Subject|Watchlist)/i)) {continue}
-	 // title = item.match(/(Action Items|Emails\/Voicemails|Next Action|Review Docs)/);
-	 // if (title) { data[title] = [] }
+	 // skip specific line matches
+	 if (item.match(/(Edit Subject|Watchlist)/i)) { continue }
+	 // if the line has [name *1234], [(Portfolio - 00012345)], [(00012345)]
 	 var cxId = item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\))/) ? item.match(/^([^*]+ \*\d{4}|[^(]+? \((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\))/)[0] : null;
 	 if (cxId?.match(/[^(]+? \((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\)/)) {
-		cxId = cxId.replace(/\((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\)/,""); // remove '(00001234)' from cxId
+		cxId = cxId.replace(/\((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\)/,""); // remove '(00012345)' from cxId
         console.log("CX Name = "+cxId)
 	 }
 	 var caseNum = item.match(/ \((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+)\) */) ? item.match(/ \(((?:Portfolio - |)(?:\d{8}|[^ ]+ [^)]+))\) */)[1] : null;
 	 console.log("Case Number = "+caseNum)
-     if (!cxId && !caseNum) {
+	 var other = item.match(/^(Lead) \(([^)]+)\)/);
+	if (other) {
+		cxId = other[1];
+		caseNum = other[2];
+	} else if (!cxId && !caseNum) {
 		if (item.match(/(Action Items|Emails\/Voicemails|Next Action|Review Docs)/i)) { 
 			data[item] = {text: "<invert>~~"+item+"~~</invert>", notes: []};
-			// data[title][item] = {text: "<invert>~~"+item+"~~</invert>", notes: []};
 		} else if (item.match(/[a-z0-9]/i)) {
 			//data[item] = {text: "TODO: "+item, notes: []};
 		}
