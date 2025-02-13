@@ -257,20 +257,12 @@ function doUpdateURL(src) {
 	var type = updateURL_type.value;
 	var form = updateURL_form.value;
 	var docsDD = updateURL_docsDD.value;
-	if (src === "updateURL_form" && form.match(/^[fip]/i)) {
-		type = "";
-	} else if (src === "updateURL_type" && form.match(/^[fip]/i)) {
-		form = form.replace(/^[fip]/i,"");
-		updateURL_form.value = form;
+	var lowForm = form.toLowerCase();
+	// uppercase letters in PDF names will trigger a 404 error
+	if (form !== lowForm) {
+		form = lowForm;
+		updateURL_form.value = lowForm;
 	}
-	updateURL_output.innerHTML = updateURL(type,form,year);
-}
-
-function doUpdateURL_newer(src) {
-	var year = updateURL_year.value;
-	var type = updateURL_type.value;
-	var form = updateURL_form.value;
-	var docsDD = updateURL_docsDD.value;
 	if (src === "updateURL_form" && form.match(/^[fip]/i)) {
 		type = "";
 	} else if (src === "updateURL_type" && form.match(/^[fip]/i)) {
