@@ -186,9 +186,13 @@ h3 {
 			color: rgba(0,0,0,1); 
 			border: solid 1px hsl(110, 89%, 45%);
 		}
+
+		#version {
+			font-size: 0.8rem;
+		}
 	</style>
 <body>
-
+<div id="version"></div>
 <div class="wrapper">
 	
 <div class="column">
@@ -226,9 +230,9 @@ h3 {
 <p><input id="updateURL_form" placeholder="Form" onkeyup="doUpdateURL(this.id)"></p>
 <p>
 <select id="updateURL_type" placeholder="Type" onchange="doUpdateURL(this.id)">
-<option value = "f">Form</option>
-<option value = "i">Instructions</option>
-<option value = "p">Publication</option>
+	<option value = "f">Form</option>
+	<option value = "i">Instructions</option>
+	<option value = "p">Publication</option>
 </select>
 </p>
 <p><button onclick="goToURL()">Go</button></p>
@@ -254,9 +258,14 @@ function updateURL(type,form,year) {
 
 function doUpdateURL(src) {
 	var year = updateURL_year.value;
-	var type = updateURL_type.value;
 	var form = updateURL_form.value;
-	var docsDD = updateURL_docsDD.value;
+	var docName = formLookup(form);
+	if (docName) { 
+		setTypesDD(docName);
+		setDocsDDvalue(docName);
+	}
+	var type = updateURL_type.value;
+	//var docsDD = updateURL_docsDD.value;
 	var lowForm = form.toLowerCase();
 	// uppercase letters in PDF names will trigger a 404 error
 	if (form !== lowForm) {
@@ -299,6 +308,18 @@ function doUpdateURL_new(src) {
 	updateURL_output.innerHTML = updateURL(type,form,year);
 }
 
+function formLookup(form) {
+	var docCodes = db.docCodes;
+	for (let d in docCodes) {
+		let doc = docCodes[d];
+		if (doc.f === form
+		|| doc.i === form
+		|| doc.p === form) {
+			return doc.docName;
+		}
+	}
+}
+
 function docsDDchoice_old() {
 	//var val = ;
 	//val = val.replace(/^(?:[fip])([fip])/i,"$1");
@@ -306,13 +327,22 @@ function docsDDchoice_old() {
 	doUpdateURL("updateURL_docsDD");
 }
 
-function docsDDchoice() {
+function docsDDchoice_old() {
 	updateURL_form.value = updateURL_docsDD.value;
 	setTypesDD(updateURL_docsDD.value);
 	doUpdateURL("updateURL_docsDD");
 }
 
-function setTypesDD(docName) {
+function docsDDchoice() {
+	let h = updateURL_type.value; // "f", "i", "p"
+	let data = JSON.parse(updateURL_docsDD.value); // {"f": "1040sa",  "i": "1040sca", docName: "Schedule A"}
+	let value = data[h]; // IF h = "f"; value = "1040sa";
+	updateURL_form.value = value; // form input element
+	setTypesDD(data.docName); // "Schedule A"
+	doUpdateURL("updateURL_docsDD");
+}
+
+function setTypesDD_old(docName) {
 	updateURL_type.innerHTML = "";
 	let types = db.docCodes[docName][2];
 	for (let t in types) {
@@ -322,6 +352,35 @@ function setTypesDD(docName) {
 		opt.innerText = display;
 		opt.value = type;
 		updateURL_type.appendChild(opt);
+	}
+}
+
+function setTypesDD(docName) { // docName = "Schedule A"
+	updateURL_type.innerHTML = "";
+	let types = [];
+	let codes = db.docCodes[docName]; // {"f": "1040sa",  "i": "1040sca", "docName": "Schedule A"}
+	for (let ea in codes) {  // ["f", "i", "docName"]
+		if (ea.match(/^[fip]$/)) { types.push(ea) } 
+	}
+	for (let t in types) {
+		let type = types[t]; // "f"
+		let display = db.docTypes[type]; // "Form"
+		let opt = document.createElement("OPTION");
+		opt.innerText = display; // "Form"
+		opt.value = type; // "f"
+		updateURL_type.appendChild(opt);
+	}
+}
+
+function setDocsDDvalue(docName) {
+	let options = updateURL_docsDD.querySelectorAll("option");
+	for (let o in options) {
+		let opt = options[o];
+		let optName = opt.innerText;
+		if (docName === optName) {
+			let value = opt.value;
+			updateURL_docsDD.value = value;
+		}
 	}
 }
 </script>
@@ -350,7 +409,7 @@ const db = {
 		`Copy all cases to the function.`,
 		`Copy action items to Case Action Items doc by section.`
 	],
-	docCodes_old: [
+	docCodes_older: [
 		["1040", "Form 1040"],
 		["1040sa", "Schedule A"],
 		["1040sb", "Schedule B"],
@@ -367,10 +426,11 @@ const db = {
 		["8949", "Form 8949"],
 		["i1040tt", "Tax / EITC Tables"]
 	],
-	docCodes: {
+	docCodes_old: {
 		"1040": ["1040", "Form 1040", ["f"]],
 		"1040gi": ["1040gi", "Form 1040 Instructions", ["i"]],
-		"1040sa": ["1040sa", "Schedule A", ["f", "i"]],
+		"1040sa": ["1040sa", "Schedule A", ["f"]],
+		"1040sca": ["1040sca", "Schedule A Instructions", ["i"]],
 		"1040sb": ["1040sb", "Schedule B", ["f", "i"]],
 		"1040sc": ["1040sc", "Schedule C", ["f", "i"]],
 		"1040sse": ["1040sse", "Schedule SE", ["f", "i"]],
@@ -383,7 +443,26 @@ const db = {
 		"8863": ["8863", "Form 8863", ["f", "i"]],
 		"8962": ["8962", "Form 8962", ["f", "i"]],
 		"8949": ["8949", "Form 8949", ["f", "i"]],
+		"843": ["843", "Form 843", ["f", "i"]],
 		"1040tt": ["1040tt", "Tax / EITC Tables" , ["i"]] 
+	},
+	docCodes: {
+		"Form 1040": {"f": "1040", "i": "1040gi", "docName": "Form 1040"},
+		"Schedule A": {"f": "1040sa",  "i": "1040sca", "docName": "Schedule A"},
+		"Schedule B": {"f": "1040sb",  "i": "1040sb", "docName": "Schedule B"},
+		"Schedule C": {"f": "1040sc",  "i": "1040sc", "docName": "Schedule C"},
+		"Schedule SE": {"f": "1040sse",  "i": "1040sse", "docName": "Schedule SE"},
+		"Schedule D": {"f": "1040sd",  "i": "1040sd", "docName": "Schedule D"},
+		"Schedule E": {"f": "1040se",  "i": "1040se", "docName": "Schedule E"},
+		"Schedule 1": {"f": "1040s1",  "i": "1040gi", "docName": "Schedule 1"},
+		"Schedule 2": {"f": "1040s2",  "i": "1040gi", "docName": "Schedule 2"},
+		"Schedule 3": {"f": "1040s3",  "i": "1040gi", "docName": "Schedule 3"},
+		"Schedule 8812": {"f": "1040s8",  "i": "1040s8", "docName": "Schedule 8812"},
+		"Form 8863": {"f": "8863",  "i": "8863", "docName": "Form 8863"},
+		"Form 8962": {"f": "8962",  "i": "8962", "docName": "Form 8962"},
+		"Form 8949": {"f": "8949",  "i": "8949", "docName": "Form 8949"},
+		"Form 843": {"f": "843",  "i": "843", "docName": "Form 843"},
+		"Tax / EITC Tables": {"i": "1040tt", "docName": "Tax / EITC Tables"} 
 	},
 	sections: {
 		"Action Items": {"id": "actionItems_TA"},
@@ -780,6 +859,22 @@ function displayChecklist(name) {
 function addOptions(name,selectElem) {
 	var items = db[name];
 	var sel = selectElem;
+	for (let i in items) {
+		let display = i;
+		let values = items[i];
+		if (typeof values === "object") {
+			values = JSON.stringify(values);
+		}
+		let option = document.createElement("option");
+		option.innerText = display;
+		option.value = values;
+		sel.appendChild(option);
+	}
+}
+
+function addOptions_old(name,selectElem) {
+	var items = db[name];
+	var sel = selectElem;
 	for (var i in items) {
 		var display = items[i][1];
 		var value = items[i][0];
@@ -1004,6 +1099,12 @@ function copySection(elem, section) {
 	navigator.clipboard.writeText(final);
 }
 
+function displayVersion(elem) {
+	var lastMod = document.lastModified;
+    var vers = lastMod.toString().replace(/(\d{2})\/(\d{2})\/\d{2}(\d{2}) (\d{2}):(\d{2}):\d{2}/,"$1.$2.$3t$4$5");
+    elem.innerText = vers;
+}
+
 setTimeout(() => { 
 	displayChecklist("actionItemsWF");
 	addOptions("docCodes",updateURL_docsDD);
@@ -1014,7 +1115,8 @@ setTimeout(() => {
 		//console.log(text);
 		navigator.clipboard.writeText(text);
 		} catch (err) { console.log(err.message) }
-	})
+	});
+	displayVersion(version);
 }, 500)
 </script>
 
