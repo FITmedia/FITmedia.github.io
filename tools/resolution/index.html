@@ -652,7 +652,32 @@ function formatActionItems(data) {
 		arr.push(`${d.cxId} (${d.caseNum}) - ${d.notes.join(" / ")}${daysText}`);
 	}
 	} catch (err) {console.log(err.message)}
+	arr = sortTasks(arr);
 	return arr.join("<br>");
+}
+
+function sortTasks(arr) {
+	var patt = /\[(\d{1,2})[^\d](\d{1,2})\]/;
+	var filtered = arr.filter(
+		(val) => !val.match(patt)
+	);
+	var newArr = arr.filter(
+		(val) => val.match(patt)
+	).sort(
+		(a, b) => {
+			let m1 = a.match(patt);
+			let m2 = b.match(patt);
+			let d1 = (parseInt(m1[1])*31)+parseInt(m1[2]);
+			let d2 = (parseInt(m2[1])*31)+parseInt(m2[2]);
+			if (d1 < d2) {
+				return -1;
+			} else if (d1 > d2) {
+				return 1;
+			}
+			return 0;
+	});
+	newArr = newArr.concat(filtered);
+	return newArr;
 }
 
 // OBJECT ORIENTED APPROACH
@@ -811,7 +836,8 @@ function myFunc() {
 		str = str.replace(/\\n/g,"\n").replace(/\\/g,"");
 		demo.value = str;
 	} else {
-		output.innerHTML = formatActionItems(getActionItems(demo.value,data));
+		let actItems = getActionItems(demo.value,data)
+		output.innerHTML = formatActionItems(actItems);
 		//output.innerHTML = displayActionItems();
 		demo.value = ""; //JSON.stringify(getActionItems(demo.value,data));
 	}
