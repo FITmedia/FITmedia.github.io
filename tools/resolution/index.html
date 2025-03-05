@@ -657,14 +657,19 @@ function formatActionItems(data) {
 }
 
 function sortTasks(arr) {
+	try {
 	var patt = /\[(\d{1,2})[^\d](\d{1,2})\]/;
+	var headers = /(Next Action|Review Docs)/;
 	var filtered = arr.filter(
-		(val) => !val.match(patt)
+		(val) => !val.match(patt) //&& !val.match(headers)
 	);
 	var newArr = arr.filter(
-		(val) => val.match(patt)
+		(val) => val.match(patt) || val.match(headers)
 	).sort(
 		(a, b) => {
+			if (b.match(/\[\d{1,2}:\d{2}\]/) || b.match(headers)) {
+				return 0;
+			}
 			let m1 = a.match(patt);
 			let m2 = b.match(patt);
 			let d1 = (parseInt(m1[1])*31)+parseInt(m1[2]);
@@ -678,6 +683,7 @@ function sortTasks(arr) {
 	});
 	newArr = newArr.concat(filtered);
 	return newArr;
+} catch (err) {alert(err.message)}
 }
 
 // OBJECT ORIENTED APPROACH
