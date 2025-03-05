@@ -653,13 +653,14 @@ function formatActionItems(data) {
 	}
 	} catch (err) {console.log(err.message)}
 	arr = sortTasks(arr);
+	console.log((arr instanceof Array ? "Array" : "Not Array")+" // expecting Array")
 	return arr.join("<br>");
 }
 
 function sortTasks(arr) {
 	try {
 	var patt = /\[(\d{1,2})[^\d](\d{1,2})\]/;
-	var headers = /(Next Action|Review Docs)/;
+	var headers = /(Next Action|Review Docs|-)/;
 	var filtered = arr.filter(
 		(val) => !val.match(patt) //&& !val.match(headers)
 	);
@@ -683,7 +684,7 @@ function sortTasks(arr) {
 	});
 	newArr = newArr.concat(filtered);
 	return newArr;
-} catch (err) {alert(err.message)}
+} catch (err) {alert("ERROR, sortTasks: "+err.message)}
 }
 
 // OBJECT ORIENTED APPROACH
