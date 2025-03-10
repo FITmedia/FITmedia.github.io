@@ -474,6 +474,11 @@ const db = {
 		"f": "Form",
 		"i": "Instructions",
 		"p": "Publication"
+	},
+	patts: {
+		due: /\[(\d{1,2})[^\d](\d{1,2})\]/, // [3/7] or [3:00]
+		headers: /(Next Action|Review Docs|-)/,
+		hp: /(Review PCA|Review Reopened Case|Urgent)/i,
 	}
 };
 var data = {};
@@ -657,7 +662,7 @@ function formatActionItems(data) {
 	return arr.join("<br>");
 }
 
-function sortTasks(arr) {
+function sortTasks_old(arr) {
 	try {
 	var patt = /\[(\d{1,2})[^\d](\d{1,2})\]/;
 	var headers = /(Next Action|Review Docs|-)/;
@@ -685,6 +690,73 @@ function sortTasks(arr) {
 	newArr = newArr.concat(filtered);
 	return newArr;
 } catch (err) {alert("ERROR, sortTasks: "+err.message)}
+}
+
+function sortTasks(arr) {
+	try {
+	var patt = db.patts.due;
+	var headers = db.patts.headers;
+	var hpPatt = db.patts.hp;
+	let d = new Date();
+	let mon = d.getMonth() + 1;
+	let day = d.getDate();
+	let td = (mon*31)+day;
+	var getDueDate = (val) => {
+		let m = val.match(patt);
+		let dd = (parseInt(m[1])*31)+parseInt(m[2]);
+		return dd;
+	}
+	var hpCurrent = arr.filter(
+		(val) => val.match(hpPatt) && getDueDate(val) <= td
+	);
+	var hpNext = arr.filter(
+		(val) => val.match(hpPatt) && getDueDate(val) > td
+	);
+	var filtered = arr.filter(
+		(val) => !val.match(patt) && !val.match(headers) && !val.match(hpPatt)
+	);
+	var newArr = arr.filter(
+		(val) => val.match(patt) && !val.match(hpPatt)
+	).sort((a,b) => sortByDate(a,b));
+	let nextArr = [];
+	console.log(newArr.join("\n"))
+	let actionArr = newArr.filter((val) => {
+		let dv = getDueDate(val);
+		let test = dv <= td || val.match(/\[\d{1,2}:\d{2}\]/);
+		if (test) {
+			return test;
+		} else {
+			newArr.push(val);
+		}
+	}).sort((a,b) => sortByDate(a,b));
+	console.log(newArr.join("\n"))
+	actionArr = hpCurrent.concat(actionArr);
+	actionArr.push("<invert>~~Next Action~~</invert>");
+	nextArr = hpNext.concat(nextArr);
+	nextArr.push("<invert>~~Review Docs~~</invert>");
+	let finalArr = actionArr.concat(nextArr).concat(filtered);
+	return finalArr;
+} catch (err) {alert("ERROR, sortTasks: "+err.message)}
+}
+
+function sortByDate(a,b) {
+	let patt = db.patts.due;
+	let hpPatt = db.patts.hp;
+	if (b.match(/\[\d{1,2}:\d{2}\]/)) {
+		return 0;
+	} else if (b.match(hpPatt)) {
+		return 1;
+	}
+	let m1 = a.match(patt);
+	let m2 = b.match(patt);
+	let d1 = (parseInt(m1[1])*31)+parseInt(m1[2]);
+	let d2 = (parseInt(m2[1])*31)+parseInt(m2[2]);
+	if (d1 < d2) {
+		return -1;
+	} else if (d1 > d2) {
+		return 1;
+	}
+	return 0;
 }
 
 // OBJECT ORIENTED APPROACH
