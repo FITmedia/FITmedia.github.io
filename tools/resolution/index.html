@@ -477,6 +477,8 @@ const db = {
 	},
 	patts: {
 		due: /\[(\d{1,2})[^\d](\d{1,2})\]/, // [3/7] or [3:00]
+		dueDate: /\[(\d{1,2})\/(\d{1,2})\]/, // [3/7]
+		dueTime: /\[(\d{1,2}):(\d{1,2})\]/, // [3:00]
 		headers: /(Next Action|Review Docs|^-$)/,
 		hp: /(Review PCA|Review Reopened Case|Urgent)/i,
 	}
@@ -695,6 +697,7 @@ function sortTasks_old(arr) {
 function sortTasks(arr) {
 	try {
 	var duePatt = db.patts.due;
+	var dueDatePatt = db.patts.dueDate;
 	var headers = db.patts.headers;
 	var hpPatt = db.patts.hp;
 	let d = new Date();
@@ -703,7 +706,7 @@ function sortTasks(arr) {
 	let td = (mon*31)+day;
 	var getDueDate = (val) => {
 		try {
-			let m = val.match(duePatt);
+			let m = val.match(dueDatePatt);
 			if (!m) { return 0; }
 			let dd = (parseInt(m[1])*31)+parseInt(m[2]);
 			return dd;
