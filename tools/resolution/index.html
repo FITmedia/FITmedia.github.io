@@ -162,6 +162,7 @@ h3 {
 			background-color: black;
 			top: 100px;
 			left: 100px;
+			padding: 0 20px;
 		}
 		
 		.full {
@@ -659,9 +660,15 @@ function formatActionItems(data) {
 		arr.push(`${d.cxId} (${d.caseNum}) - ${d.notes.join(" / ")}${daysText}`);
 	}
 	} catch (err) {console.log(err.message)}
-	arr = sortTasks(arr);
-	console.log((arr instanceof Array ? "Array" : "Not Array")+" // expecting Array")
-	return arr.join("<br>");
+	//arr = sortTasks(arr);
+	//console.log((arr instanceof Array ? "Array" : "Not Array")+" // expecting Array")
+	//return arr.join("<br>");
+	let obj = sortTasks(arr);
+	let html = `<div><invert>~~ActionItems~~</invert></div>
+	<div class='copy' title="Action Items">${obj.actionItems.join("<br>")}</div>
+	<div><invert>~~Next Action~~</invert></div>
+	<div class='copy' title="Next Action">${obj.nextAction.join("<br>")}</div>`;
+	return html;
 }
 
 function sortTasks_old(arr) {
@@ -730,13 +737,14 @@ function sortTasks(arr) {
 	//var filtered = arr.filter(
 	//	(val) => !val.match(duePatt) && !val.match(headers) && !val.match(hpPatt)
 	//);
+	let tasks = {actionItems: [], nextAction: []};
 	let actionArr = hpCurrent.concat(current);
+	tasks.actionItems = actionArr;
+	tasks.nextAction = hpNext.concat(next);
 	let nextArr = ["<invert>~~Next Action~~</invert>"];
 	nextArr = nextArr.concat(hpNext).concat(next);
-	//let review = ["<invert>~~Review Docs~~</invert>"];
-	//review = review.concat(filtered);
-	let finalArr = actionArr.concat(nextArr);//.concat(review);
-	return finalArr;
+	let finalArr = actionArr.concat(nextArr);
+	return tasks; //finalArr;
 } catch (err) {alert("ERROR, sortTasks: "+err.message)}
 }
 
@@ -920,6 +928,17 @@ function myFunc() {
 	} else {
 		let actItems = getActionItems(demo.value,data)
 		output.innerHTML = formatActionItems(actItems);
+		document.addEventListener("click",(e) => {
+			if (e.target.classList.contains("copy")) {
+				let text = e.target.innerText;
+				let title = e.target.getAttribute("title") || "";
+				if (title === "") {
+					title = text.slice(0,24)+"...";
+				}
+				navigator.clipboard.writeText(text);
+				showOverlay("copied: "+title,{expire: 3000})
+			}
+		})
 		//output.innerHTML = displayActionItems();
 		demo.value = ""; //JSON.stringify(getActionItems(demo.value,data));
 	}
@@ -1153,11 +1172,18 @@ function showOverlay(content,options) { // 10.23.23
 	overlay.appendChild(control);
 	overlay.appendChild(message);
 	options.appendTo.appendChild(overlay);
-   // overlay.addEventListener("keyup", (e) => { if (e.key === "e") { e.target.innerHTML += e.key } });
+   	// overlay.addEventListener("keyup", (e) => { if (e.key === "e") { e.target.innerHTML += e.key } });
+	if (options.expire) {
+		setTimeout(() => hideOverlay(overlay), options.expire)
+	}
 	return overlay;
 }
 
-function hideOverlay() {
+function hideOverlay(elem) {
+	if (elem) {
+		elem.remove()
+		return;
+	}
 	if (!document.getElementById("overlay") && !window.overlay) {
 		return;
 	} else {
