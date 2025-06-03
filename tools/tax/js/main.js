@@ -381,7 +381,7 @@ function decorClear(id, text) {
     deleteCopyItem(border);
   } else {
     elem.innerHTML = temps[id].text;
-    var ins = border.getElementsByTagName("input");
+    var ins = border.querySelectorAll("input, textarea");
     var dds = border.getElementsByTagName("select");
     for (var i in ins) {
         if (ins[i].tagName === "INPUT" || ins[i].tagName === "TEXTAREA") {
