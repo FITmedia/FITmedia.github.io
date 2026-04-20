@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background-color: black;
+  background-image: radial-gradient(
+	rgba(0, 50, 0, 0.75), black 120%
+  );
+  height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 2rem;
+  color: hsl(110, 89%, 68%);
+  font: 1.3rem Inconsolata, monospace;
+  text-shadow: 0 0 5px #17cf17;
+  &::after {
+	content: "";
+	position: absolute;
+	z-index: 1000;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: repeating-linear-gradient(
+	  0deg,
+	  rgba(black, 0.15),
+	  rgba(black, 0.75) 1px,
+	  transparent 1px,
+	  transparent 2px
+	);
+	pointer-events: none;
+  }
+}
+
+::selection {
+  background: #0080FF;
+  text-shadow: none;
+}
+
+.flex {
+	display: flex;
+	align-items: baseline;
+	justify-content: left;
+}
+
+.tip {
+	padding: 0 0 0 10px;
+	/*color: rgba(0,255,0,0.35);*/
+	color: hsl(110, 89%, 68%);
+	font-size: .75rem;
+}
+
+textarea, input {
+	background: rgba(0,255,0,0.05);
+	/*color: rgba(0,255,0,0.35);*/
+	font: 1.3rem Inconsolata, monospace;
+	text-transform: uppercase;
+	text-shadow: 0 0 5px #17cf17;
+	color: hsl(110, 89%, 68%);/*#1adb1a;*/
+	padding: 10px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	/*border-color: -internal-light-dark(rgb(0, 230, 0), rgb(0, 255, 0));*/
+}
+
+textarea {
+		
+}
+
+button {
+	background-color: rgba(0,255,0,0.05);
+	color: hsl(110, 89%, 68%);
+	/*color: black;
+	font-family: monospace;*/
+	font: 1.3rem Inconsolata, monospace;
+	text-shadow: 0 0 5px #17cf17;
+	border: 1px solid hsl(110, 89%, 68%);
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+h3 {
+	font: 2rem Inconsolata, monospace;
+	display: inline-block;
+	text-align: center;
+	margin: 0 0 0 20px;
+	max-width: 100%;
+}
+</style>
+</head>
+<body>
+
+<input id="damage" placeholder="Damage - new"><br>
+<input id="compDamage" placeholder="Comparison Offset"><br><br>
+<input id="rate" placeholder="Rate of Fire - new"><br>
+<input id="compRate" placeholder="Comparison Offset"><br>
+<button onclick="demo.innerHTML = calc()">submit</button>
+<button onclick="clearInputs()">clear</button>
+<div id="demo"></div>
+<script>
+
+</script>
+</body>
+</html>
