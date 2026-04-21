@@ -97,15 +97,19 @@ h3 {
 	max-width: 100%;
 }
 </style>
-<link rel="stylesheet" href="main.css">
-  <script src="main.js"></script>
 </head>
-<body>
+<body> 
 
+<input id="wpName" placeholder="New weapon"><br>
 <input id="damage" placeholder="Damage - new"><br>
-<input id="compDamage" placeholder="Comparison Offset"><br><br>
 <input id="rate" placeholder="Rate of Fire - new"><br>
-<input id="compRate" placeholder="Comparison Offset"><br>
+<input id="accuracy" placeholder="Accuracy - new"><br><br>
+
+<input id="wp2Name" placeholder="Current weapon"><br>
+<input id="compDamage" placeholder="Damage - current"><br>
+<input id="compRate" placeholder="Rate of Fire - current"><br>
+<input id="compAccu" placeholder="Accuracy - current"><br><br>
+
 <button onclick="demo.innerHTML = calc()">submit</button>
 <button onclick="clearInputs()">clear</button>
 <div id="demo"></div>
