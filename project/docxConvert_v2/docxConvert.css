@@ -1,0 +1,527 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Prevents the main window from scrolling */
+    font-family: Calibri, Helvetica, sans-serif;
+    font-size: 12pt;
+}
+
+/* 2. Set up the container as a vertical flexbox column */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Exactly 100% of the viewport height */
+}
+
+/* 3. Give the top bar a fixed height */
+.top-bar {
+    /*height: 75px;  Adjust height as needed */
+    display: flex;
+    /*align-items: center;*/
+    /*padding: 0 20px;*/
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10; /* Keeps it layered above scrolling content */
+    
+    flex-flow: column;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid lightgrey;
+}
+
+/* 4. Make the main area grow to fill remaining space and handle overflow */
+.main-view {
+    display: flex; /* Arranges the panels side-by-side */
+    flex-direction: row;
+    flex: 1; /* Fills the rest of the vertical space */
+    overflow: hidden; /* Ensures the row wrapper itself doesn't scroll */
+}
+
+.layout-container {
+    display: flex;
+    height: 100%; /* Lock container to viewport height */
+    width: 100vw;
+    overflow: hidden; /* Prevent the main window from scrolling */
+}
+
+/* 5. Shared panel styles */
+.panel {
+    /*flex: 1;  Distributes width evenly (50/50 split) */
+    height: 100%; /* Fill container height */
+    overflow-y: auto; /* Forces independent vertical scrolling */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Styling for Left Panel */
+.left-panel {
+    flex: 0 0 auto;
+    background-color: #f4f4f9;
+    border-right: 2px solid #ddd; /* Separates the two panels */
+}
+
+/* Styling for Right Panel */
+.right-panel {
+    flex: 1;
+    min-width: 612px;
+    background-color: #ffffff;
+}
+
+.page-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+}
+
+.overlay {
+  position: fixed;
+  top: 25%;
+  left: 20%;
+  width: 60%;
+  height: auto;
+  background-color: white;
+  z-index: 1001;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.doc-flow {
+  display: flex;
+  flex-flow: row wrap;
+  height: stretch;
+  width: 100vw;
+}
+
+#input-control-tray {
+  display: flex;
+  flex-flow: column;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid lightgrey;
+  /*filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5));*/
+  /*box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);*/
+}
+
+.control {
+	display: block;
+  min-height: 35px;
+  position: relative;
+  /*max-width: 86%;*/
+}
+
+.message {
+  min-height: 300px;
+  height: auto;
+  padding: 20px;
+  overflow-y: scroll;
+}
+
+.btn-close {
+	position: absolute;
+  font-weight: bold;
+  cursor: pointer;
+  right: 10px;
+  top: 10px;
+  width: 15px;
+  height: 15px;
+}
+
+.btn-min {
+  width: 12px;
+  cursor: pointer;
+  position: absolute;
+  font-weight: bold;
+  cursor: pointer;
+  right: 36px;
+  top: 10px;
+  z-index: 500;
+}
+
+#closeBtn > svg,
+#minBtn > svg  {
+  vertical-align: top;
+}
+
+.counter {
+	position: absolute;
+	color: grey;
+	font-family: sans-serif;
+	font-size: 0.8rem;
+	left: 10px;
+	bottom: 5px;
+}
+
+.expedite {
+  background: repeating-linear-gradient(
+  45deg,
+  orange,
+  orange 10px,
+  #e09200 10px,
+  #e09200 20px
+);
+}
+
+.mobile-controls .counter {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	left: 20px;
+	bottom: -10px;
+	z-index: 3;
+}
+
+.mobile-controls {
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+input:not([type="radio"]):not([type="checkbox"]) {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 25px; 
+  width: 250px;
+}
+
+textarea {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 15px 15px 5px 15px;
+    width: 250px;
+}
+
+button {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 25px;
+    border-style: none;
+    width: 250px;
+    background-color: #15b101;
+    color: white;
+    font-weight: bold;
+}
+
+button#reloadSrc {
+    width: auto;
+    margin-left: 30px;
+}
+
+button#loadData {
+    width: auto;
+    margin-left: 30px;
+}
+
+.info-banner {
+  display: flex; 
+  flex-flow: row wrap;
+}
+
+p {
+    white-space: pre-wrap;
+    tab-size: 0.5in;
+}
+
+#persp_output {
+    margin: 5px;
+    padding: 5px;
+    background-color: lightgrey;
+}
+
+#docsWarn {
+  font-weight: bold;
+}
+
+/*
+label.checkbox > input {
+	width: 30px;
+}
+
+label.checkbox {
+	display: block;
+	width: 100%;
+	max-width: 95vw;
+}
+*/
+
+.view-wrapper {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.chkbx-form {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 20px;
+  overflow: auto scroll;
+  height: 100%;
+  border-bottom: 1px solid black;
+}
+
+.chkbx-unit {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  margin: 5px;
+  width: 100%;
+}
+
+input[type="checkbox"]
+{
+  margin: 5px 10px;
+  width: 13px;
+  height: 13px;
+}
+
+.mobile-controls>button {
+	display: none;
+}
+
+select {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 25px;
+  width: 250px;
+}
+
+select {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 25px;
+  width: 250px;
+}
+
+#inputCopies {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  width: 355px;
+  max-height: 75vh;
+  max-width: 80vw;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+}
+
+.copy_border {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid lightgrey;
+  border-radius: 10px;
+  font-family: Helvetica, sans-serif;
+  padding: 10px;
+  margin: 20px 10px;
+  width: 355px;
+}
+
+.copy_border div {
+	max-width: 100%;
+}
+
+.copy_border .copy_control {
+  display: flex;
+  justify-content: space-around;
+  align-items: top;
+  position: relative;
+  top: -25px;
+  left: 35%;
+  z-index: 100;
+  width: 75px;
+  height: 26px;
+}
+
+.copy_btn {
+  cursor: copy;
+  background: white;
+  color: #cccccc;
+  padding: 3px;
+}
+
+.copy_btn.lite {
+  color: blue;
+}
+
+.copy_border.lite {
+  border-color: blue;
+}
+
+.unsure {
+  cursor: default;
+}
+
+.no-select {
+  /*Prevents selection*/
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none;     /* IE 10 and Element Edge */
+  user-select: none;         /* Standard syntax for Chrome, Firefox, and Opera */
+}
+
+.warn {
+  size: 0.5rem;
+}
+
+red, .red {
+  color: red;
+}
+
+.green {
+  color: #15b101;
+  font-weight: bold;
+}
+
+.highlight {
+  background: yellow;
+}
+
+mark {
+  background: yellow;
+}
+
+*:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px blue;
+}
+
+table {
+    max-width: 450px;
+}
+
+table tr > td:nth-child(1) {
+    width: 33%;
+}
+
+table tr > td:nth-child(2) {
+    width: 66%;
+}
+
+#docsList,#preConsRvw {
+    height: 140px;
+    width: 350px;
+}
+
+#taAddress {
+    height: 110px;
+    width: 350px;
+}
+
+.form-wrapper {
+    margin: 10px 10px 10px 40px;
+    width: 400px;
+}
+
+form {
+    width: 100%;
+}
+
+#output-wrapper {
+    width: 816px;
+    padding: 0;
+    height: auto; /*stretch;*/
+    /*overflow: auto scroll;*/
+    margin-top: 0;
+    border-top: 1px solid lightgrey;
+    border-right: 1px solid grey;
+    border-bottom: 1px solid grey;
+    border-left: 1px solid lightgrey;
+}
+
+#output {
+    padding: 95.8px;
+}
+
+.hidden {
+    display: none;
+}
+
+span {
+    font-family:Calibri; 
+    font-size: 12pt;
+}
+
+
+@media only screen and (max-width: 1540px) {
+    .layout-container {
+        flex-direction: column; /* Stack columns vertically */
+        align-items: center;
+        height: auto; /* Allow container to grow with content */
+        overflow: scroll; /* Return scrolling control to the main window */
+    }
+
+    .panel {
+        height: auto; /* Columns take up natural content height */
+        overflow-y: visible; /* Disable independent column scrolling */
+    }
+}
+
+@media only screen and (max-width: 375px) {
+	body {
+		width: 95vw;
+		overflow-x: hidden;
+	}
+
+	.mobile-controls button {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: lightgrey;
+		border-style: none;
+		color: white;
+		font-family: monospace;
+		height: 65px;
+		width: 65px;
+		right: 20px;
+		top: 20px;
+		border-radius: 10px;
+		font-size: 2rem;
+		z-index: 3;
+	}
+
+	.mobile-controls textarea {
+		font-size: 1rem;
+	}
+
+	#inputCopies {
+		margin: 10px;
+		padding: 10px 70px 10px 10px;
+		border-radius: 10px;
+	}
+
+	.copy_border {
+		padding: 10px;
+		margin: 20px 10px;
+		width: 95vw;
+	}
+
+	.copy_control {
+		display: flex;
+		justify-content: space-around;
+		align-items: top;
+		position: relative;
+		top: -25px;
+		left: 40%;
+		z-index: 2;
+		width: 75px;
+		height: 26px;
+	}
+}
