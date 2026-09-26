@@ -351,8 +351,8 @@ db = {
         "Primary TIN": (tpTIN) => {
             //let newREline = "";
             let auth = db.summData["Tax Authority"] || "IRS";
-            let elem = document.querySelector(`[data-input="Primary TIN"]`);
-            let caseNN = document.querySelector(`[data-input="Case Name and Number"]`)?.value.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+$/,"$1");
+            let elem = getInput("Primary TIN");
+            let caseNN = getInput("Case Name and Number")?.value.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+$/,"$1");
             if (tpTIN === "") { tpTIN = caseNN || "" }
             let isBus = isBusiness();
             if (tpTIN?.length === 4 || tpTIN.match(/(?:^| )[X\d]{3}\-[X\d]{2}\-[X\d]{4}(?!\d)/)) {
