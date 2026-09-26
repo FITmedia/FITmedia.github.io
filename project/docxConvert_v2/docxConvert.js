@@ -1215,7 +1215,95 @@ function waitFor(selector, options) { // vers 12.16.24
 }
 
 function loadDemoData() {
-    let data = {"2848":{"value":"2848","id":"poaForm","placeholder":"2848"},"Portfolio Number":{"value":"Portfolio - 00012345 - Smith","id":"pfNumFld","placeholder":"Portfolio Number"},"Case Name and Number":{"value":"Smith *1234 - 00054321 - IRS/25","id":"caseNameNum","placeholder":"Case Name and Number"},"Formatted Summary":{"value":"Date Submitted: 7/15/2026, 5:00 PM\n\n\n\nPortfolio Approval: Main and Secondary\n\n\n\nWriting Perspective: Third Person\n\n\n\nRepresentative for Deceased Taxpayer: Not Applicable\n\n\n\nCase Description - Case Summary\n\nSummary:\n\nTP got a notice and provided proof of payment.\n\nRelevant Law/Regulation:\n\nN/A\n\nCase Strength:\n\nStrong\n\nExplain rationale for strength:\n\nTP provided docs.\n\n\n\nSummarize important contacts with IRS/state, client, or third parties. Include dates and substance (for reference), if applicable. \n\nN/A\n\n\n\nTax Year(s) Involved: 2025\n\nTaxing Authority Details:\n\nAuthority: IRS\n\nNotice Details:\n\nNotice Date: April 15, 2026\n\nNotice Type: N/A\n\nNotice Number: CP2000\n\nReference #/AUR: N/A\n\nNotice Deadline: May 15, 2026\n\n\n\nExpected Outcome: Unknown\n\n\n\nPayments Made: No\n\n\n\nAgreed Items\n\nItems Accepted:\n\nN/A\n\nReason:\n\nN/A\n\n\n\nDisputed Items\n\nItems Contested:\n\nN/A\n\nReason for Dispute:\n\nN/A\n\n\n\nSubstantiation Status\n\nPartial Substantiation Details:\n\nMissing Documents:\n\nN/A\n\nReason for Omission:\n\nN/A\n\n\n\nDate you communicated to the taxpayer that, without proper substantiation, the deduction and/or credits will likely be disallowed, resulting in a possible balance due.\n\nJuly 15, 2026\n\n\n\nList supporting documents provided explaining relevance to disputed issues (e.g., how the business deduction is ordinary and necessary to operate the business)\n\nP1_01_IRS Notice dated 4.15.2026\n\nP1_02_Payment Confirmation","id":"summ","placeholder":""},"Tax Authority":{"value":"IRS","id":"taxAuth","placeholder":"Tax Authority"},"Tax Year":{"value":"2025","id":"taxYear","placeholder":"Tax Year"},"Notice Type":{"value":"Unreported Income","id":"noticeType","placeholder":"Notice Type"},"Notice Number":{"value":"CP2000","id":"noticeNumber","placeholder":"Notice Number"},"Notice Date":{"value":"April 15, 2026","id":"noticeDate","placeholder":"Notice Date"},"Primary Name":{"value":"John Smith","id":"primName","placeholder":"Primary Name"},"Secondary Name":{"value":"Jane Smith","id":"secName","placeholder":"Secondary Name"},"Name Merge":{"value":"John Smith and Jane Smith","id":"nameMerge","placeholder":"Name Merge"},"Representative":{"value":"Jamie Klueck","id":"repName","placeholder":"Representative"},"Docs List":{"value":"P1_01_IRS Notice dated 4.15.2026\n\nP1_02_Payment Confirmation","id":"docsList","placeholder":"Docs List"},"TA Address":{"value":"Department of the Treasury\nInternal Revenue Service\nOgden Service Center\nOgden, UT 84201-0046","id":"taAddress","placeholder":"TA Address"},"TA Fax":{"value":"(800) 555-1212","id":"taFax","placeholder":"TA Fax"},"Pre-Consult Review":{"value":"- SSN digits? For which TP?\n- Fax number in notice?\n- Notice indicates that the IRS has identified items that were not reported on the 2025 Federal Tax Return. ","id":"preConsRvw","placeholder":"Pre-Consult Review"}};
+    //let data = {"2848":{"value":"2848","id":"poaForm","placeholder":"2848"},"Portfolio Number":{"value":"Portfolio - 00012345 - Smith","id":"pfNumFld","placeholder":"Portfolio Number"},"Case Name and Number":{"value":"Smith *1234 - 00054321 - IRS/25","id":"caseNameNum","placeholder":"Case Name and Number"},"Formatted Summary":{"value":"Date Submitted: 7/15/2026, 5:00 PM\n\n\n\nPortfolio Approval: Main and Secondary\n\n\n\nWriting Perspective: Third Person\n\n\n\nRepresentative for Deceased Taxpayer: Not Applicable\n\n\n\nCase Description - Case Summary\n\nSummary:\n\nTP got a notice and provided proof of payment.\n\nRelevant Law/Regulation:\n\nN/A\n\nCase Strength:\n\nStrong\n\nExplain rationale for strength:\n\nTP provided docs.\n\n\n\nSummarize important contacts with IRS/state, client, or third parties. Include dates and substance (for reference), if applicable. \n\nN/A\n\n\n\nTax Year(s) Involved: 2025\n\nTaxing Authority Details:\n\nAuthority: IRS\n\nNotice Details:\n\nNotice Date: April 15, 2026\n\nNotice Type: N/A\n\nNotice Number: CP2000\n\nReference #/AUR: N/A\n\nNotice Deadline: May 15, 2026\n\n\n\nExpected Outcome: Unknown\n\n\n\nPayments Made: No\n\n\n\nAgreed Items\n\nItems Accepted:\n\nN/A\n\nReason:\n\nN/A\n\n\n\nDisputed Items\n\nItems Contested:\n\nN/A\n\nReason for Dispute:\n\nN/A\n\n\n\nSubstantiation Status\n\nPartial Substantiation Details:\n\nMissing Documents:\n\nN/A\n\nReason for Omission:\n\nN/A\n\n\n\nDate you communicated to the taxpayer that, without proper substantiation, the deduction and/or credits will likely be disallowed, resulting in a possible balance due.\n\nJuly 15, 2026\n\n\n\nList supporting documents provided explaining relevance to disputed issues (e.g., how the business deduction is ordinary and necessary to operate the business)\n\nP1_01_IRS Notice dated 4.15.2026\n\nP1_02_Payment Confirmation","id":"summ","placeholder":""},"Tax Authority":{"value":"IRS","id":"taxAuth","placeholder":"Tax Authority"},"Tax Year":{"value":"2025","id":"taxYear","placeholder":"Tax Year"},"Notice Type":{"value":"Unreported Income","id":"noticeType","placeholder":"Notice Type"},"Notice Number":{"value":"CP2000","id":"noticeNumber","placeholder":"Notice Number"},"Notice Date":{"value":"April 15, 2026","id":"noticeDate","placeholder":"Notice Date"},"Primary Name":{"value":"John Smith","id":"primName","placeholder":"Primary Name"},"Secondary Name":{"value":"Jane Smith","id":"secName","placeholder":"Secondary Name"},"Name Merge":{"value":"John Smith and Jane Smith","id":"nameMerge","placeholder":"Name Merge"},"Representative":{"value":"Jamie Klueck","id":"repName","placeholder":"Representative"},"Docs List":{"value":"P1_01_IRS Notice dated 4.15.2026\n\nP1_02_Payment Confirmation","id":"docsList","placeholder":"Docs List"},"TA Address":{"value":"Department of the Treasury\nInternal Revenue Service\nOgden Service Center\nOgden, UT 84201-0046","id":"taAddress","placeholder":"TA Address"},"TA Fax":{"value":"(800) 555-1212","id":"taFax","placeholder":"TA Fax"},"Pre-Consult Review":{"value":"- SSN digits? For which TP?\n- Fax number in notice?\n- Notice indicates that the IRS has identified items that were not reported on the 2025 Federal Tax Return. ","id":"preConsRvw","placeholder":"Pre-Consult Review"}};
+    let data = {
+        "2848": {
+            "value": "2848",
+            "id": "poaForm",
+            "placeholder": "2848"
+        },
+        "Portfolio Number": {
+            "value": "Portfolio - 00012345 - Smith",
+            "id": "pfNumFld",
+            "placeholder": "Portfolio Number"
+        },
+        "Case Name and Number": {
+            "value": "Smith *1234 - 00054321 - IRS/25",
+            "id": "caseNameNum",
+            "placeholder": "Case Name and Number"
+        },
+        "Formatted Summary": {
+            //"value": "Date Submitted: 7/15/2026, 5:00 PM\n\n\n\nPortfolio Approval: Main and Secondary\n\n\n\nWriting Perspective: Third Person\n\n\n\nRepresentative for Deceased Taxpayer: Not Applicable\n\n\n\nCase Description - Case Summary\n\nSummary:\n\nTP got a notice and provided proof of payment.\n\nRelevant Law/Regulation:\n\nN/A\n\nCase Strength:\n\nStrong\n\nExplain rationale for strength:\n\nTP provided docs.\n\n\n\nSummarize important contacts with IRS/state, client, or third parties. Include dates and substance (for reference), if applicable. \n\nN/A\n\n\n\nTax Year(s) Involved: 2025\n\nTaxing Authority Details:\n\nAuthority: IRS\n\nNotice Details:\n\nNotice Date: April 15, 2026\n\nNotice Type: N/A\n\nNotice Number: CP2000\n\nReference #/AUR: N/A\n\nNotice Deadline: May 15, 2026\n\n\n\nExpected Outcome: Unknown\n\n\n\nPayments Made: No\n\n\n\nAgreed Items\n\nItems Accepted:\n\nN/A\n\nReason:\n\nN/A\n\n\n\nDisputed Items\n\nItems Contested:\n\nN/A\n\nReason for Dispute:\n\nN/A\n\n\n\nSubstantiation Status\n\nPartial Substantiation Details:\n\nMissing Documents:\n\nN/A\n\nReason for Omission:\n\nN/A\n\n\n\nDate you communicated to the taxpayer that, without proper substantiation, the deduction and/or credits will likely be disallowed, resulting in a possible balance due.\n\nJuly 15, 2026\n\n\n\nList supporting documents provided explaining relevance to disputed issues (e.g., how the business deduction is ordinary and necessary to operate the business)\n\nP1_01_IRS Notice dated 4.15.2026\n\nP1_02_Payment Confirmation",
+            "value": `{"Special Portfolio Needs": "Expedite","Writing Perspective": "Third Person","Representative for Deceased Taxpayer": "Not Applicable","Case Summary": "TP got a notice and provided proof of payment.","Relevant Law/Regulation": "N/A","Case Strength": "Strong","Explain rationale for strength": "TP provided docs.","Important Communication": "N/A","Case Notes": "","Tax Year(s) Involved": "2025","Tax Authority": "IRS","Notice Date": "April 15, 2026","Notice Type": "N/A","Notice Number": "CP2000","Reference #/AUR": "N/A","Items Accepted": "N/A","Reason Accepted": "N/A","Items Disputed": "N/A","Reason Disputed": "N/A","Missing Documents": "N/A","Reason for Omission": "N/A","Supporting Documents": "P1_01_IRS Notice dated April 15, 2026\\nP1_02_Payment Confirmation","Portfolio Number": "Portfolio - 00012345 - Smith","Case Name and Number": "Smith *1234 - 00076543 - IRS/24","Primary Taxpayer": "John Smith","Secondary Taxpayer": "Jane Smith"}`,
+            "id": "summ",
+            "placeholder": ""
+        },
+        "Tax Authority": {
+            "value": "IRS",
+            "id": "taxAuth",
+            "placeholder": "Tax Authority"
+        },
+        "Tax Year": {
+            "value": "2025",
+            "id": "taxYear",
+            "placeholder": "Tax Year"
+        },
+        "Notice Type": {
+            "value": "Unreported Income",
+            "id": "noticeType",
+            "placeholder": "Notice Type"
+        },
+        "Notice Number": {
+            "value": "CP2000",
+            "id": "noticeNumber",
+            "placeholder": "Notice Number"
+        },
+        "Notice Date": {
+            "value": "April 15, 2026",
+            "id": "noticeDate",
+            "placeholder": "Notice Date"
+        },
+        "Primary Name": {
+            "value": "John Smith",
+            "id": "primName",
+            "placeholder": "Primary Name"
+        },
+        "Secondary Name": {
+            "value": "Jane Smith",
+            "id": "secName",
+            "placeholder": "Secondary Name"
+        },
+        "Name Merge": {
+            "value": "John Smith and Jane Smith",
+            "id": "nameMerge",
+            "placeholder": "Name Merge"
+        },
+        "Representative": {
+            "value": "Jamie Klueck",
+            "id": "repName",
+            "placeholder": "Representative"
+        },
+        "Docs List": {
+            "value": "P1_01_IRS Notice dated 4.15.2026\n\nP1_02_Payment Confirmation",
+            "id": "docsList",
+            "placeholder": "Docs List"
+        },
+        "TA Address": {
+            "value": "Department of the Treasury\nInternal Revenue Service\nOgden Service Center\nOgden, UT 84201-0046",
+            "id": "taAddress",
+            "placeholder": "TA Address"
+        },
+        "TA Fax": {
+            "value": "(800) 555-1212",
+            "id": "taFax",
+            "placeholder": "TA Fax"
+        },
+        "Pre-Consult Review": {
+            "value": "- SSN digits? For which TP?\n- Fax number in notice?\n- Notice indicates that the IRS has identified items that were not reported on the 2025 Federal Tax Return. ",
+            "id": "preConsRvw",
+            "placeholder": "Pre-Consult Review"
+        }
+    };
     let fields = document.querySelectorAll("[data-input]");
     for (let field of fields) {
         if (!field instanceof Element) { continue }
