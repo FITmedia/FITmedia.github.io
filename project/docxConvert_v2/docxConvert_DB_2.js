@@ -501,6 +501,7 @@ db = {
         "CP12": { main: "Error Correction", ssnStatus: "A", taAddress: "Department of the Treasury\nInternal Revenue Service\nKansas City, MO 64999-0010", indicates: "indicates that the IRS made changes to correct a purported error on the {{{Tax Year}}} Federal Tax Return, resulting in a reduced refund of ${{{Refund Amount}}}." },
         "CP13": { main: "Tax Return Change", sub: "$0 Balance" },
         "CP14": { main: "Balance Due", sub: "Unpaid Taxes", indicates: "indicates that the IRS is assessing a balance due of {{{Balance Due}}} for tax year {{{Tax Year}}}." },
+        "CP14G": { main: "Balance Due", sub: "Unpaid Taxes", indicates: "indicates that the IRS is assessing a balance due of {{{Balance Due}}} for tax year {{{Tax Year}}}." },
         "CP21A": { main: "Tax Return Change", sub: "Balance Due" },
         "CP21B": { 
             main: "Tax Return Change", 
