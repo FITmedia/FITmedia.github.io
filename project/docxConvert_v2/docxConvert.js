@@ -1059,7 +1059,7 @@ function nameMergeHandler(txt) {
         if (primName.value === "" && db.summData["Primary Name"] !== "") {
             primName.value = db.summData["Primary Name"];
         }
-    } else if (txt.match(/ and /) && !isBus) {
+    } else if (txt.match(/(\&(amp;|)| and )/) && !isBus) {
         console.log("Two taxpayers.")
         txt = txt.replace(/\&(amp;|)/,"and");
         txt = fixMidInitial(txt);
