@@ -229,7 +229,8 @@ db = {
             taxYear.value = yearTxt || "";
             return val;
         },
-        "Notice Date": (val) => {
+        "Notice Date": (val,e) => {
+            if (e?.type === "keyup") { return }
             if (!val) { return }
             let d = new Date(val);
             let options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -633,6 +634,13 @@ db = {
         "Letter 566-S": { main: "Audit Notice", hasFax: true }, // often Schedule C (always?)
         "Letter 566-T": { main: "Audit Notice", hasFax: true, indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." }, // (always?)
         "Letter 566-J": { main: "Audit Notice", hasFax: true, indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
+        "Letter 692-M": {
+            main: "Audit Notice",
+            hasFax: true,  
+            hasExaminerNum: true,
+            ssnStatus: "FP",
+            indicates: "indicates that the IRS determined that the information previously provided for tax year {{{Tax Year}}} was insufficient to support the position.",
+        },
         "Letter 729": { 
             main: "Delinquent Return", 
             hasFax: true, 
