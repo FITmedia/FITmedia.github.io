@@ -1313,3 +1313,11 @@ function loadDemoData() {
         //updateFromInput(field);
     }
 }
+
+function updateVers() {
+    let versElem = document.getElementById("vers");
+    let lastMod = document.lastModified;
+    let vers = lastMod.toString().replace(/(\d{2})\/(\d{2})\/\d{2}(\d{2}) (\d{2}):(\d{2}):\d{2}/,"1.2.3t4$5");
+    versElem.innerText = vers;
+}
+
