@@ -687,6 +687,7 @@ db = {
         "California": { form: "CA-540", poa:"3520-PIT", agency: "California Franchise Tax Board" },
         "Colorado": { form: "DR 0104", agency: "Colorado Department of Revenue" },
         "Connecticut": { form: "CT-1040" },
+        "Delaware": { form: "PIT-RES", agency: "Division of Revenue" },
         "Georgia": { form: "Form 500", poa: "RD-1061", agency: "Georgia Department of Revenue" },
         "Hawaii": { form: "N-15" },
         "Idaho": { form: "Form 40" },
