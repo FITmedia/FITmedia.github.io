@@ -250,7 +250,8 @@ db = {
             if (txt.match(/undefined/)) { txt = null } // leave '{{{field name}}}'
             let parentElem = getInput("Case/Portfolio")?.parentElement?.parentElement;
             if (parentElem) {
-                parentElem.remove();
+                //parentElem.remove();
+                parentElem.classList.add("hidden");
             }
             return txt;
         },
