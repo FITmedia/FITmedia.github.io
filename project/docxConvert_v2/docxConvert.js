@@ -59,7 +59,7 @@ async function fileToHTML() {
     html = loadOutputFields(html); // converts {{{}}} to "data-output"
     if (!db.inputKeyupListener) {
         document.addEventListener("keyup", (e) => { 
-            if (e.target.tagName !== "TEXTAREA") { updateFromInput(e.target) }
+            if (e.target.tagName !== "TEXTAREA") { updateFromInput(e.target,e) }
         });
         db.inputKeyupListener = true;
     }
@@ -296,15 +296,15 @@ function loadOutputFields(html) {
     return html;
 }
 
-function updateFromInput(elem) {
+function updateFromInput(elem,e) {
     let name = elem?.getAttribute("data-input");
     if (!name) { return }
     let tag = elem?.tagName;
     let outs = document.querySelectorAll(`[data-output="${name}"]`);
     if (!outs) { return }
     let value = elem.value.trim() || "";
-    //let specVal = (db.special[name] && value) ? db.special[name](value) : (value || `{{{${name}}}}`);
-    let specVal = db.special[name] ? (db.special[name](value) || `{{{${name}}}}`) : (value || `{{{${name}}}}`);
+    //let specVal = (db.special[name] && value) ? db.special[name](value,e) : (value || `{{{${name}}}}`);
+    let specVal = db.special[name] ? (db.special[name](value,e) || `{{{${name}}}}`) : (value || `{{{${name}}}}`);
     // (may need to allow db.special to process !value to allow 
     // for corrections due to deleting the value from the input)
     db.summData[name] = value.trim();
