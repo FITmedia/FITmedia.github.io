@@ -387,11 +387,11 @@ function fillOutputs(id) { // 9.22.26
     let outs = context.querySelectorAll(`[data-output]`);
     for (let out of outs) {
         let name = out.getAttribute("data-output");
-        let inp =  getInput(name);
-        if (!!inp && inp.value !== "") { // updated fillOutputs()
-            updateFromInput(inp);
-        } else {
+        let inp = getInput(name);
+        if (!inp || inp.value !== "") { // updated fillOutputs()
             getOutput(name).setValue(db.summData[name] || `{{{${name}}}}`)
+        } else {
+            updateFromInput(inp);
         }
     }
     return context;
