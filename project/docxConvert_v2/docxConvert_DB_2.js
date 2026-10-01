@@ -633,7 +633,7 @@ db = {
         },
         "Letter 566-B": { main: "Audit Notice", hasFax: true, indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
         "Letter 566-S": { main: "Audit Notice", hasFax: true }, // often Schedule C (always?)
-        "Letter 566-T": { main: "Audit Notice", hasFax: true, indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." }, // (always?)
+        "Letter 566-T": { main: "Audit Notice", hasFax: true, ssnStatus: "F", indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
         "Letter 566-J": { main: "Audit Notice", hasFax: true, indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
         "Letter 692-M": {
             main: "Audit Notice",
