@@ -388,10 +388,10 @@ function fillOutputs(id) { // 9.22.26
     for (let out of outs) {
         let name = out.getAttribute("data-output");
         let inp =  getInput(name);
-        if (!inp) {
-            getOutput(name).setValue(db.summData[name] || `{{{${name}}}}`)
-        } else {
+        if (!!inp && inp.value !== "") { // updated fillOutputs()
             updateFromInput(inp);
+        } else {
+            getOutput(name).setValue(db.summData[name] || `{{{${name}}}}`)
         }
     }
     return context;
@@ -436,6 +436,7 @@ function fixAligns() {
             } else if (indent < aligns[c]) {
                 // if current elem is left of first elem
                 // add a tab before elem
+				if (!tabNode.nodeValue) { continue }
                 tabNode.nodeValue += "\t";
                 let newIn = elem.getBoundingClientRect().left;
                 let tabWidth = newIn - indent;
@@ -450,6 +451,7 @@ function fixAligns() {
             } else if (aligns[c] !== 0 && indent > aligns[c]) {
                 // else if further right
                 // remove a tab from before elem
+				if (!tabNode.nodeValue) { continue }
                 tabNode.nodeValue = tabNode.nodeValue.replace(/\t$/,"");
                 let newIn = elem.getBoundingClientRect().left;
                 let tabWidth = indent - newIn;
@@ -1035,26 +1037,20 @@ function expediteHandler() {
 }
 
 function nameMergeHandler(txt) {
-    console.log(JSON.stringify(db.summData)) // if business => summData["Name Merge"] is originally the bus rep
-    console.log(txt) // Jane Doe
     let nmText = txt;
     let nameMerge = getInput("Name Merge"); 
     let primName = getInput("Primary Name");
     let secName = getInput("Secondary Name");
     let isBus = isBusiness(); // true
     let busName = getCaseName(); // John & Jane's Store LLC // if not business => last name
-    console.log(`Business? ${isBus}\nBusiness Name: ${busName}`)
-    //txt = txt || nameMerge?.value;
     if (isBus) { 
         db.summData["Primary Name"] = primName?.value || txt;
         txt = busName;
     }
-    console.log(txt)
     if (!txt) { return }
     if (isBus) {
         console.log("Is a business case.")
         txt = txt.replace(/\&(amp;|)/,"&");
-        console.log(txt)
         nameMerge.value = txt;
         if (primName.value === "" && db.summData["Primary Name"] !== "") {
             primName.value = db.summData["Primary Name"];
@@ -1064,7 +1060,6 @@ function nameMergeHandler(txt) {
         txt = txt.replace(/\&(amp;|)/,"and");
         txt = fixMidInitial(txt);
         txt = fixLastNames(txt);
-        console.log(txt);
         nameMerge.value = txt;
         let splits = txt.split(/ and /);
         primName.value = splits[0];
@@ -1080,7 +1075,7 @@ function nameMergeHandler(txt) {
         console.log("Single individual taxpayer.")
         txt = fixMidInitial(txt);
         txt = fixLastNames(txt);
-        console.log(txt)
+		nameMerge.value = txt;
         primName.value = txt;
     }
     return nameMerge.value;
