@@ -660,6 +660,14 @@ db = {
         // --- NY ---
         "DTF-948": { main: "Request for Information", hasFax: true, ssnStatus: "N", taFax: "(518) 391-4568", taAddress: "New York State\nDepartment of Taxation and Finance\nAudit Division-Personal Income Tax Desk\nP.O. Box 15270\nAlbany, NY 12212-5270", indicates: "indicates that the New York State Department of Taxation and Finance is requesting more information about the {{{Tax Year}}} NYS income tax return.", taAddress: "New York State\nDepartment of Taxation and Finance\nAudit Division-Personal Income Tax Desk\nP.O. Box 15270\nAlbany, NY 12212-5270", }, // NYS
         "DTF-960-E": { main: "Proposed Change", hasFax: true, ssnStatus: "LP", indicates: "indicates that the New York State Department of Taxation and Finance has identified a discrepancy between their records and the amount of Pass-Through Entity Tax (PTET) credit reported on the {{{Tax Year}}} New York State Income Tax Return.", },
+        "DTF-948-O": {
+            main: "Request for Information", 
+            ssnStatus: "N",
+            hasFax: true,
+            taFax: "(518) 391-4567",
+            taAddress: "New York State\nDepartment of Taxation and Finance\nOPTS Individual Account Resolution\nP.O. Box 15311\nAlbany, NY 12212-5311",
+            indicates: "indicates that the New York State Department of Taxation and Finance is requesting more information about the {{{Tax Year}}} NYS income tax return.",
+        },
         // --- CA ---
         "FTB 4734D": { main: "Tax Information and Document Request", indicates: "indicates that the State of California Franchise Tax Board has selected the {{{Tax Year}}} California income tax return for review." },
         "FTB 4502": { main: "Request for Information", hasFax: true, indicates: "indicates that the State of California Franchise Tax Board is requesting additional documentation to validate credits claimed on the {{{Tax Year}}} Form {{{Tax Form}}}." },
