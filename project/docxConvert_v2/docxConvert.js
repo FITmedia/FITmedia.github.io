@@ -47,12 +47,12 @@ async function fileToHTML() {
     }
     setDefaultValues();
     db.summData = getSummaryData(summ.value);
-    /*db.inputValues =*/ getInputValues();
-    //updateNoticeType();
+    /*db.inputValues =*/ //getInputValues();
+    updateNoticeType();
     loadInputFields(html); // create additional inputs, based on {{{}}}
     //html = loadOutputFields_old(html);
-    //autoFillFields();
-    //updateOtherItems();
+    autoFillFields();
+    updateOtherItems();
     setSaveName();
     output.innerHTML = html;
     html = fillOutputs(id).innerHTML;
@@ -313,14 +313,14 @@ function updateFromInput(elem,e) {
     }
 }
 
-function autoFillFields() {
+function autoFillFields() { // 10.1.26
     // consider creating a db object to loop through
-    if (document.getElementById("taxAuth")?.value !== "") {
-        if (document.querySelector("[data-input='Tax Form']")?.value.match(/(^$|n.?a)/i)) {
-            let taValue = document.getElementById("taxAuth").value;
+    if (getInput("Tax Authority")?.value !== "") {
+        if (getInput("Tax Form")?.value.match(/(^$|n.?a)/i)) {
+            let taValue = getInput("Tax Authority")?.value;
             if (isBusiness()) { return } // TODO: add .ptrForm, .scorpForm, .corpForm
             let tfValue = db.stateInfo[taValue]?.form || "";
-            let elem = document.querySelector("[data-input='Tax Form']");
+            let elem = getInput("Tax Form");
             elem.value = tfValue;
         }
     }
@@ -382,15 +382,26 @@ function fillValues(html,type) {
 	return html;
 }
 
-function fillOutputs(id) { // 9.22.26
+function fillOutputs(id) { // 10.1.26
     let context = document.getElementById(id) || document.getElementById("output");
     let outs = context.querySelectorAll(`[data-output]`);
     for (let out of outs) {
         let name = out.getAttribute("data-output");
-        let inp = getInput(name);
-        if (!inp || inp.value !== "") { // updated fillOutputs()
-            getOutput(name).setValue(db.summData[name] || `{{{${name}}}}`)
+        let inp =  getInput(name);
+        // if inp is undefined, there is no input element of that name => set to summ val
+        // if inp returns an input element, but its value == "" => set to summ val
+        console.warn(inp)
+        if (!inp || inp.value === "") {
+            console.log("No input, or input value is blank.")
+            let value = db.summData[name];
+            value = (value && !value.match(/(^$|n.a)/i)) ? value : "";
+            if (inp) {
+                inp.value = value;
+                updateFromInput(inp);
+            }
+            //getOutput(name).setValue(value || `{{{${name}}}}`)
         } else {
+            console.log(`Input found with value: "${inp.value}".`)
             updateFromInput(inp);
         }
     }
