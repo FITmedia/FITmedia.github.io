@@ -769,7 +769,7 @@ db = {
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">NOTICE NUMBER:		<span class="re-align">{{{Notice Number}}}</span></span></p>
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">NOTICE DATE:			<span id="noticeDateText" class="re-align unsure" style="font-style: italic; color: blue;">{{{Notice Date}}}</span></span></p>${newREline}`,
                 "New York": `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">RE:	${isBusiness ? `{{{Name Merge}}}` : `{{{Primary Name}}}`}		<span id="tpTINText" class="unsure tp-align" style="font-style: italic; color: blue;">{{{Primary TIN}}}</span></span></p>
-                    ${secName?.value === "" ? "" : db.templates["Secondary TP"]()}<br>
+                    ${/*secName?.value === "" ? "" : */db.templates["Secondary TP"]()}<br>
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">TAX FORM:			<span class="re-align">{{{Tax Form}}}</span></span></p>
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">TAX YEAR:			<span class="re-align">{{{Tax Year}}}</span></span></p>
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">NOTICE TYPE:			<span class="re-align">{{{Notice Type}}}</span></span></p>
@@ -778,7 +778,7 @@ db = {
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">CASE ID:			<span class="re-align">{{{Case ID}}}</span></span></p>
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">DLN:				<span class="re-align">{{{DLN}}}</span></span></p>${newREline}`,
                 "California": `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">RE:	${isBusiness ? `{{{Name Merge}}}` : `{{{Primary Name}}}`}		<span id="tpTINText" class="unsure tp-align" style="font-style: italic; color: blue;">{{{Primary TIN}}}</span></span></p>
-                    ${secName?.value === "" ? "" : db.templates["Secondary TP"]()}<br>
+                    ${/*secName?.value === "" ? "" : */db.templates["Secondary TP"]()}<br>
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">TAX FORM:			<span class="re-align">{{{Tax Form}}}</span></span></p>
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">TAX YEAR:			<span class="re-align">{{{Tax Year}}}</span></span></p>
                     <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">NOTICE TYPE:			<span class="re-align">{{{Notice Type}}}</span></span></p>
