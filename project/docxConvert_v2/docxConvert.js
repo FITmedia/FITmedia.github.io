@@ -1320,10 +1320,30 @@ function loadDemoData() {
     }
 }
 
-function updateVers() {
-    let versElem = document.getElementById("vers");
-    let lastMod = document.lastModified;
-    let vers = lastMod.toString().replace(/(\d{2})\/(\d{2})\/\d{2}(\d{2}) (\d{2}):(\d{2}):\d{2}/,"$1.$2.$3t$4$5");
-    versElem.innerText = vers;
+async function getAssetLastModified(urls) { // 10.2.2026
+  let arr = [new Date(document.lastModified)];
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      let lastMod = response.headers.get('Last-Modified');
+      if (!lastMod) { continue }
+      lastMod = new Date(lastMod);
+      arr.push(lastMod);
+      console.log(`${url} -> Last-Modified: ${lastMod}`);
+    } catch (err) {
+      console.error(`Failed to fetch headers for ${url}:`, err);
+    }
+  }
+  let latestDate = new Date(Math.max(...arr));
+  return latestDate.toLocaleString();
 }
 
+async function updateVers() { // 10.2.2026
+    let versElem = document.getElementById("vers");
+    let fileUrls = Array.from(document.querySelectorAll('link[rel="stylesheet"], script[src]'))
+        .map(el => el.href || el.src)
+        .filter(Boolean);
+    let lastMod = await getAssetLastModified(fileUrls); //document.lastModified;
+    let vers = lastMod.replace(/(\d{2})\/(\d{2})\/\d{2}(\d{2}) (\d{2}):(\d{2}):\d{2}/,"1.2.3t4$5");
+    versElem.innerText = vers;
+}
