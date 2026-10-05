@@ -336,6 +336,17 @@ db = {
             }
             return arr.join("");
         },
+        "TA Fax": (val) => {
+            if (val.match(/^No(ne|)/i)) {
+                let pcw = getInput("Pre-Consult Review");
+                let text = pcw?.value;
+                if (text) {
+                    pcw.value = text.replace(/^- Fax number in notice\?/m,"- No fax number in notice.");
+                }
+                return "";
+            }
+            return val;
+        },
         "Docs List": (val) => {
             //console.warn(val)
             //let test = textToHTML(val, {isTemporary: true, doubleSpace: false, testAlign: false});
@@ -563,25 +574,24 @@ db = {
         "LT11": { main: "Notice of Intent to Levy", indicates: "indicates that the IRS is trying to collect unpaid balances on your {{{Tax Year}}} account." },
         "LT19": { main: "Balance Due", indicates: "indicates that the IRS is trying to collect unpaid balances on your {{{Tax Year}}} account." },
         "LT39": { main: "Overdue Balance", sub: "Missing Returns", indicates: "indicates that the IRS has issued an overdue balance reminder for tax year {{{Tax Year}}}." },
-        "LTR 12C": { 
-            main: "Information Request", 
+        "LTR 12C": {
+            main: "Information Request",
             hasFax: true,
             hasReferNum: true,
             hasControlNum: true,
             ssnStatus: "AP",
-            indicates: "indicates that the IRS is requesting more information to process the {{{Tax Year}}} Federal Tax Return.\n- Copy of Form 1040.\n- Amounts and dates of estimated payments.\n- Support for income and expenses.", 
-            body: `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold;">Attn: ICO Rejects Team {{{Rejects Team}}} | Control #: {{{Reference #/AUR}}} | Batch: {{{Batch Number}}}</span></p>`
-            + `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">Enclosed is a copy of the {{{Tax Year}}} Form 1095-A, Health Insurance Marketplace Statement. <span id="ltr12c-noEstPmts" class="unsure" style="font-family:Calibri; font-size: 12pt; font-style: italic; color: blue;">No estimated tax payments were made for {{{Tax Year}}}.</span> All documents reporting income and withholding are enclosed.</span></p><br><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-style: italic; color: blue;">OR</span></p><br><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">The notice states that the amounts reported on Form 8962 do not match information received from the Health Insurance Marketplace. Enclosed is the {{{Tax Year}}} Form 1095-A, Health Insurance Marketplace Statement, issued by {{{Policy Issuer}}}. Also enclosed is Form 8962, which was completed using the amounts reported on Form 1095-A.</span></p><br><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">Please accept these as proof, process the {{{Tax Year}}} tax return, and <span id="ltr12c-refund" class="unsure" style="font-family:Calibri; font-size: 12pt; font-style: italic; color: blue;">issue the refund, as shown on the return</span>, without further delay.</span></p>`,
+            indicates: "indicates that the IRS is requesting more information to process the {{{Tax Year}}} Federal Tax Return.\n- Copy of Form 1040.\n- Amounts and dates of estimated payments.\n- Support for income and expenses.",
+            banner: `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold;">Attn: ICO Rejects Team {{{Rejects Team}}} | Control #: {{{Control Number}}} | Batch: {{{Batch Number}}}</span></p>`,
         },
         "LTR 105C": { main: "Claim Disallowed", hasFax: false, hasReferNum: true, ssnStatus: "L", indicates: "indicates that the IRS disallowed a claim for credit for the {{{Tax Year}}} tax year.", },
         "LTR 118C": {
-            main: "Information Request", 
+            main: "Information Request",
             hasFax: true,
             hasReferNum: true,
             hasControlNum: true,
             ssnStatus: "F",
-            indicates: "indicates that the IRS is requesting more information to process the {{{Tax Year}}} Federal Tax Return.\n- Copy of Form 1040.\n- Amounts and dates of estimated payments.\n- Support for income and expenses.", 
-            body: `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold;">Attn: ICO Rejects Team {{{Rejects Team}}} | Control #: {{{Reference #/AUR}}} | Batch: {{{Batch Number}}}</span></p>`,
+            indicates: "indicates that the IRS is requesting more information to process the {{{Tax Year}}} Federal Tax Return.\n- Copy of Form 1040.\n- Amounts and dates of estimated payments.\n- Support for income and expenses.",
+            banner: `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold;">Attn: ICO Rejects Team {{{Rejects Team}}} | Control #: {{{Control Number}}} | Batch: {{{Batch Number}}}</span></p>`,
         },
         "LTR 474C": { main: "Error Correction", hasReferNum: true, ssnStatus: "L", indicates: "indicates that the IRS made changes to correct purported errors on the {{{Tax Year}}} Federal Tax Return." },
         "LTR 3852C": { 
@@ -893,11 +903,11 @@ db = {
             if (strongExplain && !strongExplain.match(/^\s*(n\/*a|not applicable|unknown)\s*$/i)) {
                 caseStrong = `${caseStrong}: ${strongExplain}`;
             }
-            caseStrong = addTags(caseStrong);
-            let summarize = db.summData["Summarize important contacts"] || db.summData["Important Communication"];// ? addTags(inputs["Summarize important contacts"]) : "";
-            let summary = db.summData["Summary"] || db.summData["Case Summary"];// ? addTags(inputs["Summary"]) : "";
-            let law = db.summData["Relevant Law/Regulation"];// ? addTags(inputs["Relevant Law/Regulation"]) : "";
-            let caseNotes = db.summData["=== CASE NOTES ==="] || db.summData["Case Notes"];// ? addTags(inputs["=== CASE NOTES ==="]) : "";
+            caseStrong = addTags(caseStrong, { isUnsure: true });
+            let summarize = db.summData["Summarize important contacts"] || db.summData["Important Communication"];
+            let summary = db.summData["Summary"] || db.summData["Case Summary"];
+            let law = db.summData["Relevant Law/Regulation"];
+            let caseNotes = db.summData["=== CASE NOTES ==="] || db.summData["Case Notes"];
             let bodyItems = [
                 doPrint("CASE STRENGTH",caseStrong),
                 doPrint("SUMMARIZE IMPORTANT CONTACTS",summarize),
