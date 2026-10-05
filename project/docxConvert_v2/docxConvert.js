@@ -265,7 +265,7 @@ function loadOutputField(html,name,value) {
     return html;
 }
 
-function loadOutputFields(html) {
+function loadOutputFields_old(html) { // 10.5.26
     let vars = html.matchAll(/\{\{\{(?!\!)([^}]+)\}\}\}/g);
     vars = [...vars];
     for (let v in vars) { // [[{{{A}}},"A"],[{{{B}}},"B"],[...]]
@@ -280,19 +280,34 @@ function loadOutputFields(html) {
         let patt = new RegExp(varText.replace(/[{}()\[\]\-.*?!:$/\\|]/g,"\\$&"),"g");
         html = html.replace(patt,fill);
     }
-    //document.addEventListener("keyup", (e) => {
-        //updateFromInput(e.target);
-        /*let name = e.target.getAttribute("data-input");
-        if (!name) { return }
-        let outs = document.querySelectorAll(`[data-output="${name}"]`);
-        if (!outs) { return }
-        for (let out of outs) {
-            let value = e.target.value || `{{{${name}}}}`;
-            value = db.special[name](value);
-            out.innerText = value;
-            db.summData[name] = value;
-        }*/
-    //});
+    return html;
+}
+
+function loadOutputFields(html) { // 10.5.26
+    let vars = html.matchAll(/(<[^>]+>|)\{\{\{(?!\!)([^}]+)\}\}\}(<\/[^>]+>|)/g);
+    vars = [...vars];
+    for (let v in vars) { // [[<>{{{A}}}</>,"<>","A","</>"],[{{{B}}},"","B",""],[...]]
+        let vr = vars[v]; // [<>{{{A}}}</>,"<>","A","</>"]
+        let openTag = vr[1]; // "<>"
+        let name = vr[2]; // "A"
+        let closeTag = vr[3]; // "</>"
+        let varText = vr[0];
+        let tag = "span";
+        if (document.querySelector(`[data-output="${name}"]`)) {
+            // continue if this 'var' is within a 'data-output' element
+            // convert if not
+            let pt1 = new RegExp(`data-output="${name}"`);
+            let pt2 = /<\/[^ >]+>/;
+            if (openTag.match(pt1) && closeTag.match(pt2)) {
+                continue;
+            }
+        }
+        if (db.summTitles.includes(name)) { continue }
+        if (getInput(name)?.tagName === "TEXTAREA") { tag = "div" }
+        let fill = `<${tag} data-output="${name}">${varText}</${tag}>`;
+        let patt = new RegExp(varText.replace(/[{}()\[\]\-.*?!:$/\\|]/g,"\\$&"),"g");
+        html = html.replace(patt,fill);
+    }
     return html;
 }
 
@@ -447,7 +462,7 @@ function fixAligns() {
             } else if (indent < aligns[c]) {
                 // if current elem is left of first elem
                 // add a tab before elem
-				if (!tabNode.nodeValue) { continue }
+                if (!tabNode?.nodeValue) { continue }
                 tabNode.nodeValue += "\t";
                 let newIn = elem.getBoundingClientRect().left;
                 let tabWidth = newIn - indent;
@@ -462,7 +477,7 @@ function fixAligns() {
             } else if (aligns[c] !== 0 && indent > aligns[c]) {
                 // else if further right
                 // remove a tab from before elem
-				if (!tabNode.nodeValue) { continue }
+                if (!tabNode?.nodeValue) { continue }
                 tabNode.nodeValue = tabNode.nodeValue.replace(/\t$/,"");
                 let newIn = elem.getBoundingClientRect().left;
                 let tabWidth = indent - newIn;
@@ -799,7 +814,7 @@ function doPrint(heading,text) {
     if (text) {
         text = getTextLines(text) || text;
         if (text.match(/^\s*(n\/*a|not applicable|unknown)\s*$/i)) { return "" }
-        let html = addTags(text);
+        let html = addTags(text, { isUnsure: true });
         return `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-style: italic; color: blue; font-weight: bold;">${heading.toUpperCase()}</span></p>`
         +`<br>${html}<br>`;
     } else {
