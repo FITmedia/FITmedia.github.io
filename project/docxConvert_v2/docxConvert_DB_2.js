@@ -874,7 +874,7 @@ db = {
             if (indicates !== "") {
                 indicates = indicates[1];
             }
-            return `<section data-template="Opening"><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">${toLine}</span></p><br>
+            return `<section data-template="Opening"><div id="banner" class="hidden"></div><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">${toLine}</span></p><br>
             <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">${intro} in response to the {{{Tax Authority}}} Notice dated <span id="noticeDateText" class="unsure" style="font-style: italic; color: blue;">{{{Notice Date}}}</span>${reference}, which <span id="noticeIndicates">${indicates}</span></span></p></section>`;
         },
         "Letter Body": (inputs) => {
