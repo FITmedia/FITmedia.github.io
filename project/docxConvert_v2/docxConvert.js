@@ -779,13 +779,17 @@ function fixPhone(txt) {
     return txt.replace(patt,func);
 }
 
-function addTags(text) {
+function addTags(text, options) { // 10.5.26
+    // { align: [justify,center,both], isUnsure: [true/false] }
+    let align = options?.align || "justify";
+    let fontWeight = options?.fontWeight ? ` font-weight: ${options.fontWeight};` : "";
+    let isUnsure = options?.isUnsure ? " font-style: italic; color: blue;" : "";
     let arr = text.split(/(\n|<br>)+/g);
     let arr2 = [];
     for (let i in arr) {
         let txt = arr[i].trim();
         if (txt === "") { continue }
-        let html = `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-style: italic; color: blue;">${txt}</span></p>`;
+        let html = `<p style="text-align: ${align};"><span style="font-family:Calibri; font-size: 12pt;${fontWeight}${isUnsure}">${txt}</span></p>`;
         arr2.push(html);
     }
     return arr2.join("<br>");
