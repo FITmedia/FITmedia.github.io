@@ -246,7 +246,7 @@ function loadInputFields(html) {
     return html;
 }
 
-function loadOutputField_older(html,name,value) {
+function loadOutputField(html,name,value) {
     if (!name) { return }
     let varText = `{{{${name}}}}`;
     let outElem = document.querySelector(`[data-output="${name}"]`);
@@ -282,16 +282,8 @@ function loadOutputFields_old(html) { // 10.5.26
     return html;
 }
 
-function loadOutputFields(html) { // 10.5.26t1800
-    let outs = document.querySelectorAll(`[data-output]`);
-    if (outs) {
-        // remove matches
-        outs.forEach((out) => {
-            if (out.innerText.match(/\{\{\{(?!\!)([^}]+)\}\}\}/g)) {
-                out.innerText = "";
-            }
-        })
-    }
+function loadOutputFields(html) { // 10.6.26t1324
+    removeOutputVars();
     let vars = html.matchAll(/\{\{\{(?!\!)([^}]+)\}\}\}/g);
     vars = [...vars];
     for (let v in vars) { // [[{{{A}}},"A"],[{{{B}}},"B"],[...]]
@@ -305,6 +297,24 @@ function loadOutputFields(html) { // 10.5.26t1800
         let patt = new RegExp(varText.replace(/[{}()\[\]\-.*?!:$/\\|]/g,"\\$&"),"g");
         html = html.replace(patt,fill);
     }
+    restoreOutputVars();
+    return html;
+}
+
+function removeOutputVars() {
+    let outs = document.querySelectorAll(`[data-output]`);
+    if (outs) {
+        // remove matches
+        outs.forEach((out) => {
+            if (out.innerText.match(/\{\{\{(?!\!)([^}]+)\}\}\}/g)) {
+                out.innerText = "";
+            }
+        })
+    }
+}
+
+function restoreOutputVars() {
+    let outs = document.querySelectorAll(`[data-output]`);
     if (outs) {
         // restore
         outs.forEach((out) => {
@@ -314,7 +324,6 @@ function loadOutputFields(html) { // 10.5.26t1800
             }
         })
     }
-    return html;
 }
 
 function updateFromInput(elem,e) {
@@ -853,14 +862,15 @@ function textToHTML(text,options) {
 function getCaseName() {
     let caseNameNum = getInput("Case Name and Number");
     if (caseNameNum?.value !== "") {
-        return caseNameNum.value.replace(/^(?:\[[^\]]+\]|) *([^\*]+) \*[X\d\-]* - \d{8}[^]*?$/,"$1") || "Last_Name"; 
+        let caseName = caseNameNum.value.replace(/^(?:\[[^\]]+\]|) *([^\*]+?) +\*[X\d\-]* - \d{8}[^]*?$/,"$1") || "Last_Name";
+        return caseName.trim();
     }
 }
 
 function setSaveName() {
     if (caseNameNum?.value !== "" && pfNumFld?.value !== "") {
-        let lastName = caseNameNum.value.replace(/^(?:\[[^\]]+\]|) *([^\*]+) \*[X\d\-]* - \d{8}[^]*?$/,"$1") || "Last_Name";
-        lastName = lastName.replace(/&amp;/g, "&");
+        let lastName = caseNameNum.value.replace(/^(?:\[[^\]]+\]|) *([^\*]+?) +\*[X\d\-]* - \d{8}[^]*?$/,"$1") || "Last_Name";
+        lastName = lastName.trim().replace(/&amp;/g, "&");
         let pfNum = pfNumFld?.value.replace(/^[^]*?(\d{8})[^]*$/,"$1") || "PF_Number";
         let docs = db.summData["List supporting documents"] || db.summData["Supporting Documents"];
         let pfCt = docs?.match(/^[^]*(P\d{1,2})[_\-]/i)
