@@ -124,6 +124,7 @@ function getSection(name) {
 	let sec = document.querySelector(`[data-template="${name}"]`);
 	let data = {};
 	data.setContents = (value) => {
+		if (!sec) { return }
 		if (isHTML(value)) {
 			sec.innerHTML = value;
 		} else {
@@ -231,7 +232,7 @@ function updateNoticeType(num) {
             noticeType.value = arr.join(" / "); 
         }
     }
-	let openTemp = db.template["Opening"]();
+	let openTemp = db.templates["Opening"]();
 	getSection("Opening").setContents(openTemp);
 }
 
