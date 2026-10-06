@@ -213,6 +213,13 @@ function updateNoticeType(num) {
                     faxWarn.classList.add("red");
                 }
             }
+			if (types[i]?.banner) {
+                let banner = document.querySelector("#banner.hidden");
+                if (banner) {
+                    banner.innerHTML = types[i].banner + "<br>";
+                    banner.classList.remove("hidden");
+                }
+            }
             if (ssnStatus) {
                 handleSSNNotes(ssnStatus);
             }
