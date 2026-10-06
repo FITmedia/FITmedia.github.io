@@ -50,7 +50,6 @@ async function fileToHTML() {
     /*db.inputValues =*/ //getInputValues();
     updateNoticeType();
     loadInputFields(html); // create additional inputs, based on {{{}}}
-    //html = loadOutputFields_old(html);
     autoFillFields();
     updateOtherItems();
     setSaveName();
@@ -247,7 +246,7 @@ function loadInputFields(html) {
     return html;
 }
 
-function loadOutputField(html,name,value) {
+function loadOutputField_older(html,name,value) {
     if (!name) { return }
     let varText = `{{{${name}}}}`;
     let outElem = document.querySelector(`[data-output="${name}"]`);
@@ -283,30 +282,37 @@ function loadOutputFields_old(html) { // 10.5.26
     return html;
 }
 
-function loadOutputFields(html) { // 10.5.26
-    let vars = html.matchAll(/(<[^>]+>|)\{\{\{(?!\!)([^}]+)\}\}\}(<\/[^>]+>|)/g);
-    vars = [...vars];
-    for (let v in vars) { // [[<>{{{A}}}</>,"<>","A","</>"],[{{{B}}},"","B",""],[...]]
-        let vr = vars[v]; // [<>{{{A}}}</>,"<>","A","</>"]
-        let openTag = vr[1]; // "<>"
-        let name = vr[2]; // "A"
-        let closeTag = vr[3]; // "</>"
-        let varText = vr[0];
-        let tag = "span";
-        if (document.querySelector(`[data-output="${name}"]`)) {
-            // continue if this 'var' is within a 'data-output' element
-            // convert if not
-            let pt1 = new RegExp(`data-output="${name}"`);
-            let pt2 = /<\/[^ >]+>/;
-            if (openTag.match(pt1) && closeTag.match(pt2)) {
-                continue;
+function loadOutputFields(html) { // 10.5.26t1800
+    let outs = document.querySelectorAll(`[data-output]`);
+    if (outs) {
+        // remove matches
+        outs.forEach((out) => {
+            if (out.innerText.match(/\{\{\{(?!\!)([^}]+)\}\}\}/g)) {
+                out.innerText = "";
             }
-        }
+        })
+    }
+    let vars = html.matchAll(/\{\{\{(?!\!)([^}]+)\}\}\}/g);
+    vars = [...vars];
+    for (let v in vars) { // [[{{{A}}},"A"],[{{{B}}},"B"],[...]]
+        let vr = vars[v]; // [{{{A}}},"A"]
+        let name = vr[1]; // "A"
+        let varText = vr[0]; //{{{A}}}
+        let tag = "span";
         if (db.summTitles.includes(name)) { continue }
         if (getInput(name)?.tagName === "TEXTAREA") { tag = "div" }
         let fill = `<${tag} data-output="${name}">${varText}</${tag}>`;
         let patt = new RegExp(varText.replace(/[{}()\[\]\-.*?!:$/\\|]/g,"\\$&"),"g");
         html = html.replace(patt,fill);
+    }
+    if (outs) {
+        // restore
+        outs.forEach((out) => {
+            if (out.innerText === "") {
+                let nm = out.getAttribute("data-output");
+                out.innerText = `{{{${nm}}}`;
+            }
+        })
     }
     return html;
 }
