@@ -344,7 +344,7 @@ function restoreOutputVars() {
         outs.forEach((out) => {
             if (out.innerText === "") {
                 let nm = out.getAttribute("data-output");
-                out.innerText = `{{{${nm}}}`;
+                out.innerText = `{{{${nm}}}}`;
             }
         })
     }
