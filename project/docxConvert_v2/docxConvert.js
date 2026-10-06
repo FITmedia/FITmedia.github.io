@@ -1369,6 +1369,6 @@ async function updateVers() { // 10.2.2026
         .map(el => el.href || el.src)
         .filter(Boolean);
     let lastMod = await getAssetLastModified(fileUrls); //document.lastModified;
-    let vers = lastMod.replace(/(\d{2})\/(\d{2})\/\d{2}(\d{2}) (\d{2}):(\d{2}):\d{2}/,"1.2.3t4$5");
+    let vers = lastMod.replace(/(\d{2})\/(\d{2})\/\d{2}(\d{2}) (\d{2}):(\d{2}):\d{2}/,"$1.$2.$3t4$5");
     versElem.innerText = vers;
 }
