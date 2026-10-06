@@ -120,6 +120,20 @@ function getOutput(name) {
     return data;
 }
 
+function getSection(name) {
+	let sec = document.querySelector(`[data-template="${name}"]`]);
+	let data = {};
+	data.setContents = (value) => {
+		if (isHTML(value)) {
+			sec.innerHTML = value;
+		} else {
+			sec.innerText = value;
+		}
+	}
+	data.getElem = () => sec;
+	return data;
+}
+
 function fillInText(text) {
     let patt = /\{\{\{([^}]+)\}\}\}/g;
     let outs = text.matchAll(patt);
@@ -210,6 +224,8 @@ function updateNoticeType(num) {
             noticeType.value = arr.join(" / "); 
         }
     }
+	let openTemp = db.template["Opening"]();
+	getSection("Opening").setContents(openTemp);
 }
 
 function loadInputFields(html) {
