@@ -232,8 +232,8 @@ function updateNoticeType(num) {
             noticeType.value = arr.join(" / "); 
         }
     }
-	let openTemp = db.templates["Opening"]();
-	getSection("Opening").setContents(openTemp);
+	//let openTemp = db.templates["Opening"]();
+	//getSection("Opening").setContents(openTemp);
 }
 
 function loadInputFields(html) {
