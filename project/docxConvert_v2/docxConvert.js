@@ -121,7 +121,7 @@ function getOutput(name) {
 }
 
 function getSection(name) {
-	let sec = document.querySelector(`[data-template="${name}"]`]);
+	let sec = document.querySelector(`[data-template="${name}"]`);
 	let data = {};
 	data.setContents = (value) => {
 		if (isHTML(value)) {
