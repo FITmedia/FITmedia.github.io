@@ -214,11 +214,17 @@ function updateNoticeType(num) {
                     faxWarn.classList.add("red");
                 }
             }
-			if (types[i]?.banner) {
-                let banner = document.querySelector("#banner.hidden");
-                if (banner) {
-                    banner.innerHTML = types[i].banner + "<br>";
-                    banner.classList.remove("hidden");
+            if (types[i]?.banner) {
+                let hidBanner = document.querySelector("#banner.hidden");
+                if (hidBanner) {
+                    hidBanner.innerHTML = types[i].banner + "<br>";
+                    hidBanner.classList.remove("hidden");
+                }
+            } else {
+                let unhidBnr = document.querySelector("#banner:not(.hidden)");
+                if (unhidBnr) {
+                    unhidBnr.innerHTML = "";
+                    unhidBnr.classList.add("hidden");
                 }
             }
             if (ssnStatus) {
