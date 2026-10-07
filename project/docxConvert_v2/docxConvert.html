@@ -50,7 +50,7 @@
                     <tr><td>Tax Authority</td><td><input id="taxAuth" data-input="Tax Authority" placeholder="Tax Authority"></td></tr>
                     <tr><td>Tax Year</td><td><input id="taxYear" data-input="Tax Year" placeholder="Tax Year"></td></tr>
                     <tr><td>Tax Form</td><td><input id="taxForm" data-input="Tax Form" placeholder="Tax Form"></td></tr>
-                    <tr><td>Notice Number</td><td><input id="noticeNumber" data-input="Notice Number" placeholder="Notice Number"></td></tr>
+                    <tr><td>Notice Number</td><td><span class="note-wrapper hidden"><span id="numNote" class="input-note hidden"></span></span><input id="noticeNumber" data-input="Notice Number" placeholder="Notice Number"></td></tr>
                     <tr><td>Notice Type</td><td><input id="noticeType" data-input="Notice Type" placeholder="Notice Type"></td></tr>
                     <tr><td>Notice Date</td><td><input id="noticeDate" data-input="Notice Date" placeholder="Notice Date"></td></tr>
                     <tr><td>Name Merge</td><td><input id="nameMerge" data-input="Name Merge" placeholder="Name Merge"></td></tr>
@@ -157,27 +157,35 @@
             repName.classList.add("hidden");
             desig.classList.add("hidden");
             poaText?.classList.add("hidden");
+            introText.innerHTML = isBusiness() ?
+                loadOutputFields(`My name is {{{Primary Name}}}, and I am writing on behalf of {{{Name Merge}}}`)
+                : `This letter is`;
         } else if (ans[0] === "First Person" && ans[1] === "Signed POA") {
             resp = `<span style="color: red;">Writing Perspective incorrect:</span> Should be Third Person (written from us) with signed POA.`;
             poaForm.classList.remove("hidden");
             repName.classList.remove("hidden");
             desig.classList.remove("hidden");
             poaText?.classList.remove("hidden");
+            introText.innerHTML = `This letter is`;
         } else if (ans[0] === "Third Person" && ans[1] === "No POA") {
             resp = `Have POA, but not writing as TPP.`;
             poaForm.classList.add("hidden");
             repName.classList.add("hidden");
             desig.classList.add("hidden");
             poaText?.classList.add("hidden");
+            introText.innerHTML = isBusiness() ?
+                loadOutputFields(`My name is {{{Primary Name}}}, and I am writing on behalf of {{{Name Merge}}}`)
+                : `This letter is`;
         } else if (ans[0] === "Third Person" && ans[1] === "Signed POA") {
             resp = `Writing Perspective Confirmed: Use TPP Letterhead and write as POA.`;
             poaForm.classList.remove("hidden");
             repName.classList.remove("hidden");
             desig.classList.remove("hidden");
             poaText?.classList.remove("hidden");
+            introText.innerHTML = `This letter is`;
         }
         if (header) { header.outerHTML = db.templates["Header"]() }
-        if (closing) { 
+        if (closing) {
             let html = db.templates["Closing"]();
             html = loadOutputFields(html);
             html = fillValues(html,"inputs");
