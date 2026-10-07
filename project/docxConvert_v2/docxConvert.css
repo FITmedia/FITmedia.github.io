@@ -457,6 +457,17 @@ form {
     width: 621.1px;
 }
 
+.note-wrapper {
+    position: relative;
+}
+
+.input-note {
+    position: absolute;
+    margin-top: 53px;
+    margin-left: 22px;
+    width: 300px;
+}
+
 .hidden {
     display: none;
 }
