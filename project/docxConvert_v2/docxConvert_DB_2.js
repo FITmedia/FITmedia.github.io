@@ -557,6 +557,7 @@ db = {
         "CP132": { main: "Information Request", hasFax: false, indicates: "indicates that the IRS corrected a purported miscalculation on the 2025 Form {{{Tax Form}}} for the {{{Name Merge}}}, resulting in a balance due of {{{Balance Due}}}." },
         "CP141L": { main: "Penalty Charged", hasFax: false, ssnStatus: "F", taAddress: "Department of the Treasury\nInternal Revenue Service\nOgden, UT 84201-0074", indicates: "indicates that the IRS is charging a penalty for filing Form {{{Tax Form}}} late, resulting in a balance due of {{{Balance Due}}}." },
         "CP162A": { main: "Balance Due", hasFax: false, ssnStatus: "F", taAddress: "Department of the Treasury\nInternal Revenue Service\nOgden, UT 84201-0039", indicates: "indicates that the IRS is assessing a balance due of {{{Balance Due}}}." },
+        "CP171": { main: "Balance Due", ssnStatus: "F", indicates: "states that the IRS is sending a reminder about a balance due of {{{Balance Due}}} for the {{{Tax Year}}} tax year.", },
         "CP501": { main: "Balance Due", hasFax: false, indicates: "states that the IRS is sending a reminder about a balance due of {{{Balance Due}}} for the {{{Tax Year}}} tax year." },
         "CP503": { main: "Balance Due", sub: "Second Notice", ssnStatus: "N", indicates: "indicates that the IRS is assessing a balance due of {{{Balance Due}}} for tax year {{{Tax Year}}}." },
         "CP504": { main: "Balance Due", sub: "Final Notice", ssnStatus: "N", indicates: "indicates that the IRS is assessing a balance due of {{{Balance Due}}} for tax year {{{Tax Year}}}." },
@@ -847,20 +848,15 @@ db = {
         },
         "Opening": () => {
             let tpTIN = db.summData["Case Name and Number"]?.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+$/,"$1");
-            let isPOA = () => { 
-                let cls = document.getElementById("signed_POA").checked ? "" : ` class="hidden"`;
+            let isPOA = () => document.getElementById("signed_POA").checked ? true : false;
+            let poaHTML = () => {
+                let cls = isPOA() ? "" : ` class="hidden"`;
                 return `<span id="poaText"${cls}>I am writing on behalf of {{{Name Merge}}}, as an authorized representative pursuant to the Power of Attorney (Form {{{2848}}}) on file. </span>`;
             };
-            /*document.getElementById("signed_POA").addEventListener("change", (e) => {
-                let poaText = document.getElementById("poaText");
-                if (poaText) {
-                    poaText.outerHTML = isPOA();
-                }
-            })*/
-            let isBusiness = (tpTIN?.length === 10)? `My name is {{{Primary Name}}}, and I am writing on behalf of {{{Name Merge}}}` : null;
-            let intro = isPOA() + "This letter is";
-            if (isBusiness) {
-                intro = isPOA() + isBusiness;
+            let intro = poaHTML() + "This letter is";
+            if (isBusiness() && !isPOA()) {
+                let busTxt = `My name is {{{Primary Name}}}, and I am writing on behalf of {{{Name Merge}}}`;
+                intro = poaHTML() + busTxt;
             }
             //console.log(inputs["Notice Number"])
             let noticeNum = db.summData["Notice Number"];
@@ -885,8 +881,8 @@ db = {
             if (indicates !== "") {
                 indicates = indicates[1];
             }
-            return `<section data-template="Opening"><div id="banner" class="hidden"></div><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">${toLine}</span></p><br>
-            <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">${intro} in response to the {{{Tax Authority}}} Notice dated <span id="noticeDateText" class="unsure" style="font-style: italic; color: blue;">{{{Notice Date}}}</span>${reference}, which <span id="noticeIndicates">${indicates}</span></span></p></section>`;
+            return `<section data-template="Opening"><div id="banner" class="hidden"></div><p style="text-align: justify;"><span id="toLine" style="font-family:Calibri; font-size: 12pt;">${toLine}</span></p><br>
+            <p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">${intro} in response to the {{{Tax Authority}}} Notice dated <span id="noticeDateText" class="unsure" style="font-style: italic; color: blue;">{{{Notice Date}}}</span><span id="referenceText">${reference}</span>, which <span id="noticeIndicates">${indicates}</span></span></p></section>`;
         },
         "Letter Body": (inputs) => {
             let noticeNum = db.summData["Notice Number"];
