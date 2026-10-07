@@ -157,6 +157,7 @@ db = {
         "8821": "Form 8821, Tax Information Authorization",
         "8": "Schedule 8812, Credits for Qualifying Children and Other Dependents",
         "940": "Form 940, Employer's Annual Federal Unemployment Tax Return",
+        "943": "Form 943, Employer's Annual Federal Tax Return for Agricultural Employees",
         // Note: there is no 940-X -- 940 has an "Amended" checkbox
         "941": "Form 941, Employer's Quarterly Federal Tax Return",
         "941-X": "Form 941-X, Adjusted Employer's Quarterly Federal Tax Return",
@@ -229,6 +230,64 @@ db = {
             taxYear.value = yearTxt || "";
             return val;
         },
+        "Notice Number": (num) => {
+            let types = db.noticeTypes;
+            let inType = getInput("Notice Type").value;
+            let dbType = types[num]?.main;
+            let hidElem = document.querySelector(`#numNote.hidden`);
+            let unhidElem = document.querySelector(`#numNote:not(.hidden)`);
+            if (dbType && inType !== dbType) {
+                // if noticeType.value !== types[num].main
+                // (if typed value is different from database)
+                // display database value to allow swapping
+                if (hidElem) {
+                    hidElem.innerHTML = dbType;
+                    hidElem.classList.remove("hidden");
+                    hidElem.parentElement.classList.remove("hidden");
+                } else if (unhidElem) {
+                    unhidElem.innerHTML = dbType;
+                }
+            } else if (!dbType || inType === dbType) {
+                if (unhidElem) {
+                    unhidElem.parentElement.classList.add("hidden");
+                    unhidElem.classList.add("hidden");
+                    unhidElem.innerHTML = "";
+                }
+            }
+            updateNoticeType(num);
+            fixAligns();
+            return num;
+        },
+        "Notice Type": (val) => {
+            let types = db.noticeTypes;
+            let num = getInput("Notice Number").value;
+            let dbType = types[num]?.main || "";
+            if (val === "") {
+                updateNoticeType(val);
+                fixAligns();
+                return dbType;
+            }
+            let hidElem = document.querySelector(`#numNote.hidden`);
+            let unhidElem = document.querySelector(`#numNote:not(.hidden)`);
+            if (unhidElem && unhidElem.innerText === val) {
+                // hide and clear the elem
+                unhidElem.classList.add("hidden");
+                unhidElem.parentElement.classList.add("hidden");
+                unhidElem.innerHTML = "";
+            } else if (hidElem && val !== dbType) {
+                hidElem.innerHTML = dbType;
+                hidElem.classList.remove("hidden");
+                hidElem.parentElement.classList.remove("hidden");
+            }
+            updateNoticeType(val);
+            fixAligns();
+            return val;
+        },
+        /*"Notice Number": (val) => {
+            updateNoticeType(val);
+            fixAligns();
+            return val;
+        },*/
         "Notice Date": (val,e) => {
             if (e?.type === "keyup") { return }
             if (!val) { return }
@@ -434,11 +493,6 @@ db = {
             }
             return spTIN;
         },
-        "Notice Number": (val) => {
-            updateNoticeType(val);
-            fixAligns();
-            return val;
-        },
         "Name Merge": (val) => {
             val = nameMergeHandler(val);
             fixAligns();
@@ -539,6 +593,7 @@ db = {
             indicates: "indicates that the IRS has made changes to the {{{Tax Year}}} Federal Tax Return to match the record of payments made." 
         },
         "CP24": { main: "Tax Return Change", sub: "Payments Made (may have a credit)", indicates: "indicates the IRS has made changes to the {{{Tax Year}}} Federal Tax Return to match the record of payments that were made." },
+        "CP28": { main: "Mortgage Interest Deduction Review", ssnStatus: "N", indicates: "indicates that IRS records show the amount of interest claimed for the {{{Tax Year}}} Home Mortgage Interest Deduction exceeds the limit.", },
         "CP30": {
             main: "Penalty Assessed",
             sub: "Estimated Tax Penalty",
@@ -689,6 +744,12 @@ db = {
         // --- IN ---
         "SF 56824": { main: "Proposed Assessment", hasFax: false, indicates: "states that the Indiana Department of Revenue is assessing a late payment penalty because the amount due for the {{{Tax Year}}} tax year was not paid by the extension due date." }, // IN
         // --- Misc ---
+        "911": { // mostly to keep the information handy
+            main: "Request for Taxpayer Advocate Service Assistance",
+            hasFax: true,
+            taAddress: "Taxpayer Advocate Service\n7940 Kentucky Dr\nMS 11 G\nFlorence, KY 41042",
+            taFax: "(855) 828-2723",
+        },
         "14039": { 
             main: "Identity Theft Affidavit", 
             hasFax: true,
@@ -853,9 +914,9 @@ db = {
                 let cls = isPOA() ? "" : ` class="hidden"`;
                 return `<span id="poaText"${cls}>I am writing on behalf of {{{Name Merge}}}, as an authorized representative pursuant to the Power of Attorney (Form {{{2848}}}) on file. </span>`;
             };
-            let intro = poaHTML() + "This letter is";
+            let intro = poaHTML() + `<span id="introText">This letter is</span>`;
             if (isBusiness() && !isPOA()) {
-                let busTxt = `My name is {{{Primary Name}}}, and I am writing on behalf of {{{Name Merge}}}`;
+                let busTxt = `<span id="introText">My name is {{{Primary Name}}}, and I am writing on behalf of {{{Name Merge}}}</span>`;
                 intro = poaHTML() + busTxt;
             }
             //console.log(inputs["Notice Number"])
