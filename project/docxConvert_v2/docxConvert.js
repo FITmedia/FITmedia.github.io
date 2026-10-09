@@ -1138,10 +1138,13 @@ function nameMergeHandler(txt) {
     if (isBus) {
         console.log("Is a business case.")
         txt = txt.replace(/\&(amp;|)/,"&");
+        //console.log(txt)
         nameMerge.value = txt;
         if (primName.value === "" && db.summData["Primary Name"] !== "") {
             primName.value = db.summData["Primary Name"];
         }
+        let outElems = getOutput("Primary Name")?.getElems();
+        outElems[0].innerText = txt; // only change the first (the one in RE)
     } else if (txt.match(/(\&(amp;|)| and )/) && !isBus) {
         console.log("Two taxpayers.")
         txt = txt.replace(/\&(amp;|)/,"and");
