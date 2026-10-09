@@ -230,7 +230,7 @@ db = {
             taxYear.value = yearTxt || "";
             return val;
         },
-        "Notice Number": (num) => {
+        "Notice Number": (num,) => {
             let types = db.noticeTypes;
             let inType = getInput("Notice Type").value;
             let dbType = types[num]?.main;
@@ -254,11 +254,13 @@ db = {
                     unhidElem.innerHTML = "";
                 }
             }
-            updateNoticeType(num);
-            fixAligns();
+            if (e?.type !== "keyup") {
+                updateNoticeType(num);
+                fixAligns();
+            }
             return num;
         },
-        "Notice Type": (val) => {
+        "Notice Type": (val,e) => {
             let types = db.noticeTypes;
             let num = getInput("Notice Number").value;
             let dbType = types[num]?.main || "";
@@ -279,8 +281,10 @@ db = {
                 hidElem.classList.remove("hidden");
                 hidElem.parentElement.classList.remove("hidden");
             }
-            updateNoticeType(val);
-            fixAligns();
+            if (e?.type !== "keyup") {
+                updateNoticeType(val);
+                fixAligns();
+            }
             return val;
         },
         /*"Notice Number": (val) => {
@@ -598,7 +602,7 @@ db = {
             main: "Penalty Assessed",
             sub: "Estimated Tax Penalty",
             ssnStatus: "A",
-            indicates: "indicates that the IRS has increased the estimated tax penalty for {{{Tax Year}}} to ${{{Amount Due}}}.",
+            indicates: "indicates that the IRS has increased the estimated tax penalty for the {{{Tax Year}}} Federal Tax Return to ${{{Amount Due}}}.",
         },
         "CP59": { main: "Failure to File", hasFax: true, indicates: "indicates that the IRS did not receive the 2024 Federal Tax Return." },
         "CP60": { main: "Payments Removed", hasFax: false, ssnStatus: "AP", indicates: "indicates that the IRS has removed payments that they believe were incorrectly applied to the balance due for tax year {{{Tax Year}}}." },
