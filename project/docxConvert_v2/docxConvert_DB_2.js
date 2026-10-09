@@ -230,7 +230,7 @@ db = {
             taxYear.value = yearTxt || "";
             return val;
         },
-        "Notice Number": (num,) => {
+        "Notice Number": (num,e) => {
             let types = db.noticeTypes;
             let inType = getInput("Notice Type").value;
             let dbType = types[num]?.main;
