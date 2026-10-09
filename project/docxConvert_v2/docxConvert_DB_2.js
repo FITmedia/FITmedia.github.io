@@ -750,7 +750,7 @@ db = {
             taFax: true,
             ssnStatus: "F",
             indicates: "indicates that the IRS has received additional information and made changes to the {{{Tax Year}}} Corporate Income Tax Return, resulting in a balance due of ${{{Balance Due}}}."
-        }
+        },
         // --- NY ---
         "DTF-948": { main: "Request for Information", hasFax: true, ssnStatus: "N", taFax: "(518) 391-4568", taAddress: "New York State\nDepartment of Taxation and Finance\nAudit Division-Personal Income Tax Desk\nP.O. Box 15270\nAlbany, NY 12212-5270", indicates: "indicates that the New York State Department of Taxation and Finance is requesting more information about the {{{Tax Year}}} NYS income tax return.", taAddress: "New York State\nDepartment of Taxation and Finance\nAudit Division-Personal Income Tax Desk\nP.O. Box 15270\nAlbany, NY 12212-5270", }, // NYS
         "DTF-960-E": { main: "Proposed Change", hasFax: true, ssnStatus: "LP", indicates: "indicates that the New York State Department of Taxation and Finance has identified a discrepancy between their records and the amount of Pass-Through Entity Tax (PTET) credit reported on the {{{Tax Year}}} New York State Income Tax Return.", },
