@@ -400,13 +400,19 @@ db = {
             return arr.join("");
         },
         "TA Fax": (val) => {
+            let pcw = getInput("Pre-Consult Review");
             if (val.match(/^No(ne|)/i)) {
-                let pcw = getInput("Pre-Consult Review");
                 let text = pcw?.value;
                 if (text) {
                     pcw.value = text.replace(/^- Fax number in notice\?/m,"- No fax number in notice.");
                 }
                 return "";
+            } else if (val.match(/\(?\d{3}\)?[ \-]?\d{3}-?\d{4}/)) {
+                // implement fixPhone() here instead?
+                let text = pcw?.value;
+                if (text) {
+                    pcw.value = text.replace(/^- Fax number in notice\?/m,"- Fax number in notice.");
+                }
             }
             return val;
         },
@@ -429,8 +435,19 @@ db = {
             let auth = db.summData["Tax Authority"] || "IRS";
             let elem = getInput("Primary TIN");
             let caseNN = getInput("Case Name and Number")?.value.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+$/,"$1");
-            if (tpTIN === "") { tpTIN = caseNN || "" }
+            let pcw = getInput("Pre-Consult Review");
             let isBus = isBusiness();
+            let text = pcw?.value;
+            if (text) {
+                if (tpTIN === "N" || tpTIN === "XXXX") {
+                    pcw.value = text.replace(/^- SSN digits\? For which TP\?/,"- No SSN shown in notice.");
+                } else if (tpTIN.match(/^(XXX-XX-|)\d{4}$/)) {
+                    pcw.value = text.replace(/^- SSN digits\? For which TP\?/,"- Last 4 SSN digits in notice.");
+                } else if (tpTIN.match(/^(\d{2}-\d{7})$/) || isBus) {
+                    pcw.value = text.replace(/^- SSN digits\? For which TP\?/,"- Full EIN in notice.");
+                }
+            }
+            if (tpTIN === "") { tpTIN = caseNN || "" }
             if (tpTIN?.length === 4 || tpTIN.match(/(?:^| )[X\d]{3}\-[X\d]{2}\-[X\d]{4}(?!\d)/)) {
                 if (tpTIN.match(/[X\d]{3}\-[X\d]{2}\-[X\d]{4}/)) {
                     tpTIN = `SSN: ${tpTIN}`;
@@ -728,6 +745,12 @@ db = {
             hasExaminerNum: true, 
             indicates: "indicates that the IRS is providing an Examination Report for tax year {{{Tax Year}}}, which is proposing changes to the Federal Tax Return." 
         },
+        "Letter 2030": {
+            main: "Unreported Items",
+            taFax: true,
+            ssnStatus: "F",
+            indicates: "indicates that the IRS has received additional information and made changes to the {{{Tax Year}}} Corporate Income Tax Return, resulting in a balance due of ${{{Balance Due}}}."
+        }
         // --- NY ---
         "DTF-948": { main: "Request for Information", hasFax: true, ssnStatus: "N", taFax: "(518) 391-4568", taAddress: "New York State\nDepartment of Taxation and Finance\nAudit Division-Personal Income Tax Desk\nP.O. Box 15270\nAlbany, NY 12212-5270", indicates: "indicates that the New York State Department of Taxation and Finance is requesting more information about the {{{Tax Year}}} NYS income tax return.", taAddress: "New York State\nDepartment of Taxation and Finance\nAudit Division-Personal Income Tax Desk\nP.O. Box 15270\nAlbany, NY 12212-5270", }, // NYS
         "DTF-960-E": { main: "Proposed Change", hasFax: true, ssnStatus: "LP", indicates: "indicates that the New York State Department of Taxation and Finance has identified a discrepancy between their records and the amount of Pass-Through Entity Tax (PTET) credit reported on the {{{Tax Year}}} New York State Income Tax Return.", },
