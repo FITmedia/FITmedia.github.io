@@ -401,7 +401,7 @@ db = {
         },
         "TA Fax": (val) => {
             let pcw = getInput("Pre-Consult Review");
-            if (val.match(/^No(ne|)/i)) {
+            if (val === "" && val.match(/^No(ne|)/i)) {
                 let text = pcw?.value;
                 if (text) {
                     pcw.value = text.replace(/^- Fax number in notice\?/m,"- No fax number in notice.");
