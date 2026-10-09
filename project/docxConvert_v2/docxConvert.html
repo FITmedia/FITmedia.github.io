@@ -346,15 +346,24 @@
             fileToHTML();
         }
     })
-    document.addEventListener("paste", (e) => {
+    /*document.addEventListener("paste", (e) => {
         if (e.target.tagName !== "INPUT" && e.target.tagName !== "TEXTAREA") { return }
         navigator.clipboard.readText().then((txt) => {
             if (txt.match(/(^\s|\s$)/)) {
                 txt = txt.trim();
+                //e.target.setAttribute("data-undo", e.target.value);
+                //if (!e.target.getAttribute("data-undoListener")) {
+                //    e.target.setAttribute("data-undoListener",true);
+                //    e.target.addEventListener("keydown", (e) => {
+                //        if (e.key === "z" && e.ctrlKey) {
+                //            e.target.value = e.target.getAttribute("data-undo");
+                //        }
+                //    })
+                //}
                 e.target.value = txt;
             }
         });
-    })
+    })*/
     
     setDefaultValues();
     updateVers();
