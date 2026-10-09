@@ -1144,7 +1144,9 @@ function nameMergeHandler(txt) {
             primName.value = db.summData["Primary Name"];
         }
         let outElems = getOutput("Primary Name")?.getElems();
-        outElems[0].innerText = txt; // only change the first (the one in RE)
+		if (outElems[0]) {
+        	outElems[0].innerText = txt; // only change the first (the one in RE)
+		}
     } else if (txt.match(/(\&(amp;|)| and )/) && !isBus) {
         console.log("Two taxpayers.")
         txt = txt.replace(/\&(amp;|)/,"and");
