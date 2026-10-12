@@ -401,7 +401,7 @@ db = {
         },
         "TA Fax": (val) => {
             let pcw = getInput("Pre-Consult Review");
-            if (val === "" && val.match(/^No(ne|)/i)) {
+            if (val === "N" || val.match(/^No(ne|)/i)) {
                 let text = pcw?.value;
                 if (text) {
                     pcw.value = text.replace(/^- Fax number in notice\?/m,"- No fax number in notice.");
@@ -650,6 +650,7 @@ db = {
         "CP3219A": { main: "Notice of Deficiency", hasFax: false, ssnStatus: "L", indicates: "indicates that the IRS is proposing changes to the {{{Tax Year}}} Federal Tax Return based on information received from third parties." },
         "CP3219N": { main: "Notice of Deficiency", indicates: "indicates that the IRS did not receive a {{{Tax Year}}} Federal Tax Return so they have calculated the tax based on information from third parties." },
         "LT11": { main: "Notice of Intent to Levy", indicates: "indicates that the IRS is trying to collect unpaid balances on your {{{Tax Year}}} account." },
+        "LT16": { main: "Balance Due", sub: "Unpaid Taxes and/or Missing Tax Return(s)", ssnStatus: "A", indicates: "indicates that the IRS is trying to collect an unpaid balance for the {{{Tax Year}}} tax year." },
         "LT19": { main: "Balance Due", indicates: "indicates that the IRS is trying to collect unpaid balances on your {{{Tax Year}}} account." },
         "LT39": { main: "Overdue Balance", sub: "Missing Returns", indicates: "indicates that the IRS has issued an overdue balance reminder for tax year {{{Tax Year}}}." },
         "LTR 12C": {
