@@ -156,6 +156,7 @@ db = {
         "2848": "Form 2848, Power of Attorney",
         "8821": "Form 8821, Tax Information Authorization",
         "8": "Schedule 8812, Credits for Qualifying Children and Other Dependents",
+        "8812": "Schedule 8812, Credits for Qualifying Children and Other Dependents",
         "940": "Form 940, Employer's Annual Federal Unemployment Tax Return",
         "943": "Form 943, Employer's Annual Federal Tax Return for Agricultural Employees",
         // Note: there is no 940-X -- 940 has an "Amended" checkbox
@@ -663,6 +664,7 @@ db = {
             banner: `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold;">Attn: ICO Rejects Team {{{Rejects Team}}} | Control #: {{{Control Number}}} | Batch: {{{Batch Number}}}</span></p>`,
         },
         "LTR 105C": { main: "Claim Disallowed", hasFax: false, hasReferNum: true, ssnStatus: "L", indicates: "indicates that the IRS disallowed a claim for credit for the {{{Tax Year}}} tax year.", },
+        "LTR 106C": { main: "Claim of Partial Disallowance", hasFax: false, hasReferNum: true, ssnStatus: "L", indicates: "indicates that the IRS disallowed part of a claim for credit for the {{{Tax Year}}} tax year.", },
         "LTR 118C": {
             main: "Information Request",
             hasFax: true,
