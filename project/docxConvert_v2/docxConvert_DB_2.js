@@ -857,7 +857,7 @@ db = {
             return `<section data-template="Date">${d.toLocaleDateString('en-US', options)}</section>`;
         },
         "Secondary TP": (fta) => /*getInput("Secondary Name").value ? */`<p id="secondary_name_line" class="hidden" style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">${fta ? "" : "	"}{{{Secondary Name}}}		<span id="spTINText" class="unsure tp-align" style="font-style: italic; color: blue;">{{{Secondary TIN}}}</span></span></p>`,// : "",
-        "Header": () => signed_POA?.checked ? `<section data-template="Header"><p style="text-align:center"><span style="font-family:Calibri; font-size: 18pt">[Use TPP letterhead]</span></p></section>` 
+        "Header": () => signed_POA?.checked ? `<section data-template="Header"><p style="text-align:center"><span style="font-family:Calibri; font-size: 18pt">[Use Company Letterhead]</span></p></section>` 
             : `<section data-template="Header"><p style="text-align:center"><span style="font-family:Calibri; font-size: 18pt">TAXPAYER NAME (S)</span></p>`
             + `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt">ADDRESS</span></p>`
             + `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt">PHONE			 EMAIL</span></p></section>`,
