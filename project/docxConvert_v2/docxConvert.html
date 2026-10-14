@@ -168,7 +168,7 @@
             poaText?.classList.remove("hidden");
             introText.innerHTML = `This letter is`;
         } else if (ans[0] === "Third Person" && ans[1] === "No POA") {
-            resp = `Have POA, but not writing as TPP.`;
+            resp = `Have POA, but not writing as representative.`;
             poaForm.classList.add("hidden");
             repName.classList.add("hidden");
             desig.classList.add("hidden");
@@ -177,7 +177,7 @@
                 loadOutputFields(`My name is {{{Primary Name}}}, and I am writing on behalf of {{{Name Merge}}}`)
                 : `This letter is`;
         } else if (ans[0] === "Third Person" && ans[1] === "Signed POA") {
-            resp = `Writing Perspective Confirmed: Use TPP Letterhead and write as POA.`;
+            resp = `Writing Perspective Confirmed: Use Company Letterhead and write as POA.`;
             poaForm.classList.remove("hidden");
             repName.classList.remove("hidden");
             desig.classList.remove("hidden");
@@ -196,8 +196,8 @@
         let list = [
             `Writing Perspective Confirmed: Use client header and write as them.`,
             `Writing Perspective incorrect: Should be Third Person (written from us) with signed POA.`,
-            `Have POA, but not writing as TPP.`,
-            `Writing Perspective Confirmed: Use TPP Letterhead and write as POA.`,
+            `Have POA, but not writing as representative.`,
+            `Writing Perspective Confirmed: Use Company Letterhead and write as representative.`,
         ];
         let regExpList = createRegExpList(list);
         if (pcwField) {
