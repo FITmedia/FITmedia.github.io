@@ -44,8 +44,8 @@
             <br>
             <table>
                 <tbody id="fields">
-                    <tr><td>Portfolio</td><td><input id="pfNumFld" data-input="Portfolio Number" placeholder="Portfolio Number"></td></tr>
-                    <tr><td>Case</td><td><input id="caseNameNum" data-input="Case Name and Number" placeholder="Case Name and Number"></td></tr>
+                    <tr class="hidden"><td>Portfolio</td><td><input id="pfNumFld" data-input="Portfolio Number" placeholder="Portfolio Number"></td></tr>
+                    <tr class="hidden"><td>Case</td><td><input id="caseNameNum" data-input="Case Name and Number" placeholder="Case Name and Number"></td></tr>
                     <tr><td>Formatted Summary</td><td><textarea id="summ" data-input="Formatted Summary"></textarea></td></tr>
                     <tr><td>Tax Authority</td><td><input id="taxAuth" data-input="Tax Authority" placeholder="Tax Authority"></td></tr>
                     <tr><td>Tax Year</td><td><input id="taxYear" data-input="Tax Year" placeholder="Tax Year"></td></tr>
@@ -95,6 +95,19 @@
                 <p><span id="docsLabel">Docs List</span></p><textarea id="docsList" data-input="Docs List" placeholder="Docs List"></textarea>
                 <p>Taxing Authority Address</p><textarea id="taAddress" data-input="TA Address" placeholder="TA Address"></textarea>
                 <p>Taxing Authority Fax</p><input id="taFax" data-input="TA Fax" placeholder="TA Fax">
+                <label class="switch">
+                    <input id="toggle_summ" type="checkbox" onchange="turnedOn(toggle_summ,thisLabel)" checked="">
+                    <span class="slider round"></span>
+                </label>
+                <p>TIN Status</p>
+                <select>
+                    <option value="">--</option>
+                    <option value="F">Full SSN in Notice.</option>
+                    <option value="L">Last four digits in Notice.</option>
+                    <option value="A">Notice asks for SSN.</option>
+                    <option value="N">No SSN in Notice.</option>
+                    <option value="E">Full EIN in notice.</option>
+                </select>
                 <p>Pre-Consult Review</p><textarea id="preConsRvw" data-input="Pre-Consult Review" placeholder="Pre-Consult Review"></textarea>
             </div>
         </section>
