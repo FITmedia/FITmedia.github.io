@@ -193,7 +193,7 @@ db = {
     defaults: { // value to put in data-input if blank
         "Tax Form": () => {
             let ta = getInput("Tax Authority")?.value || "IRS";
-            let form = (ta !== "IRS") ? (db.stateInfo[ta]?.poa || "") : "1040";
+            let form = (ta !== "IRS") ? (db.stateInfo[ta]?.form || "") : "1040";
             return form;
         },
         "2848": () => {
@@ -204,12 +204,6 @@ db = {
         "Representative": () => "Mary Keller",
         "Designation": () => "EA",
         "Pre-Consult Review": () => "- SSN digits? For which TP?\n- Fax number in notice?\n- Notice indicates ",
-        /* does not work as a default for fields generated later
-        "Tax Form": () => {
-            let ta = taxAuth?.value || "IRS";
-            let form = (ta !== "IRS") ? (db.stateInfo[ta]?.form || "") : "1040";
-            return form;
-        },*/
     },
     special: {
         // Special functions for handling/generating a value
@@ -231,6 +225,28 @@ db = {
             taxYear.value = yearTxt || "";
             return val;
         },
+        "Tax Authority": (val) => {
+            let taxForm = getInput("Tax Form");
+            let form = (val !== "IRS") ? (db.stateInfo[val]?.form || "") : "1040";
+            if (taxForm && !isBusiness()) {
+                taxForm.value = form;
+            }
+            // else if isBusiness
+            // let entType = [partner|scorp|ccorp]
+            // db.stateInfo[val][type]
+            return val;
+        },
+        "Tax Year": (val,e) => {
+            if (e?.type === "keyup") { return val }
+            val = fixTaxYears(val);
+            return val;
+        },
+        /*"Tax Form": (val) => {
+            if (val === "") {
+                val = (db.summData["Tax Authority"]?.match(/IRS/) && !isBusiness()) ? "1040" : `{{{Tax Form}}}`;
+            }
+            return val;
+        },*/
         "Notice Number": (num,e) => {
             let types = db.noticeTypes;
             let inType = getInput("Notice Type").value;
@@ -261,6 +277,11 @@ db = {
             }
             return num;
         },
+        /*"Notice Number": (val) => {
+            updateNoticeType(val);
+            fixAligns();
+            return val;
+        },*/
         "Notice Type": (val,e) => {
             let types = db.noticeTypes;
             let num = getInput("Notice Number").value;
@@ -288,9 +309,20 @@ db = {
             }
             return val;
         },
-        /*"Notice Number": (val) => {
-            updateNoticeType(val);
-            fixAligns();
+       /* "Notice Type": (val) => {
+            let type = db.summData["Notice Type"];
+            let num = db.summData["Notice Number"];
+            let typeField = noticeType;
+            let numField = noticeNumber;
+            if (type.match(/n.?a/i) && num.match(/n.?a/i)) {
+                val = "{{{Notice Type}}}";
+            } else if (!type.match(/n.?a/i) && num.match(/n.?a/i)) {
+                val = type;
+            } else if (type.match(/n.?a/i) && !num.match(/n.?a/i)) {
+                val = num;
+            } else if (!type.match(/n.?a/i) && !num.match(/n.?a/i)) {
+                val = type + `</span></p><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">NOTICE NUMBER:\t\t${num}`;
+            }
             return val;
         },*/
         "Notice Date": (val,e) => {
@@ -303,133 +335,10 @@ db = {
             noticeDate.value = txt;
             return txt;
         },
-        "Case/Portfolio": (val) => {
-            if (val && !val.match(/\{\{\{.+?\}\}\}/)) { return val }
-            let pfNum = db.summData["Portfolio Number"]?.replace(/^[^]*?(\d{8})[^]*$/,"$1");
-            let caseNN = db.summData["Case Name and Number"];
-            if (!caseNN) { caseNN =  document.querySelector(`[data-input="Case Name and Number"]`)?.value }
-            let caseNum = caseNN?.replace(/^(?:\[[^\]]+\]|) *[^\*]+\*[X\d\-]* - (\d{8})[^]*?$/,"$1");
-            let name = caseNN?.replace(/^(?:\[[^\]]+\]|) *([^\*]+) \*[X\d\-]* - \d{8}[^]*?$/,"$1").trim();
-            let txt = `${name} (${caseNum}), Portfolio - ${pfNum}`;
-            if (txt.match(/undefined/)) { txt = null } // leave '{{{field name}}}'
-            let parentElem = getInput("Case/Portfolio")?.parentElement?.parentElement;
-            if (parentElem) {
-                //parentElem.remove();
-                parentElem.classList.add("hidden");
-            }
-            return txt;
-        },
-        /*"Pre-Consult Review": (val) => {
-            let indicates = val.match(/^- Notice (indicates .+?)$/m) || "";
-            if (indicates !== "") {
-                indicates = indicates[1];
-                //indicates = fillValues(indicates,"inputs"); // changes {{{}}} before data-output
-                let indHTML = loadOutputFields(indicates);
-                let noticeIndicates = document?.getElementById("noticeIndicates") || null;
-                //pcw.value = pcw.value.replace(/^- Notice indicates/m,`- Notice ${indicates}`);
-                if (noticeIndicates) {
-                    noticeIndicates.innerHTML = indHTML;
-                }
-                //console.log(pcw.value)
-            }
-            let notes = textToHTML(val, {isTemporary: false, doubleSpace: false});
-            //let notes = val?.replace(/(\n)+/g, `</span></p><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">`);
-            return notes //`<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${notes}</span></p>`
-            + `<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${signDate("jklueck")}</span></p>`;
-        },*/
-        "Pre-Consult Review": (val) => { //9.24.26
-            let indicates = val.match(/^- Notice (indicates .+?)$/m) || "";
-            let pcw = getInput("Pre-Consult Review");
-            if (indicates !== "") {
-                indicates = indicates[1];
-                //indicates = fillValues(indicates,"inputs"); // changes {{{}}} before data-output
-                let indHTML = loadOutputFields(indicates);
-                //console.log(indicates)
-                indicates = fillInText(indicates);
-                let noticeIndicates = document?.getElementById("noticeIndicates") || null;
-                pcw.value = val.replace(/^- Notice indicates.*/m,`- Notice ${indicates}`);
-                if (noticeIndicates) {
-                    noticeIndicates.innerHTML = indHTML;
-                    fillOutputs("noticeIndicates");
-                }
-                //loadOutputField(html,name,value)
-                //console.log(pcw.value)
-            }
-            let notes = textToHTML(val, {isTemporary: false, doubleSpace: false});
-            //let notes = val?.replace(/(\n)+/g, `</span></p><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">`);
-            return notes //`<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${notes}</span></p>`
-            + `<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${signDate("jklueck")}</span></p>`;
-        },
-        "Balance Due" : (val) => {
-            if (!val) { return `{{{Balance Due}}}` }
-            if (!val.match(/^\$/)) {
-                val = "$"+val;
-            }
-            return fixAmounts(val);
-        },
-        /*"Tax Authority": (val) => {
-            let inputs = db.summData;
-            let taxAuths = {
-                // if inputs get saved to db
-                // their values can determine
-                // what form is appropriate
-                "IRS": () => {
-                    if (document.getElementById("taxForm")) {
-                        getInput("Tax Form").value = "1040";
-                        return "1040";
-                    }
-                },
-            };
-            val = taxAuths[val] ? taxAuths[val]() : val;
+        "Name Merge": (val) => {
+            val = nameMergeHandler(val);
+            fixAligns();
             return val;
-        },*/
-        "Tax Form": (val) => {
-            if (val === "") {
-                val = (db.summData["Tax Authority"]?.match(/IRS/) && !isBusiness()) ? "1040" : `{{{Tax Form}}}`;
-            }
-            return val;
-        },
-        "TA Address": (val) => {
-            //return textToHTML(val, {isTemporary: false, doubleSpace: false});
-            let lines = val.split(/\n+/g);
-            let arr = [];
-            for (let l in lines) {
-                let line = lines[l];
-                line = `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">${line}</span></p>`;
-                arr.push(line);
-            }
-            return arr.join("");
-        },
-        "TA Fax": (val) => {
-            let pcw = getInput("Pre-Consult Review");
-            if (val === "N" || val.match(/^No(ne|)/i)) {
-                let text = pcw?.value;
-                if (text) {
-                    pcw.value = text.replace(/^- Fax number in notice\?/m,"- No fax number in notice.");
-                }
-                return "";
-            } else if (val.match(/\(?\d{3}\)?[ \-]?\d{3}-?\d{4}/)) {
-                // implement fixPhone() here instead?
-                let text = pcw?.value;
-                if (text) {
-                    pcw.value = text.replace(/^- Fax number in notice\?/m,"- Fax number in notice.");
-                }
-            }
-            return val;
-        },
-        "Docs List": (val) => {
-            //console.warn(val)
-            //let test = textToHTML(val, {isTemporary: true, doubleSpace: false, testAlign: false});
-            val = getTextLines(val) || val;
-            let lines = val.split(/\n+/g);
-            let arr = [];
-            for (let l in lines) {
-                let line = lines[l];
-                let num = parseInt(l) + 1;
-                line = `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;"><span id="docsListText${num}" class="unsure" style="font-style: italic; color: blue;">${line}</span></span></p>`;
-                arr.push(line);
-            }
-            return arr.join("");
         },
         "Primary TIN": (tpTIN) => {
             //let newREline = "";
@@ -498,11 +407,27 @@ db = {
             }
             return val;
         },
+        "Case/Portfolio": (val) => {
+            if (val && !val.match(/\{\{\{.+?\}\}\}/)) { return val }
+            let pfNum = db.summData["Portfolio Number"]?.replace(/^[^]*?(\d{8})[^]*$/,"$1");
+            let caseNN = db.summData["Case Name and Number"];
+            if (!caseNN) { caseNN =  document.querySelector(`[data-input="Case Name and Number"]`)?.value }
+            let caseNum = caseNN?.replace(/^(?:\[[^\]]+\]|) *[^\*]+\*[X\d\-]* - (\d{8})[^]*?$/,"$1");
+            let name = caseNN?.replace(/^(?:\[[^\]]+\]|) *([^\*]+) \*[X\d\-]* - \d{8}[^]*?$/,"$1").trim();
+            let txt = `${name} (${caseNum}), Portfolio - ${pfNum}`;
+            if (txt.match(/undefined/)) { txt = null } // leave '{{{field name}}}'
+            let parentElem = getInput("Case/Portfolio")?.parentElement?.parentElement;
+            if (parentElem) {
+                //parentElem.remove();
+                parentElem.classList.add("hidden");
+            }
+            return txt;
+        },
         "Secondary TIN": (spTIN) => {
             //let newREline = "";
             let auth = getInput("Tax Authority")?.value || "IRS";
             let elem = document.querySelector(`[data-input="Secondary TIN"]`);
-            //let spTIN = db.summData["Case Name and Number"]?.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+$/,"$1");
+            //let spTIN = db.summData["Case Name and Number"]?.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+/,"1");
             if (spTIN?.length === 4 || spTIN.match(/XXX\-XX\-\d{4}/)) {
                 if (spTIN.match(/XXX\-XX\-\d{4}/)) {
                     spTIN = `SSN: ${spTIN}`;
@@ -515,11 +440,6 @@ db = {
             }
             return spTIN;
         },
-        "Name Merge": (val) => {
-            val = nameMergeHandler(val);
-            fixAligns();
-            return val;
-        },
         "Control Number": (val) => {
             if (!val) {
                 let aur = db.summData["Reference #/AUR"]?.trim();
@@ -530,34 +450,97 @@ db = {
             fixAligns();
             return val;
         },
-       /* "Notice Type": (val) => {
-            let type = db.summData["Notice Type"];
-            let num = db.summData["Notice Number"];
-            let typeField = noticeType;
-            let numField = noticeNumber;
-            if (type.match(/n.?a/i) && num.match(/n.?a/i)) {
-                val = "{{{Notice Type}}}";
-            } else if (!type.match(/n.?a/i) && num.match(/n.?a/i)) {
-                val = type;
-            } else if (type.match(/n.?a/i) && !num.match(/n.?a/i)) {
-                val = num;
-            } else if (!type.match(/n.?a/i) && !num.match(/n.?a/i)) {
-                val = type + `</span></p><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">NOTICE NUMBER:\t\t${num}`;
+        "Balance Due" : (val) => {
+            if (!val) { return `{{{Balance Due}}}` }
+            if (!val.match(/^\$/)) {
+                val = "$"+val;
+            }
+            return fixAmounts(val);
+        },
+        "Docs List": (val) => {
+            //console.warn(val)
+            //let test = textToHTML(val, {isTemporary: true, doubleSpace: false, testAlign: false});
+            val = getTextLines(val) || val;
+            let lines = val.split(/\n+/g);
+            let arr = [];
+            for (let l in lines) {
+                let line = lines[l];
+                let num = parseInt(l) + 1;
+                line = `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;"><span id="docsListText${num}" class="unsure" style="font-style: italic; color: blue;">${line}</span></span></p>`;
+                arr.push(line);
+            }
+            return arr.join("");
+        },
+        "TA Address": (val) => {
+            //return textToHTML(val, {isTemporary: false, doubleSpace: false});
+            let lines = val.split(/\n+/g);
+            let arr = [];
+            for (let l in lines) {
+                let line = lines[l];
+                line = `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">${line}</span></p>`;
+                arr.push(line);
+            }
+            return arr.join("");
+        },
+        "TA Fax": (val) => {
+            let pcw = getInput("Pre-Consult Review");
+            if (val === "N" || val.match(/^No(ne|)/i)) {
+                let text = pcw?.value;
+                if (text) {
+                    pcw.value = text.replace(/^- Fax number in notice\?/m,"- No fax number in notice.");
+                }
+                return "";
+            } else if (val.match(/\(?\d{3}\)?[ \-]?\d{3}-?\d{4}/)) {
+                // implement fixPhone() here instead?
+                let text = pcw?.value;
+                if (text) {
+                    pcw.value = text.replace(/^- Fax number in notice\?/m,"- Fax number in notice.");
+                }
             }
             return val;
-        },*/
-        /*"Case Name and Number": (val) => {
-            let parts = val.replace(/^([^*]+)\*([X\d\-]{4-10}) - (\d{8})$/);
-            data["Case Name"] = parts[1];
-            let tin = parts[2];
-            data["Case Number"] = parts[3];
-            if (tin.toString().length > 4) {
-                data["EIN"] = tin;
-            } else {
-                data["SSN"] = tin;
+        },
+        /*"Pre-Consult Review": (val) => {
+            let indicates = val.match(/^- Notice (indicates .+?)$/m) || "";
+            if (indicates !== "") {
+                indicates = indicates[1];
+                //indicates = fillValues(indicates,"inputs"); // changes {{{}}} before data-output
+                let indHTML = loadOutputFields(indicates);
+                let noticeIndicates = document?.getElementById("noticeIndicates") || null;
+                //pcw.value = pcw.value.replace(/^- Notice indicates/m,`- Notice ${indicates}`);
+                if (noticeIndicates) {
+                    noticeIndicates.innerHTML = indHTML;
+                }
+                //console.log(pcw.value)
             }
-            return val;
+            let notes = textToHTML(val, {isTemporary: false, doubleSpace: false});
+            //let notes = val?.replace(/(\n)+/g, `</span></p><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">`);
+            return notes //`<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${notes}</span></p>`
+            + `<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${signDate("jklueck")}</span></p>`;
         },*/
+        "Pre-Consult Review": (val) => { //9.24.26
+            let indicates = val.match(/^- Notice (indicates .+?)$/m) || "";
+            let pcw = getInput("Pre-Consult Review");
+            if (indicates !== "") {
+                indicates = indicates[1];
+                //indicates = fillValues(indicates,"inputs"); // changes {{{}}} before data-output
+                let indHTML = loadOutputFields(indicates);
+                //console.log(indicates)
+                indicates = fillInText(indicates);
+                console.log(indicates)
+                let noticeIndicates = document?.getElementById("noticeIndicates") || null;
+                pcw.value = val.replace(/^- Notice indicates.*/m,`- Notice ${indicates}`);
+                if (noticeIndicates) {
+                    noticeIndicates.innerHTML = indHTML;
+                    fillOutputs("noticeIndicates");
+                }
+                //loadOutputField(html,name,value)
+                //console.log(pcw.value)
+            }
+            let notes = textToHTML(val, {isTemporary: false, doubleSpace: false});
+            //let notes = val?.replace(/(\n)+/g, `</span></p><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">`);
+            return notes //`<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${notes}</span></p>`
+            + `<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${signDate("jklueck")}</span></p>`;
+        },
     },
     patterns: {
         "Require full SSN": /(?:^|[^\dL])(12C|3219(?![AN])|CP11|CP12|CP22A|CP23|CP24|CP71C|566|525|915)(?:[^\d]|$)/i,
