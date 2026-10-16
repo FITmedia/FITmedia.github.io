@@ -287,7 +287,7 @@ db = {
             let num = getInput("Notice Number").value;
             let dbType = types[num]?.main || "";
             if (val === "") {
-                updateNoticeType(val);
+                updateNoticeType(num);
                 fixAligns();
                 return dbType;
             }
@@ -304,7 +304,7 @@ db = {
                 hidElem.parentElement.classList.remove("hidden");
             }
             if (e?.type !== "keyup") {
-                updateNoticeType(val);
+                updateNoticeType(num);
                 fixAligns();
             }
             return val;
