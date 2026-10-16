@@ -410,6 +410,11 @@ function isBusiness() {
     return isBusiness;
 }
 
+function isState() {
+    let taField = getInput("Tax Authority");
+    if (taField?.value !== "IRS") { return true }
+}
+
 function isHTML(value) {
     // returns boolean
     return !!value?.match(/(<br>|<[^>]+?>[^]*?<\/[^>]+?>)/);
@@ -450,9 +455,9 @@ function fillOutputs(id) { // 10.1.26
         let inp =  getInput(name);
         // if inp is undefined, there is no input element of that name => set to summ val
         // if inp returns an input element, but its value == "" => set to summ val
-        console.warn(inp)
+        //console.warn(inp)
         if (!inp || inp.value === "") {
-            console.log("No input, or input value is blank.")
+            //console.log("No input, or input value is blank.")
             let value = db.summData[name];
             value = (value && !value.match(/(^$|n.a)/i)) ? value : "";
             if (inp) {
@@ -461,7 +466,7 @@ function fillOutputs(id) { // 10.1.26
             }
             //getOutput(name).setValue(value || `{{{${name}}}}`)
         } else {
-            console.log(`Input found with value: "${inp.value}".`)
+            //console.log(`Input found with value: "${inp.value}".`)
             updateFromInput(inp);
         }
     }
@@ -794,6 +799,28 @@ function fixDates(html) {
         html = html.replace(patt," "+d);
     }
     return html;
+}
+
+function fixYears(txt) {
+    // match, sort, and reformat case years
+    let ms = txt.matchAll(/(?:^|[^\d])((?:19|20)\d{2})(?!\d)/g);
+    if (!ms) { return "" }
+    let matches = [...ms];
+    let yrs = [];
+    for (let m in matches) {
+        let year = matches[m][1];
+        yrs.push(year);
+    }
+    yrs = yrs.sort();
+    if (yrs.length === 1) {
+        return yrs[0];
+    } else if (yrs.length === 2) {
+        return `${yrs[0]} and ${yrs[1]}`;
+    } else if (yrs.length > 2) {
+        let finalYr = yrs.pop();
+        let yrsTxt = `${yrs.join(", ")}, and ${finalYr}`;
+        return yrsTxt;
+    }
 }
 
 function fixAmounts(html) {
