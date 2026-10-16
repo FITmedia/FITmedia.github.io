@@ -342,6 +342,7 @@ db = {
         },
         "Primary TIN": (tpTIN) => {
             //let newREline = "";
+            tpTIN = tpTIN.trim();
             let auth = db.summData["Tax Authority"] || "IRS";
             let elem = getInput("Primary TIN");
             let caseNN = getInput("Case Name and Number")?.value.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+$/,"$1");
@@ -425,6 +426,7 @@ db = {
         },
         "Secondary TIN": (spTIN) => {
             //let newREline = "";
+            spTIN = spTIN.trim();
             let auth = getInput("Tax Authority")?.value || "IRS";
             let elem = document.querySelector(`[data-input="Secondary TIN"]`);
             //let spTIN = db.summData["Case Name and Number"]?.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+/,"1");
