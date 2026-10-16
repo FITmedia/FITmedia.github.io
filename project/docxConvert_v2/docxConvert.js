@@ -1212,6 +1212,7 @@ function handleSSNNotes(ssnStatus) {
     let pcwText = pcwField?.value || "";
     let caseField = document.querySelector("[data-input='Case Name and Number']");
     let caseText = caseField?.value || "";
+    let tinStatusDD = document.getElementById("tinStatusDD");
     let patt = /SSN digits\? For which TP\?/;
     let replace = (m1, m2) => {
         let repl = "";
@@ -1219,19 +1220,27 @@ function handleSSNNotes(ssnStatus) {
         switch (m1) {
             case "L":
                 repl = `Last 4 SSN digits in notice.`;
+                tinStatusDD.value = "L";
                 break;
             case "F":
                 repl = `Full SSN shown in notice.`;
+                tinStatusDD.value = "F";
                 break;
             case "N":
                 repl = `No SSN shown in notice.`;
+                tinStatusDD.value = "N";
                 skip = true;
                 break;
             case "A":
                 repl = `Notice asks for TP's ID number.`;
+                tinStatusDD.value = "A";
+                break;
+            case "E":
+                repl = `Full EIN in notice.`;
+                tinStatusDD.value = "E";
                 break;
             default:
-            	repl = `SSN digits? For which TP?`;
+                repl = `SSN digits? For which TP?`;
                 skip = true;
         }
         if (skip) { return repl }
