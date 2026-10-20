@@ -161,7 +161,7 @@ function fillInText(text) {
 	return text;
 }
 
-function updateNoticeType(num) {
+function updateNoticeType(num) { // 10.20.26
     num = num || noticeNumber?.value; // give input value priority
     let type = noticeType?.value;
     let types = db.noticeTypes;
@@ -171,8 +171,10 @@ function updateNoticeType(num) {
     let faxNote = pcw?.value.match(/^- Fax number in notice\?$/m);
     let taAdd = document.querySelector(`[data-input="TA Address"]`);
     let taFaxNum = document.querySelector(`[data-input="TA Fax"]`);
-    if (type === "" || type.trim().match(/^n.?a$/im) || type === num) {
+    console.log("num = "+num+"\ntype = "+type)
+    if (type.trim().match(/^n.?a$/im) || type === num) {
         noticeType.value = ""; // clear out 'n/a' or dupe value
+        console.log("Notice Type cleared.")
     }
     let arr = [];
     for (let i in types) {
@@ -180,6 +182,12 @@ function updateNoticeType(num) {
         let issue = types[i]?.main;
         let hasFax = types[i]?.hasFax;
         let ssnStatus = types[i]?.ssnStatus;
+        let referNumTxt = types[i]?.hasReferNum ? ` (reference #: {{{Refer Number}}})` : "";
+        referNumTxt = loadOutputFields(referNumTxt);
+        //let ctrlNumTxt = types[i]?.hasControlNum ? ` (reference #: {{{Refer Number}}})` : "";
+        let hasExaminerNum = types[i]?.hasExaminerNum;
+        let hasExaminerName = types[i]?.hasExaminerName;
+        let toLineElem = document.getElementById("toLine");
         if (num.toUpperCase() === testName.toUpperCase() && issue) {
             //console.log(types[i])
             if (!arr.includes(issue)) { arr.push(issue) }
@@ -194,6 +202,18 @@ function updateNoticeType(num) {
                     noticeIndicates.innerHTML = indicates;
                 }
                 //console.log(pcw.value)
+            }
+            if (document.getElementById("referenceText")) {
+                document.getElementById("referenceText").innerHTML = referNumTxt;
+            }
+            if (toLineElem) {
+                if (hasExaminerName && hasExaminerNum) {
+                    toLineElem.innerText = "To {{{Examiner Name}}} ({{{Examiner ID}}}):";
+                } else if (hasExaminerNum) {
+                    toLineElem.innerText = "To Tax Examiner ({{{Examiner ID}}}):";
+                } else {
+                    toLineElem.innerText = "To Whom It May Concern:";
+                }
             }
             if (taAdd && taAdd.value === "") {
                 taAdd.value = types[i]?.taAddress || "";
@@ -243,11 +263,11 @@ function updateNoticeType(num) {
     if (arr.length > 0) {
         //console.log(noticeType.value.length);
         if (noticeType.value === "") {
-            noticeType.value = arr.join(" / "); 
+            noticeType.value = arr.join(" / ");
         }
     }
-	//let openTemp = db.templates["Opening"]();
-	//getSection("Opening").setContents(openTemp);
+    //let openTemp = db.templates["Opening"]();
+    //getSection("Opening").setContents(openTemp);
 }
 
 function loadInputFields(html) {
@@ -289,7 +309,7 @@ function loadOutputField(html,name,value) {
     let varText = `{{{${name}}}}`;
     let outElem = document.querySelector(`[data-output="${name}"]`);
     let inpElem = document.querySelector(`[data-input="${name}"]`);
-    inpElem.value = value;
+    if (inpElem && (value || value === "")) { inpElem.value = value }
     value = value || varText;
     if (outElem && inpElem) {
         updateFromInput(inpElem);
