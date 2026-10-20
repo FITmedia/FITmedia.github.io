@@ -623,6 +623,12 @@ db = {
         "CP501": { main: "Balance Due", hasFax: false, indicates: "states that the IRS is sending a reminder about a balance due of {{{Balance Due}}} for the {{{Tax Year}}} tax year." },
         "CP503": { main: "Balance Due", sub: "Second Notice", ssnStatus: "N", indicates: "indicates that the IRS is assessing a balance due of {{{Balance Due}}} for tax year {{{Tax Year}}}." },
         "CP504": { main: "Balance Due", sub: "Final Notice", ssnStatus: "N", indicates: "indicates that the IRS is assessing a balance due of {{{Balance Due}}} for tax year {{{Tax Year}}}." },
+        "CP567": {
+            main: "Rejected ITIN Application",
+            ssnStatus: "N",
+            hasControlNum: true,
+            indicates: "indicates the IRS rejected the Form W-7, Application for ITIN.",
+        },
         "CP2000": { 
             main: "Unreported Income", 
             variation: "Proposed Changes", 
