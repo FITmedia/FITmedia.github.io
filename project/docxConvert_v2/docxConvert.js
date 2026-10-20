@@ -754,18 +754,6 @@ function expandStateNames(list) {
     return list;
 }
 
-function fixTaxYears() {
-    // potentially pass string to indicate final format
-    // default: 2022, 2023, 2024
-    let tyElem = document.querySelector("[data-input='Tax Year']");
-    let tyText = tyElem?.value;
-    if (!tyText) { return "" }
-    if (!tyText.match(/(19|20)\d{2}[^\d]+(19|20)\d{2}/)) { return tyText }
-    let ms = tyText.match(/(19|20)\d{2}/g);
-    // sort years
-    // join with ", "
-}
-
 function getInputValues() {
     let fields = document.querySelectorAll("input[data-input],textarea[data-input]:not(#summ)");
     let data = db.summData;
