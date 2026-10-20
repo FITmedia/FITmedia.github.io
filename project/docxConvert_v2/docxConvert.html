@@ -146,10 +146,16 @@
     submitBtn.addEventListener("click", async (e) => { await fileToHTML() });
     saveBtn.addEventListener("click", async (e) => { await htmlToFile("output") });
     document.addEventListener("paste", async (e) => {
-        if (e.target !== caseNameNum && e.target !== pfNumFld) { return }
-        navigator.clipboard.readText().then((txt) => {
-            setSaveName();
-        })
+        if (e.target === caseNameNum && e.target === pfNumFld) {
+            navigator.clipboard.readText().then((txt) => {
+                setSaveName();
+            })
+        }
+        if (e.target.getAttribute("data-input")?.match(/TIN/)) {
+            navigator.clipboard.readText().then((txt) => {
+                e.target.value = txt.trim();
+            })
+        }
     })
     perspective.addEventListener("change", (e) => {
         //e.preventDefault();
