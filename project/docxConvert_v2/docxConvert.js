@@ -70,7 +70,8 @@ async function fileToHTML() {
 }
 
 document.addEventListener("focusout", (e) => {
-    let name = e.target.getAttribute("data-input");
+    fillOutputs();
+    /*let name = e.target.getAttribute("data-input");
     if (!name) { return }
     let inValue = e.target.value;
     let outValue = inValue;
@@ -97,6 +98,13 @@ document.addEventListener("focusout", (e) => {
         } else {
             out.innerText = outValue;
         }
+    }*/
+});
+
+document.addEventListener("change", (e) => {
+    if (e.target.tagName === "SELECT" || e.target.getAttribute("type") === "radio" || e.target.getAttribute("type") === "checkbox") {
+        // other inputs and textareas are handled via 'focusout' listener
+        fillOutputs();
     }
 });
 
@@ -447,7 +455,8 @@ function fillValues(html,type) {
 	return html;
 }
 
-function fillOutputs(id) { // 10.1.26
+function fillOutputs(id) { // 10.20.26
+    id = !id ? "output" : id;
     let context = document.getElementById(id) || document.getElementById("output");
     let outs = context.querySelectorAll(`[data-output]`);
     for (let out of outs) {
