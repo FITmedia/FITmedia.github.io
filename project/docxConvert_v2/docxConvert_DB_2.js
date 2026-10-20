@@ -237,8 +237,10 @@ db = {
             return val;
         },
         "Tax Year": (val,e) => {
+            if (!val) { return val }
             if (e?.type === "keyup") { return val }
-            val = fixTaxYears(val);
+            val = fixYears(val);
+            getInput("Tax Year").value = val;
             return val;
         },
         /*"Tax Form": (val) => {
