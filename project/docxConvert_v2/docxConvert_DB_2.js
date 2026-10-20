@@ -769,7 +769,7 @@ db = {
             main: "Request for Taxpayer Advocate Service Assistance",
             hasFax: true,
             taAddress: "Taxpayer Advocate Service\n7940 Kentucky Dr\nMS 11 G\nFlorence, KY 41042",
-            taFax: "(855) 828-2723",
+            taFaxNum: "(855) 828-2723",
         },
         "14039": { 
             main: "Identity Theft Affidavit", 
