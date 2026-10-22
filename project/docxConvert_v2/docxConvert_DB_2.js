@@ -542,6 +542,7 @@ db = {
                 //console.log(pcw.value)
             }
             let notes = textToHTML(val, {isTemporary: false, doubleSpace: false});
+            reLinesHandler(val);
             //let notes = val?.replace(/(\n)+/g, `</span></p><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">`);
             return notes //`<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${notes}</span></p>`
             + `<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${signDate("jklueck")}</span></p>`;
@@ -638,6 +639,12 @@ db = {
             ssnStatus: "LB", 
             hasControlNum: true, 
             indicates: "indicates that the IRS has identified items that were not reported on the {{{Tax Year}}} Federal Tax Return." 
+        },
+        "CP2000A": {
+            main: "Change to Proposed Amount Due",
+            ssnStatus: "LB",
+            hasControlNum: true,
+            indicates: "indicates that the IRS updated the proposed amount due on the {{{Tax Year}}} Federal Tax Return.",
         },
         "CP2501": { main: "Tax Return Mismatch" },
         "CP5071": { main: "ID and Return Verification" },
