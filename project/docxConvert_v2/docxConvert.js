@@ -401,15 +401,18 @@ function updateFromInput(elem,e) {
     }
 }
 
-function autoFillFields() { // 10.1.26
-    // consider creating a db object to loop through
+function autoFillFields() {
+    // consider creating a db object to loop through...
+    // or is this what db.special is doing?
     if (getInput("Tax Authority")?.value !== "") {
         if (getInput("Tax Form")?.value.match(/(^$|n.?a)/i)) {
             let taValue = getInput("Tax Authority")?.value;
             if (isBusiness()) { return } // TODO: add .ptrForm, .scorpForm, .corpForm
             let tfValue = db.stateInfo[taValue]?.form || "";
             let elem = getInput("Tax Form");
-            elem.value = tfValue;
+            if (elem && elem.value === "" && !isBusiness()) {
+                elem.value = tfValue;
+            }
         }
     }
 }
