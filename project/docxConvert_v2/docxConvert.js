@@ -593,6 +593,24 @@ function addREline(title,value) {
     };
 }
 
+function reLinesHandler(text) {
+    let ms = text.matchAll(/^\- ([A-Z \-\.]+): (.+)$/gm);
+    let arr = [...ms];
+    let reAls = document.querySelectorAll(".re-align");
+    let allTitles = [];
+    for (let elem of reAls) {
+        let checkTitle = elem.parentElement?.innerText.replace(/^([^:]+): [^]+$/,"$1");
+        allTitles.push(checkTitle);
+    }
+    console.log(allTitles);
+    arr.forEach((ea) => {
+        let title = ea[1];
+        if (allTitles.includes(title)) { return }
+        let value = ea[2];
+        addREline(title,value).append();
+    });
+}
+
 async function htmlToFile(id) {
     // Convert HTML to DOCX
     let htmlBackup = output.innerHTML;
@@ -985,19 +1003,31 @@ function setUnsureStyles() {
                 //let parent = e.target.parentElement;
                 //let parentMarked = parent.style.fontStyle === "italic" && parent.style.color === "blue";
                 if (isMarked) {
-                    e.currentTarget.style = "";
+                    let id = e.currentTarget?.id;
+                    if (id) {
+                        let elems = document.querySelectorAll(`#${id}`);
+                        elems.forEach((ea) => {
+                            ea.style = "";
+                        });
+                    }
+                    //e.currentTarget.style = "";
                     /*if (parent.classList.contains("unsure") && parentMarked) {
                         parent.style = "";
                     }*/
-                    let id = e.currentTarget?.id;
                     if (!id) { return }
                     sureStatus[id] = true;
                 } else if (!isMarked) {
-                    e.currentTarget.style = "font-style: italic; color: blue;";
+                    let id = e.currentTarget?.id;
+                    if (id) {
+                        let elems = document.querySelectorAll(`#${id}`);
+                        elems.forEach((ea) => {
+                            ea.style = "font-style: italic; color: blue;";
+                        });
+                    }
+                    //e.currentTarget.style = "font-style: italic; color: blue;";
                     /*if (parent.classList.contains("unsure") && !parentMarked) {
                         parent.style = "font-style: italic; color: blue;";
                     }*/
-                    let id = e.currentTarget.id;
                     if (!id) { return }
                     sureStatus[id] = false;
                 }
