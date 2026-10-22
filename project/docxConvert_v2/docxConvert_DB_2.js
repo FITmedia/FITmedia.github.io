@@ -178,6 +178,7 @@ db = {
         "843": "Form 843, Claim for Refund and Request for Abatement",
         "SS CARD": "Social Security Card",
         "3911": "Form 3911, Taxpayer Statement Regarding Refund",
+        "12661": "Form 12661, Disputed Issue Verification",
         "14039": "Form 14039, Identity Theft Affidavit",
     },
     formPatterns: [
@@ -191,11 +192,11 @@ db = {
         [/(SS Card)()([^]*?)$/],
     ],
     defaults: { // value to put in data-input if blank
-        "Tax Form": () => {
+        /*"Tax Form": () => {
             let ta = getInput("Tax Authority")?.value || "IRS";
             let form = (ta !== "IRS") ? (db.stateInfo[ta]?.form || "") : "1040";
             return form;
-        },
+        },*/
         "2848": () => {
             let ta = getInput("Tax Authority")?.value || "IRS";
             let poa = (ta !== "IRS") ? (db.stateInfo[ta]?.poa || "") : "2848";
@@ -228,7 +229,7 @@ db = {
         "Tax Authority": (val) => {
             let taxForm = getInput("Tax Form");
             let form = (val !== "IRS") ? (db.stateInfo[val]?.form || "") : "1040";
-            if (taxForm && !isBusiness()) {
+            if (taxForm && taxForm.value === "" && !isBusiness()) {
                 taxForm.value = form;
             }
             // else if isBusiness
@@ -243,12 +244,12 @@ db = {
             getInput("Tax Year").value = val;
             return val;
         },
-        /*"Tax Form": (val) => {
+        "Tax Form": (val) => {
             if (val === "") {
-                val = (db.summData["Tax Authority"]?.match(/IRS/) && !isBusiness()) ? "1040" : `{{{Tax Form}}}`;
+                val = (db.summData["Tax Authority"]?.match(/IRS/) && !isBusiness()) ? "1040" : "";
             }
             return val;
-        },*/
+        },
         "Notice Number": (num,e) => {
             let types = db.noticeTypes;
             let inType = getInput("Notice Type").value;
@@ -668,6 +669,14 @@ db = {
             banner: `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold;">Attn: ICO Rejects Team {{{Rejects Team}}} | Control #: {{{Control Number}}} | Batch: {{{Batch Number}}}</span></p>`,
         },
         "LTR 474C": { main: "Error Correction", hasReferNum: true, ssnStatus: "L", indicates: "indicates that the IRS made changes to correct purported errors on the {{{Tax Year}}} Federal Tax Return." },
+        "LTR 3338C": {
+            main: "Acknowledgement Letter",
+            sub: "Audit Reconsideration",
+            ssnStatus: "L",
+            hasFax: true,
+            hasReferNum: true,
+            indicates: "acknowledges the request for audit reconsideration for the {{{Tax Year}}} tax year and provides instructions on how to proceed.",
+        },
         "LTR 3852C": { 
             main: "Entity Misclassification", 
             hasFax: true,
@@ -715,10 +724,10 @@ db = {
             ssnStatus: "F",
             indicates: "indicates that the IRS didn't change the previously proposed tax increase because the information sent doesn't justify a change.",
         },
-        "Letter 566-B": { main: "Audit Notice", hasFax: true, indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
-        "Letter 566-S": { main: "Audit Notice", hasFax: true }, // often Schedule C (always?)
-        "Letter 566-T": { main: "Audit Notice", hasFax: true, ssnStatus: "F", indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
-        "Letter 566-J": { main: "Audit Notice", hasFax: true, indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
+        "Letter 566-B": { main: "Initial Contact", hasFax: true, hasExaminerName: true, hasExaminerNum: true, ssnStatus: "F", indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
+        "Letter 566-S": { main: "Initial Contact", hasFax: true, hasExaminerName: true, hasExaminerNum: true, ssnStatus: "F", indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." }, // often Schedule C (always?)
+        "Letter 566-T": { main: "Initial Contact", hasFax: true, hasExaminerName: true, hasExaminerNum: true, ssnStatus: "F", indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." }, // (always?)
+        "Letter 566-J": { main: "Initial Contact", hasFax: true, hasExaminerName: true, hasExaminerNum: true, ssnStatus: "F", indicates: "indicates that the IRS is auditing the {{{Tax Year}}} Federal Income Tax Return." },
         "Letter 692-M": {
             main: "Audit Notice",
             hasFax: true,  
