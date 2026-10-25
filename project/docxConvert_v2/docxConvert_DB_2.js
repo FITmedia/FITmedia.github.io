@@ -684,6 +684,13 @@ db = {
             hasReferNum: true,
             indicates: "acknowledges the request for audit reconsideration for the {{{Tax Year}}} tax year and provides instructions on how to proceed.",
         },
+        "LTR 3340C": {
+            main: "Audit Reconsideration Denial",
+            ssnStatus: "L",
+            hasReferNum: true,
+            indicates: "indicates that the IRS is denying the request for audit reconsideration and not changing the original audit assessment of {{{Balance Due}}} for {{{Tax Year}}}.",
+        },
+
         "LTR 3852C": { 
             main: "Entity Misclassification", 
             hasFax: true,
