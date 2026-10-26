@@ -287,6 +287,12 @@ input[type="checkbox"]
   height: 13px;
 }
 
+.input-note:hover {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
 .mobile-controls>button {
 	display: none;
 }
