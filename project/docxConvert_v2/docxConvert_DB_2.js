@@ -633,18 +633,18 @@ db = {
             hasControlNum: true,
             indicates: "indicates the IRS rejected the Form W-7, Application for ITIN.",
         },
-        "CP2000": { 
-            main: "Unreported Income", 
-            variation: "Proposed Changes", 
-            ssnStatus: "LB", 
-            hasControlNum: true, 
-            indicates: "indicates that the IRS has identified items that were not reported on the {{{Tax Year}}} Federal Tax Return." 
+        "CP2000": {
+            main: "Unreported Income",
+            variation: "Proposed Changes",
+            ssnStatus: "LB",
+            hasControlNum: true,
+            indicates: "indicates that the IRS has identified items t, resulting in a proposed amount due of {{{Balance Due}}}.",
         },
         "CP2000A": {
             main: "Change to Proposed Amount Due",
             ssnStatus: "LB",
             hasControlNum: true,
-            indicates: "indicates that the IRS updated the proposed amount due on the {{{Tax Year}}} Federal Tax Return.",
+            indicates: "indicates that the IRS {{{Increased or Decreased}}} the proposed amount due on the {{{Tax Year}}} Federal Tax Return to {{{Balance Due}}}.",
         },
         "CP2501": { main: "Tax Return Mismatch" },
         "CP5071": { main: "ID and Return Verification" },
