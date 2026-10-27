@@ -1,9 +1,9 @@
 const db = {
   localSave: true,
   searches: {
-    searchIRS: "site:irs.gov ",
-    searchIntuit: "site:ttlc.intuit.com ",
-    searchUScode: "site:law.cornell.edu/uscode/text/26 "
+    searchIRS: "site: irs.gov ",
+    searchIntuit: "site: ttlc.intuit.com ",
+    searchUScode: "site: law.cornell.edu/uscode/text/26 "
   }
 };
 
