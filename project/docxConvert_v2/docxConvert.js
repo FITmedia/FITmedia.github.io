@@ -104,7 +104,11 @@ document.addEventListener("focusout", (e) => {
 document.addEventListener("change", (e) => {
     if (e.target.tagName === "SELECT" || e.target.getAttribute("type") === "radio" || e.target.getAttribute("type") === "checkbox") {
         // other inputs and textareas are handled via 'focusout' listener
+        let ssnStatus = e.target.value;
         fillOutputs();
+        if (e.target.id === "tinStatusDD") {
+            handleSSNNotes(ssnStatus);
+        }
     }
 });
 
