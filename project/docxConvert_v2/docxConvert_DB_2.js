@@ -830,6 +830,7 @@ db = {
         "Idaho": { form: "Form 40" },
         "Illinois": { form: "IL-1040" },
         "Indiana": { form: "IT-40", poa: "POA-1" },
+        "Kansas": { form: "K-40", poa: "DO-10" },
         "Kentucky": { form: "Form 740" },
         "Maryland": { form: "502", poa: "548", agency: "Comptroller of Maryland" },
         "Michigan": { form: "MI-1040", agency: "Michigan Department of Treasury" },
