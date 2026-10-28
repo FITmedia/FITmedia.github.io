@@ -583,11 +583,32 @@ function fixAligns() {
 
 function addREline(title,value) {
     title = title.toUpperCase();
-    let html = `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">${title}:		<span class="re-align">${value}</span></span></p>`;
+    let html = `<p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">${title}:     <span class="re-align">${value}</span></span></p>`;
+    let reLns = document.querySelectorAll(".re-align");
+    let dupe = false;
+    let patt = new RegExp(`^${title}:`);
+    reLns.forEach((ea) => {
+        if (ea.parentElement.innerText.match(patt)) {
+            if (ea.innerText === value) {
+                // if title and value match, do nothing
+                dupe = true;
+            } else {
+                // if title matches, but value differs
+                // change value of existing
+                ea.innerText = value;
+                dupe = true;
+            }
+        }
+    });
+    // if title doesn't match
+    // add new RE Line (regardless of value)
+    if (dupe) {
+        return { append: () => { return } }
+    }
     let newREline = parseHTML(html);
-    return { 
-        getHTML: () => html, 
-        getElement: () => newREline, 
+    return {
+        getHTML: () => html,
+        getElement: () => newREline,
         append: () => {
             let reElems = document.querySelectorAll(".re-align");
             if (reElems.length === 0) { return }
