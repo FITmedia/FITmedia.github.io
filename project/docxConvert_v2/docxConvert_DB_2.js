@@ -177,6 +177,7 @@ db = {
         "2553": "Form 2553, Election by a Small Business Corporation",
         "8832": "Form 8832, Entity Classification Election",
         "843": "Form 843, Claim for Refund and Request for Abatement",
+        "4564": "Form 4564, Information Document Request",
         "5564": "Form 5564, Notice of Deficiency – Waiver",
         "SS CARD": "Social Security Card",
         "3911": "Form 3911, Taxpayer Statement Regarding Refund",
@@ -771,6 +772,14 @@ db = {
             taFax: true,
             ssnStatus: "F",
             indicates: "indicates that the IRS has received additional information and made changes to the {{{Tax Year}}} Corporate Income Tax Return, resulting in a balance due of ${{{Balance Due}}}."
+        },
+        "Letter 3254": {
+            main: "Appointment Confirmation Letter",
+            ssnStatus: "L",
+            hasFax: true,
+            hasExaminerName: true,
+            hasExaminerNum: true,
+            indicates: "indicates that the IRS is confirming an appointment for an initial taxpayer interview regarding tax year {{{Tax Year}}}, and has provided Form 4564, Information Document Request.",
         },
         // --- NY ---
         "DTF-948": { main: "Request for Information", hasFax: true, ssnStatus: "N", taFax: "(518) 391-4568", taAddress: "New York State\nDepartment of Taxation and Finance\nAudit Division-Personal Income Tax Desk\nP.O. Box 15270\nAlbany, NY 12212-5270", indicates: "indicates that the New York State Department of Taxation and Finance is requesting more information about the {{{Tax Year}}} NYS income tax return.", taAddress: "New York State\nDepartment of Taxation and Finance\nAudit Division-Personal Income Tax Desk\nP.O. Box 15270\nAlbany, NY 12212-5270", }, // NYS
