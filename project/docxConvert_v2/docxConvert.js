@@ -715,7 +715,8 @@ function parseHTML(html) {
 
 function processHTML(elem,html) {
     loadInputFields(html);
-    html = fillOutputs(id).innerHTML;
+	elem.innerHTML = html;
+    html = fillOutputs(elem).innerHTML;
     html = loadOutputFields(html); // converts {{{}}} to "data-output"
     if (!db.inputKeyupListener) {
         document.addEventListener("keyup", (e) => {
