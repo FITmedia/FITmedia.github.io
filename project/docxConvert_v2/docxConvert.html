@@ -91,6 +91,7 @@
                 <input id="poaForm" class="hidden" data-input="2848" placeholder="2848">
                 <input id="repName" class="hidden" data-input="Representative" placeholder="Representative">
                 <input id="desig" class="hidden" data-input="Designation" placeholder="Designation">
+                <p><input id="abatement" type="checkbox" data-input="Abatement"><label for="abatement">Abatement Format</label></p>
                 <p><input id="auditRecon" type="checkbox" data-input="Audit Recon"><label for="auditRecon">Request Audit Reconsideration</label></p>
                 <p><span id="docsLabel">Docs List</span></p><textarea id="docsList" data-input="Docs List" placeholder="Docs List"></textarea>
                 <p>Taxing Authority Address</p><textarea id="taAddress" data-input="TA Address" placeholder="TA Address"></textarea>
@@ -239,6 +240,17 @@
         } else {
             elem.innerText = "";
             elem.classList.add("hidden");
+        }
+    });
+    abatement.addEventListener("change", (e) => {
+        let elem = document.querySelector(`[data-template="RE Section"]`);
+        let abateTemp = db.templates["RE Section FTA"]();
+        let stdTemp = db.templates["RE Section"]();
+        if (!elem || !temp) { return }
+        if (abatement.checked) {
+            processHTML(elem, abateTemp);
+        } else {
+            processHTML(elem, stdTemp);
         }
     });
     document.getElementById("numNote").addEventListener("click", (e) => {
