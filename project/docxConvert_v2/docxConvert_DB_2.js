@@ -525,29 +525,23 @@ db = {
             return notes //`<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${notes}</span></p>`
             + `<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${signDate("jklueck")}</span></p>`;
         },*/
-        "Pre-Consult Review": (val) => { //9.24.26
+        "Pre-Consult Review": (val) => { //10.28.26
             let indicates = val.match(/^- Notice (indicates .+?)$/m) || "";
             let pcw = getInput("Pre-Consult Review");
             if (indicates !== "") {
                 indicates = indicates[1];
-                //indicates = fillValues(indicates,"inputs"); // changes {{{}}} before data-output
                 let indHTML = loadOutputFields(indicates);
-                //console.log(indicates)
                 indicates = fillInText(indicates);
-                console.log(indicates)
                 let noticeIndicates = document?.getElementById("noticeIndicates") || null;
                 pcw.value = val.replace(/^- Notice indicates.*/m,`- Notice ${indicates}`);
                 if (noticeIndicates) {
                     noticeIndicates.innerHTML = indHTML;
-                    fillOutputs("noticeIndicates");
+                    fillOutputs(noticeIndicates);
                 }
-                //loadOutputField(html,name,value)
-                //console.log(pcw.value)
             }
             let notes = textToHTML(val, {isTemporary: false, doubleSpace: false});
             reLinesHandler(val);
-            //let notes = val?.replace(/(\n)+/g, `</span></p><p style="text-align: justify;"><span style="font-family:Calibri; font-size: 12pt;">`);
-            return notes //`<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${notes}</span></p>`
+            return notes 
             + `<p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt;">${signDate("jklueck")}</span></p>`;
         },
     },
@@ -957,13 +951,13 @@ db = {
                 tpTIN = `SSN: XXX-XX-XXXX`;
             }
             return `<section data-template="RE Section"><p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">RE: Request For Abatement of Penalties</span></p><br>
-                <p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">${isBusiness ? `{{{Name Merge}}}` : `{{{Primary Name}}}`} 		<span id="tpTINtext" class="unsure tp-align" style="font-style: italic; color: blue;">${tpTIN}</span></span></p>
+                <p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">${isBusiness ? `{{{Name Merge}}}` : `{{{Primary Name}}}`}        <span id="tpTINtext" class="unsure tp-align" style="font-style: italic; color: blue;">${tpTIN}</span></span></p>
                 ${secName?.value === "" ? "" : db.templates["Secondary TP"](true)}<br>
-                <p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">Type of Tax:			<span class="tp-align">${isBusiness ? "Form {{{Tax Form}}}, {{{Tax Form Title}}}" : "Form 1040, US Individual Income Tax Return"}</span></span></p><br>
+                <p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">Type of Tax:         <span class="tp-align">${isBusiness ? "Form {{{Tax Form}}}, {{{Tax Form Title}}}" : "Form 1040, US Individual Income Tax Return"}</span></span></p><br>
                 <p style="text-align: both;">`
-                    +`<span style="font-family:Calibri; font-size: 12pt; text-decoration: underline; font-weight: bold">Tax Period(s):</span>		<span class="fta-align" style="font-family:Calibri; font-size: 12pt; text-decoration: underline; font-weight: bold">Applicable Penalties:</span>`
+                    +`<span style="font-family:Calibri; font-size: 12pt; text-decoration: underline; font-weight: bold">Tax Period(s):</span>       <span class="fta-align" style="font-family:Calibri; font-size: 12pt; text-decoration: underline; font-weight: bold">Applicable Penalties:</span>`
                 +`</p><p style="text-align: both;">`
-                    +`<span style="font-family:Calibri; font-size: 12pt; font-weight: bold">{{{Tax Year List}}}</span>			<span class="fta-align" style="font-family:Calibri; font-size: 12pt; font-weight: bold">{{{Penalty List}}}</span></p></section>`
+                    +`<span style="font-family:Calibri; font-size: 12pt; font-weight: bold">{{{Penalty Years}}}</span>          <span class="fta-align" style="font-family:Calibri; font-size: 12pt; font-weight: bold">{{{Penalties}}}</span></p></section>`
         },
         "Opening": () => {
             let tpTIN = db.summData["Case Name and Number"]?.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+$/,"$1");
