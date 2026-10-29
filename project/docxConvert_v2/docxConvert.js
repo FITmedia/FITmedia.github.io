@@ -54,7 +54,7 @@ async function fileToHTML() {
     updateOtherItems();
     setSaveName();
     output.innerHTML = html;
-    html = fillOutputs(id).innerHTML;
+    html = fillOutputs(output).innerHTML;
     html = loadOutputFields(html); // converts {{{}}} to "data-output"
     if (!db.inputKeyupListener) {
         document.addEventListener("keyup", (e) => { 
@@ -482,27 +482,22 @@ function fillValues(html,type) {
 	return html;
 }
 
-function fillOutputs(id) { // 10.20.26
-    id = !id ? "output" : id;
-    let context = document.getElementById(id) || document.getElementById("output");
+function fillOutputs(elem) { // 10.28.26
+    let context = elem || document.getElementById("output");
     let outs = context.querySelectorAll(`[data-output]`);
     for (let out of outs) {
         let name = out.getAttribute("data-output");
-        let inp =  getInput(name);
+        let inp = getInput(name);
         // if inp is undefined, there is no input element of that name => set to summ val
         // if inp returns an input element, but its value == "" => set to summ val
-        //console.warn(inp)
         if (!inp || inp.value === "") {
-            //console.log("No input, or input value is blank.")
             let value = db.summData[name];
             value = (value && !value.match(/(^$|n.a)/i)) ? value : "";
             if (inp) {
                 inp.value = value;
                 updateFromInput(inp);
             }
-            //getOutput(name).setValue(value || `{{{${name}}}}`)
         } else {
-            //console.log(`Input found with value: "${inp.value}".`)
             updateFromInput(inp);
         }
     }
@@ -716,6 +711,23 @@ function parseHTML(html) {
     let elem = tempWrap.firstElementChild; // get tempContain
     tempWrap.remove();
     return elem;
+}
+
+function processHTML(elem,html) {
+    loadInputFields(html);
+    html = fillOutputs(id).innerHTML;
+    html = loadOutputFields(html); // converts {{{}}} to "data-output"
+    if (!db.inputKeyupListener) {
+        document.addEventListener("keyup", (e) => {
+            if (e.target.tagName !== "TEXTAREA") { updateFromInput(e.target,e) }
+        });
+        db.inputKeyupListener = true;
+    }
+    html = fixDates(html);
+    html = fixAmounts(html);
+    elem.innerHTML = html;
+    setUnsureStyles(); // changes style set by template to reflect user changes
+    fixAligns();
 }
 
 function fixMidInitial(text) {
@@ -1151,7 +1163,10 @@ function setDefaultValues(names) {
 }
 
 function updateFromSummary() {
-    if (db.summData.expedited || db.summData["Special Portfolio Needs"] === "Expedite") { expediteHandler() }
+    if (
+        db.summData.expedited || db.summData["Special Portfolio Needs"] === "Expedite"
+        || db.summData["Special Portfolio Needs"] === "Reasonable Cause"
+    ) { expediteHandler() }
     if (taxAuth.value === "" || taxAuth.value.trim().match(/^n.?a$/i)) {
         let name = db.summData["Authority"]?.trim() || db.summData["Tax Authority"]?.trim() || "";
         taxAuth.value = name;
@@ -1221,8 +1236,11 @@ function updateFromSummary() {
 }
 
 function expediteHandler() {
-    if (!db.summData.expedited && db.summData["Special Portfolio Needs"] !== "Expedite") { return }
-    btnBanner.classList.add("expedite");
+    if (db.summData.expedited || db.summData["Special Portfolio Needs"] === "Expedite") {
+        btnBanner.classList.add("expedite");
+    } else if (db.summData["Special Portfolio Needs"] === "Reasonable Cause") {
+        btnBanner.classList.add("rcpa");
+    }
 }
 
 function nameMergeHandler(txt) {
