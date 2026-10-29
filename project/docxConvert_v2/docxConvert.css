@@ -170,6 +170,16 @@ html, body {
   #e09200 10px,
   #e09200 20px
 );
+
+}
+.rcpa {
+  background: repeating-linear-gradient(
+	  45deg,
+	  #15b101,
+	  #15b101 10px,
+	  #118101 10px,
+	  #118101 20px
+	);
 }
 
 .mobile-controls .counter {
