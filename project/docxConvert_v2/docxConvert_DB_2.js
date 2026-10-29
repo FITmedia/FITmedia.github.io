@@ -635,7 +635,7 @@ db = {
             variation: "Proposed Changes",
             ssnStatus: "LB",
             hasControlNum: true,
-            indicates: "indicates that the IRS has identified items t, resulting in a proposed amount due of {{{Balance Due}}}.",
+            indicates: "indicates that the IRS has identified items that were not reported on the {{{Tax Year}}} Federal Tax Return, resulting in a proposed amount due of {{{Balance Due}}}.",
         },
         "CP2000A": {
             main: "Change to Proposed Amount Due",
