@@ -246,7 +246,7 @@
         let elem = document.querySelector(`[data-template="RE Section"]`);
         let abateTemp = db.templates["RE Section FTA"]();
         let stdTemp = db.templates["RE Section"]();
-        if (!elem || !temp) { return }
+        if (!elem || !abateTemp) { return }
         if (abatement.checked) {
             processHTML(elem, abateTemp);
         } else {
