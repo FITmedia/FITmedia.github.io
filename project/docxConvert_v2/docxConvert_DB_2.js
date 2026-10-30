@@ -158,6 +158,7 @@ db = {
         "8821": "Form 8821, Tax Information Authorization",
         "8": "Schedule 8812, Credits for Qualifying Children and Other Dependents",
         "8812": "Schedule 8812, Credits for Qualifying Children and Other Dependents",
+        "1116": "Form 1116, Foreign Tax Credit",
         "940": "Form 940, Employer's Annual Federal Unemployment Tax Return",
         "943": "Form 943, Employer's Annual Federal Tax Return for Agricultural Employees",
         // Note: there is no 940-X -- 940 has an "Amended" checkbox
@@ -586,12 +587,12 @@ db = {
             taAddress: "Department of the Treasury\nInternal Revenue Service\nKansas City, MO 64999-0010", 
             indicates: "indicates the IRS has made changes to the {{{Tax Year}}} Federal Tax Return based on information the taxpayer(s) provided." 
         },
-        "CP22A": { 
-            main: "Account Adjustment", 
+        "CP22A": {
+            main: "Account Adjustment",
             hasFax: false,
             ssnStatus: "A",
-            taAddress: "Department of the Treasury\nInternal Revenue Service\nMail Stop C1 6525\nKansas City, MO 64999-0025", 
-            indicates: "indicates the IRS has made changes to the {{{Tax Year}}} Federal Tax Return based on information the taxpayer(s) provided." 
+            taAddress: "Department of the Treasury\nInternal Revenue Service\nMail Stop C1 6525\nKansas City, MO 64999-0025",
+            indicates: "indicates the IRS has made changes to the {{{Tax Year}}} Federal Tax Return, resulting in a balance due of {{{Balance Due}}}."
          },
         "CP23": { 
             main: "Tax Return Change", 
@@ -833,7 +834,7 @@ db = {
         "Georgia": { form: "Form 500", poa: "RD-1061", agency: "Georgia Department of Revenue" },
         "Hawaii": { form: "N-15" },
         "Idaho": { form: "Form 40" },
-        "Illinois": { form: "IL-1040" },
+        "Illinois": { form: "IL-1040", poa: "IL-2848" },
         "Indiana": { form: "IT-40", poa: "POA-1" },
         "Kansas": { form: "K-40", poa: "DO-10" },
         "Kentucky": { form: "Form 740" },
