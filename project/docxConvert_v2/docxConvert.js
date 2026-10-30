@@ -921,6 +921,14 @@ function fixAmount(amount) { // format a number
     return formattedNum;
 }
 
+function fixNoticeInputs(data) {
+    let type = data["Notice Type"];
+    if (db.noticeTypes[type]) {
+        getInput("Notice Number").value = type;
+        getInput("Notice Type").value = db.noticeTypes[type].main || "";
+    }
+}
+
 function signDate(txt) {
     let today = new Date();
     let mo = today.getMonth() + 1;
@@ -1097,10 +1105,10 @@ function setUnsureStyles() {
     }
 }
 
-function getSummaryData(text) {
+function getSummaryData(text) { // 10.30.26
     let data = {};
     if (text.match(/^\{[^]+\}/)) { data = JSON.parse(text); }
-    if (data["Case Summary"]) { 
+    if (data["Case Summary"]) {
         for (let name in data) {
             let value = data[name];
             if (isHTML(text)) {
@@ -1109,18 +1117,19 @@ function getSummaryData(text) {
                 data[name] = value;
             }
         }
-        return data; 
+        fixNoticeInputs(data);
+        return data;
     }
-	let titles = db.summTitles;
+    let titles = db.summTitles;
     let sects = db.summSections;
     let sectsPatt = new RegExp(`(${sects.join("|")})`,"g");
     data.expedited = text.match(/\*\*EXPEDITE\*\*/) ? true : false;
     text = text.replace(sectsPatt,"");
-    //console.log(text)
+    console.warn(text)
     //.replace(/Summary:\n\n/,"")
     for (let t in titles) {
-    	let title = titles[t];
-        //if (title?.match(/\(section\)/)) { continue } // not used?
+        let title = titles[t];
+        //if (title?.match(/section/)) { continue } // not used?
         let currPatt = title.replace(/[()[\]{}\-.*$+/]/g,"\\$&");
         let nextPatt = titles[parseInt(t)+1];
         nextPatt = nextPatt?.replace(/[()[\]{}\\\-.*$+/]/g,"\\$&") || "(Date Submitted|$)";
@@ -1144,8 +1153,7 @@ function getSummaryData(text) {
             data[title] = "";
         }
     }
-    //console.log("Summary Data:");
-    //console.log(data)
+    fixNoticeInputs(data);
     return data;
 }
 
@@ -1168,6 +1176,13 @@ function updateFromSummary() {
         db.summData.expedited || db.summData["Special Portfolio Needs"] === "Expedite"
         || db.summData["Special Portfolio Needs"] === "Reasonable Cause"
     ) { expediteHandler() }
+    if (db.summData["Portfolio Approval Instructions"] === "Skip Approval") {
+        console.log("Skip client approval.")
+        let pcw = getInput("Pre-Consult Review");
+        if (!pcw.value.match(/- Skip client approval./)) {
+            pcw.value = "- Skip client approval.\n" + pcw.value;
+        }
+    }
     if (taxAuth.value === "" || taxAuth.value.trim().match(/^n.?a$/i)) {
         let name = db.summData["Authority"]?.trim() || db.summData["Tax Authority"]?.trim() || "";
         taxAuth.value = name;
