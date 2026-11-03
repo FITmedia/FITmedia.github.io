@@ -160,10 +160,10 @@ db = {
         "8812": "Schedule 8812, Credits for Qualifying Children and Other Dependents",
         "1116": "Form 1116, Foreign Tax Credit",
         "940": "Form 940, Employer's Annual Federal Unemployment Tax Return",
-        "943": "Form 943, Employer's Annual Federal Tax Return for Agricultural Employees",
-        // Note: there is no 940-X -- 940 has an "Amended" checkbox
         "941": "Form 941, Employer's Quarterly Federal Tax Return",
         "941-X": "Form 941-X, Adjusted Employer's Quarterly Federal Tax Return",
+        "943": "Form 943, Employer's Annual Federal Tax Return for Agricultural Employees",
+        "990": "Form 990, Return of Organization Exempt From Income Tax",
         "1040": "Form 1040, US Individual Income Tax Return",
         "FEDERAL TAX RETURN": "Form 1040, US Individual Income Tax Return",
         "1040-X": "Form 1040-X, Amended U.S. Individual Income Tax Return",
@@ -252,6 +252,13 @@ db = {
             if (val === "") {
                 val = (db.summData["Tax Authority"]?.match(/IRS/) && !isBusiness()) ? "1040" : "";
             }
+            let taxFormVal = getInput("Tax Form")?.value;
+            let taxFormTitle = getInput("Tax Form Title");
+            if (!taxFormVal || !taxFormTitle) { return val }
+            let title = db.formNames[taxFormVal];
+            title = title.replace(/^[^,]+, */,"");
+            taxFormTitle.value = title;
+            //taxFormTitle dispatch "focusout"?
             return val;
         },
         "Notice Number": (num,e) => {
@@ -357,7 +364,7 @@ db = {
             let isBus = isBusiness();
             let text = pcw?.value;
             if (text) {
-                if (tpTIN === "N" || tpTIN === "XXXX") {
+                if (tpTIN.match(/^N(o(ne|)|)$/i) || tpTIN === "XXXX") {
                     pcw.value = text.replace(/^- SSN digits\? For which TP\?/,"- No SSN shown in notice.");
                 } else if (tpTIN.match(/^(XXX-XX-|)\d{4}$/)) {
                     pcw.value = text.replace(/^- SSN digits\? For which TP\?/,"- Last 4 SSN digits in notice.");
@@ -493,7 +500,7 @@ db = {
         },
         "TA Fax": (val) => {
             let pcw = getInput("Pre-Consult Review");
-            if (val === "N" || val.match(/^No(ne|)/i)) {
+            if (val.match(/^N(o(ne|)|)$/i)) {
                 let text = pcw?.value;
                 if (text) {
                     pcw.value = text.replace(/^- Fax number in notice\?/m,"- No fax number in notice.");
@@ -674,6 +681,12 @@ db = {
             banner: `<p style="text-align:center"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold;">Attn: ICO Rejects Team {{{Rejects Team}}} | Control #: {{{Control Number}}} | Batch: {{{Batch Number}}}</span></p>`,
         },
         "LTR 474C": { main: "Error Correction", hasReferNum: true, ssnStatus: "L", indicates: "indicates that the IRS made changes to correct purported errors on the {{{Tax Year}}} Federal Tax Return." },
+        "LTR 681C": {
+            main: "Proposal to Pay Accepted",
+            ssnStatus: "L",
+            hasReferNum: true,
+            indicates: "indicates that the IRS accepted a proposal to pay the balance due of {{{Balance Due}}} for tax year {{{Tax Year}}} by {{{Proposed Date}}}.",
+        },
         "LTR 3338C": {
             main: "Acknowledgement Letter",
             sub: "Audit Reconsideration",
@@ -839,6 +852,7 @@ db = {
         "Kansas": { form: "K-40", poa: "DO-10" },
         "Kentucky": { form: "Form 740" },
         "Maryland": { form: "502", poa: "548", agency: "Comptroller of Maryland" },
+        "Massachusetts": { form: "1", poa: "M-2848", agency: "Department of Revenue" },
         "Michigan": { form: "MI-1040", agency: "Michigan Department of Treasury" },
         "Minnesota": { form: "M1"},
         "Missouri": { form: "MO-1040" },
