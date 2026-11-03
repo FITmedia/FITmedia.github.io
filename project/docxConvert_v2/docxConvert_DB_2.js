@@ -256,6 +256,7 @@ db = {
             let taxFormTitle = getInput("Tax Form Title");
             if (!taxFormVal || !taxFormTitle) { return val }
             let title = db.formNames[taxFormVal];
+            if (!title) { return console.log(`'${taxFormVal}' not found in db.formNames.`) }
             title = title.replace(/^[^,]+, */,"");
             taxFormTitle.value = title;
             //taxFormTitle dispatch "focusout"?
@@ -968,11 +969,11 @@ db = {
             return `<section data-template="RE Section"><p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">RE: Request For Abatement of Penalties</span></p><br>
                 <p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">${isBusiness ? `{{{Name Merge}}}` : `{{{Primary Name}}}`}        <span id="tpTINtext" class="unsure tp-align" style="font-style: italic; color: blue;">${tpTIN}</span></span></p>
                 ${secName?.value === "" ? "" : db.templates["Secondary TP"](true)}<br>
-                <p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">Type of Tax:         <span class="tp-align">${isBusiness ? "Form {{{Tax Form}}}, {{{Tax Form Title}}}" : "Form 1040, US Individual Income Tax Return"}</span></span></p><br>
+                <p style="text-align: both;"><span style="font-family:Calibri; font-size: 12pt; font-weight: bold">Type of Tax:         <span class="tp-align">Form {{{Tax Form}}}, {{{Tax Form Title}}}</span></span></p><br>
                 <p style="text-align: both;">`
                     +`<span style="font-family:Calibri; font-size: 12pt; text-decoration: underline; font-weight: bold">Tax Period(s):</span>       <span class="fta-align" style="font-family:Calibri; font-size: 12pt; text-decoration: underline; font-weight: bold">Applicable Penalties:</span>`
                 +`</p><p style="text-align: both;">`
-                    +`<span style="font-family:Calibri; font-size: 12pt; font-weight: bold">{{{Penalty Years}}}</span>          <span class="fta-align" style="font-family:Calibri; font-size: 12pt; font-weight: bold">{{{Penalties}}}</span></p></section>`
+                    +`<span style="font-family:Calibri; font-size: 12pt; font-weight: bold">{{{Tax Years}}}</span>          <span class="fta-align" style="font-family:Calibri; font-size: 12pt; font-weight: bold">{{{Penalties}}}</span></p></section>`
         },
         "Opening": () => {
             let tpTIN = db.summData["Case Name and Number"]?.trim().replace(/^[^*]+ \*([X\d\-]{4,10})[^]+$/,"$1");
