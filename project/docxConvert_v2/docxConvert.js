@@ -274,8 +274,14 @@ function updateNoticeType(num) { // 10.20.26
     //getSection("Opening").setContents(openTemp);
 }
 
-function loadInputFields(html) {
-    if (!html) { return }
+function loadInputFields(htmlOrElem) { // 11.12.26
+    if (!htmlOrElem) { return }
+    let elem = null;
+    let html = htmlOrElem;
+    if (htmlOrElem instanceof Element) {
+        elem = htmlOrElem;
+        html = elem.innerHTML;
+    }
     let vars = html.matchAll(/\{\{\{(?!\!)([^}]+)\}\}\}/g);
     vars = [...vars];
     for (let v in vars) { // [[{{{A}}},"A"],[{{{B}}},"B"],[...]]
@@ -304,6 +310,9 @@ function loadInputFields(html) {
         tr.appendChild(label);
         tr.appendChild(fieldData);
         document.getElementById("fields").appendChild(tr);
+    }
+    if (elem) {
+        elem.innerHTML = html;
     }
     return html;
 }
@@ -344,8 +353,15 @@ function loadOutputFields_old(html) { // 10.5.26
     return html;
 }
 
-function loadOutputFields(html) { // 10.6.26t1324
-    removeOutputVars();
+function loadOutputFields(htmlOrElem) { // 11.12.26
+    if (!htmlOrElem) { return }
+    let elem = null;
+    let html = htmlOrElem;
+    if (htmlOrElem instanceof Element) {
+        elem = htmlOrElem;
+        html = elem.innerHTML;
+    }
+    html = removeOutputVars(html); // remove {{{}}} dislayed in data-output element
     let vars = html.matchAll(/\{\{\{(?!\!)([^}]+)\}\}\}/g);
     vars = [...vars];
     for (let v in vars) { // [[{{{A}}},"A"],[{{{B}}},"B"],[...]]
@@ -359,12 +375,19 @@ function loadOutputFields(html) { // 10.6.26t1324
         let patt = new RegExp(varText.replace(/[{}()\[\]\-.*?!:$/\\|]/g,"\\$&"),"g");
         html = html.replace(patt,fill);
     }
-    restoreOutputVars();
+    html = restoreOutputVars(html); // restore {{{}}} displayed in data-output element
+    if (elem) {
+        elem.innerHTML = html;
+    }
     return html;
 }
 
-function removeOutputVars() {
-    let outs = document.querySelectorAll(`[data-output]`);
+function removeOutputVars(html) { // 11.12.26
+    let elem = document;
+    if (html) {
+        elem = parseHTML(html);
+    }
+    let outs = elem.querySelectorAll(`[data-output]`);
     if (outs) {
         // remove matches
         outs.forEach((out) => {
@@ -373,10 +396,15 @@ function removeOutputVars() {
             }
         })
     }
+    return elem.innerHTML;
 }
 
-function restoreOutputVars() {
-    let outs = document.querySelectorAll(`[data-output]`);
+function restoreOutputVars(html) { // 11.12.26
+    let elem = document;
+    if (html) {
+        elem = parseHTML(html);
+    }
+    let outs = elem.querySelectorAll(`[data-output]`);
     if (outs) {
         // restore
         outs.forEach((out) => {
@@ -386,6 +414,7 @@ function restoreOutputVars() {
             }
         })
     }
+    return elem.innerHTML;
 }
 
 function updateFromInput(elem,e) {
