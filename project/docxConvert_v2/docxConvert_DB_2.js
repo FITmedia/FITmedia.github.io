@@ -288,6 +288,9 @@ db = {
             }
             if (e?.type !== "keyup") {
                 updateNoticeType(num);
+                let output = document.getElementById("output");
+                loadInputFields(output);
+                loadOutputFields(output);
                 fixAligns();
             }
             return num;
@@ -320,6 +323,9 @@ db = {
             }
             if (e?.type !== "keyup") {
                 updateNoticeType(num);
+                let output = document.getElementById("output");
+                loadInputFields(output);
+                loadOutputFields(output);
                 fixAligns();
             }
             return val;
