@@ -695,6 +695,13 @@ db = {
             hasReferNum: true,
             indicates: "indicates that the IRS accepted a proposal to pay the balance due of {{{Balance Due}}} for tax year {{{Tax Year}}} by {{{Proposed Date}}}.",
         },
+        "LTR 2626C": {
+            main: "Acknowledgement Letter",
+            ssnStatus: "L",
+            hasFax: true,
+            hasReferNum: true,
+            indicates: `indicates that the IRS <span id="resub-1" class="unsure" style="font-family:Calibri; font-size: 12pt; font-style: italic; color: blue;">has denied the reasonable cause penalty abatement requested on {{{RCPA Submitted Date}}} for the {{{Tax Year}}}.</span>`,
+        },
         "LTR 3338C": {
             main: "Acknowledgement Letter",
             sub: "Audit Reconsideration",
